@@ -1,4 +1,4 @@
 package de.adorsys.keymanagement;
 
-public interface Key {
+public interface KeyTemplate {
 }
