@@ -11,7 +11,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
-        <module>storage</module>
+        <module>security-provider-adapters</module>
     </modules>
 
     <name>keymanagement</name>
@@ -28,11 +28,12 @@
 
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
-        <lombok.version>1.18.6</lombok.version>
+        <lombok.version>1.18.10</lombok.version>
         <bouncycastle.version>1.62</bouncycastle.version>
         <dagger.version>2.19</dagger.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
+        <slf4j.version>1.7.2</slf4j.version>
         <jupiter.version>5.4.1</jupiter.version>
         <junit.platform.version>1.4.1</junit.platform.version>
         <assertj.version>3.12.2</assertj.version>
@@ -72,6 +73,11 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
             <!-- Test section -->
             <dependency>
@@ -108,6 +114,12 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
