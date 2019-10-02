@@ -1,11 +1,14 @@
 package de.adorsys.keymanagement;
 
+import de.adorsys.keymanagement.collection.AliasCollection;
+import de.adorsys.keymanagement.collection.WithAlias;
 import de.adorsys.keymanagement.generator.KeyStorageGenerator;
 import de.adorsys.keymanagement.template.generated.Encrypting;
 import de.adorsys.keymanagement.template.generated.Signing;
 import de.adorsys.keymanagement.template.provided.Provided;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +17,9 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.KeyStore;
 import java.security.Security;
+
+import static com.googlecode.cqengine.query.QueryFactory.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class KeyStorageTest {
@@ -30,6 +36,14 @@ class KeyStorageTest {
                 .build();
 
         KeyStore store = new KeyStorageGenerator().generate(template);
+
+        AliasCollection aliasCollection = new AliasCollection(store);
+
+        val rsZZ = aliasCollection.retrieve(startsWith(WithAlias.A_ID, "ZZ"));
+        val rsT = aliasCollection.retrieve(startsWith(WithAlias.A_ID, "T"));
+
+        assertThat(rsZZ).hasSize(2);
+        assertThat(rsT).hasSize(1);
 
         log.info("Arrr! {}", store.aliases());
     }
