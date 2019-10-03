@@ -11,6 +11,6 @@ import java.util.stream.IntStream;
 public class Signing extends KeyPair {
 
     public Collection<Signing> repeat(int times) {
-        return IntStream.range(0, times).boxed().map(it -> this).collect(Collectors.toList());
+        return IntStream.range(0, times).boxed().map(it -> this.toBuilder().build()).collect(Collectors.toList());
     }
 }

@@ -20,6 +20,6 @@ public class Secret extends NamedWithPassword {
     private final int size = 256;
 
     public Collection<Secret> repeat(int times) {
-        return IntStream.range(0, times).boxed().map(it -> this).collect(Collectors.toList());
+        return IntStream.range(0, times).boxed().map(it -> this.toBuilder().build()).collect(Collectors.toList());
     }
 }

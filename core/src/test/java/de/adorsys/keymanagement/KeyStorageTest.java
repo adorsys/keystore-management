@@ -1,9 +1,9 @@
 package de.adorsys.keymanagement;
 
-import de.adorsys.keymanagement.collection.AliasCollection;
-import de.adorsys.keymanagement.collection.WithAlias;
+import de.adorsys.keymanagement.collection.KeyView;
 import de.adorsys.keymanagement.generator.KeyStorageGenerator;
 import de.adorsys.keymanagement.template.generated.Encrypting;
+import de.adorsys.keymanagement.template.generated.Secret;
 import de.adorsys.keymanagement.template.generated.Signing;
 import de.adorsys.keymanagement.template.provided.Provided;
 import lombok.SneakyThrows;
@@ -19,7 +19,8 @@ import java.security.KeyStore;
 import java.security.Security;
 import java.util.function.Supplier;
 
-import static com.googlecode.cqengine.query.QueryFactory.startsWith;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static de.adorsys.keymanagement.collection.QueryableKey.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -36,21 +37,18 @@ class KeyStorageTest {
         KeyStorageTemplate template = KeyStorageTemplate.builder()
                 .keyPassword(password)
                 .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
+                .generatedSecretKey(Secret.with().prefix("ZZZ").build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
-                .generatedEncryptionKey(Encrypting.with().password(password2).alias("TTT").build())
-                .generatedEncryptionKeys(Encrypting.with().password(password2).alias("TTT").build().repeat(10))
+                .generatedEncryptionKey(Encrypting.with().password(password).alias("TTT").build())
+                .generatedEncryptionKeys(Encrypting.with().password(password).prefix("TTT").build().repeat(10))
                 .build();
 
         KeyStore store = new KeyStorageGenerator().generate(template);
+        val keyView = new KeyView(store, password.get());
 
-        AliasCollection aliasCollection = new AliasCollection(store);
-
-        val rsZZ = aliasCollection.retrieve(startsWith(WithAlias.A_ID, "ZZ"));
-        val rsT = aliasCollection.retrieve(startsWith(WithAlias.A_ID, "T"));
-
-        assertThat(rsZZ).hasSize(2);
-        assertThat(rsT).hasSize(1);
-
+        assertThat(keyView.retrieve(equal(IS_SECRET, true))).hasSize(2);
+        assertThat(keyView.retrieve(equal(IS_TRUST_CERT, true))).hasSize(0);
+        assertThat(keyView.retrieve(equal(IS_PRIVATE, true))).hasSize(12);
         log.info("Arrr! {}", store.aliases());
     }
 

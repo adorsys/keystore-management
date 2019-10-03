@@ -81,13 +81,13 @@ public class KeyStorageGenerator {
     @SneakyThrows
     private KeyPairData generateEncrypting(Encrypting encrypting, char[] password) {
         return new KeyPairGeneratorImpl(encrypting.getAlgo(), encrypting.getSize(), encrypting.getSigAlgo(), "PAIR")
-                .generateEncryptionKey(encrypting.getAlias(), new ReadKeyPassword(password));
+                .generateEncryptionKey(keyName(encrypting.getAlias(), encrypting.getPrefix()), new ReadKeyPassword(password));
     }
 
     @SneakyThrows
     private KeyPairData generateSigning(Signing signing, char[] password) {
         return new KeyPairGeneratorImpl(signing.getAlgo(), signing.getSize(), signing.getSigAlgo(), "PAIR")
-                .generateSignatureKey(signing.getAlias(), new ReadKeyPassword(password));
+                .generateSignatureKey(keyName(signing.getAlias(), signing.getPrefix()), new ReadKeyPassword(password));
     }
 
     @SneakyThrows
