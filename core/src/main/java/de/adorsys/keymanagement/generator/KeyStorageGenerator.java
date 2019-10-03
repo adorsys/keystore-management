@@ -29,6 +29,7 @@ public class KeyStorageGenerator {
         KeyStore ks = KeyStore.getInstance("UBER");
         ks.load(null);
 
+        // FIXME - key ids uniqueness validation
         template.providedKeys().forEach(it -> addProvidedKey(ks, it, extractPassword(it, template)));
         template.providedKeyEntries().forEach(it -> addProvidedEntry(ks, it, extractPassword(it, template)));
         template.generatedSecretKeys().forEach(it -> addGeneratedSecret(ks, it, extractPassword(it, template)));

@@ -30,14 +30,15 @@ class KeyStorageTest {
     void basicTest() {
         Security.addProvider(new BouncyCastleProvider());
 
-        Supplier<char[]> password = () -> "Password".toCharArray();
-        Supplier<char[]> password2 = () -> "Password Other".toCharArray();
+        Supplier<char[]> password = "Password"::toCharArray;
+        Supplier<char[]> password2 = "Password Other"::toCharArray;
 
         KeyStorageTemplate template = KeyStorageTemplate.builder()
                 .keyPassword(password)
                 .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
                 .generatedEncryptionKey(Encrypting.with().password(password2).alias("TTT").build())
+                .generatedEncryptionKeys(Encrypting.with().password(password2).alias("TTT").build().repeat(10))
                 .build();
 
         KeyStore store = new KeyStorageGenerator().generate(template);
