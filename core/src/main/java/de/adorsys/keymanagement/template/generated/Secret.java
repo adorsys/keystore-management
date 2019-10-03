@@ -1,12 +1,13 @@
 package de.adorsys.keymanagement.template.generated;
 
+import de.adorsys.keymanagement.template.NamedWithPassword;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder(builderMethodName = "with")
-public class Secret extends GeneratedKeyTemplate {
+@SuperBuilder(builderMethodName = "with", toBuilder = true)
+public class Secret extends NamedWithPassword {
 
     @Builder.Default
     private final String algo = "AES";

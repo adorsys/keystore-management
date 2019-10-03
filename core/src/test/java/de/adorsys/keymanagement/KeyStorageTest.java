@@ -17,6 +17,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.KeyStore;
 import java.security.Security;
+import java.util.function.Supplier;
 
 import static com.googlecode.cqengine.query.QueryFactory.startsWith;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,10 +30,14 @@ class KeyStorageTest {
     void basicTest() {
         Security.addProvider(new BouncyCastleProvider());
 
+        Supplier<char[]> password = () -> "Password".toCharArray();
+        Supplier<char[]> password2 = () -> "Password Other".toCharArray();
+
         KeyStorageTemplate template = KeyStorageTemplate.builder()
+                .keyPassword(password)
                 .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
-                .generatedEncryptionKey(Encrypting.with().alias("TTT").build())
+                .generatedEncryptionKey(Encrypting.with().password(password2).alias("TTT").build())
                 .build();
 
         KeyStore store = new KeyStorageGenerator().generate(template);

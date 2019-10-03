@@ -12,6 +12,9 @@ import java.util.Enumeration;
 
 public class AliasCollection {
 
+    /**
+     * Note that keystore aliases are case-insensitive in general case
+     */
     private final IndexedCollection<WithAlias> aliases = new TransactionalIndexedCollection<>(WithAlias.class);
 
     @SneakyThrows

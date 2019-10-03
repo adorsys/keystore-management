@@ -5,12 +5,12 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
-import java.security.Key;
+import java.security.KeyStore;
 
 @Getter
 @SuperBuilder(builderMethodName = "with", toBuilder = true)
-public class Provided extends NamedWithPassword {
+public class KeyEntry extends NamedWithPassword {
 
     @NonNull
-    private final Key key;
+    private final KeyStore.Entry entry;
 }

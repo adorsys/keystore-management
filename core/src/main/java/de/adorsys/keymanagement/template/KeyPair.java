@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement.template;
 
-import de.adorsys.keymanagement.template.generated.GeneratedKeyTemplate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 // FIXME Provider-pluggable, dagger configured
 @SuperBuilder
-public class KeyPair extends GeneratedKeyTemplate {
+public class KeyPair extends NamedWithPassword {
 
     @Builder.Default
     private final String algo = "RSA";

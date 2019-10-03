@@ -8,4 +8,8 @@ public class ReadKeyPassword extends BaseTypePasswordString {
     public ReadKeyPassword(String readKeyPassword) {
         super(readKeyPassword);
     }
+
+    public ReadKeyPassword(char[] readKeyPassword) {
+        super(readKeyPassword);
+    }
 }
