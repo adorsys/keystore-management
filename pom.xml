@@ -29,7 +29,7 @@
         <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <lombok.version>1.18.10</lombok.version>
-        <bouncycastle.version>1.62</bouncycastle.version>
+        <bouncycastle.version>1.63</bouncycastle.version>
         <dagger.version>2.19</dagger.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
