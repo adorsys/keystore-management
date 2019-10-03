@@ -5,6 +5,7 @@ import com.googlecode.cqengine.TransactionalIndexedCollection;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
+import com.googlecode.cqengine.query.parser.sql.SQLParser;
 import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -14,11 +15,18 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
+import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
+
 // FIXME should be derived from KeyStorage
 public class KeyView {
 
     private final KeyStore source;
     private final IndexedCollection<QueryableKey> keys = new TransactionalIndexedCollection<>(QueryableKey.class);
+    private final SQLParser<QueryableKey> parser = SQLParser.forPojoWithAttributes(
+            QueryableKey.class,
+            createAttributes(QueryableKey.class, GETTER_METHODS_ONLY)
+    );
 
     // FIXME key password should not be provided, but rather one should open keystore for querying
     public KeyView(KeyStore source, char[] keyPassword) {
@@ -33,6 +41,10 @@ public class KeyView {
 
     public ResultSet<QueryableKey> retrieve(Query<QueryableKey> query) {
         return keys.retrieve(query);
+    }
+
+    public ResultSet<QueryableKey> retrieve(String query) {
+        return parser.retrieve(keys, query);
     }
 
     @SneakyThrows

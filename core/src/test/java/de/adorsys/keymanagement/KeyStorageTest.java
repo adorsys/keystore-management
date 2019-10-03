@@ -49,6 +49,11 @@ class KeyStorageTest {
         assertThat(keyView.retrieve(equal(IS_SECRET, true))).hasSize(2);
         assertThat(keyView.retrieve(equal(IS_TRUST_CERT, true))).hasSize(0);
         assertThat(keyView.retrieve(equal(IS_PRIVATE, true))).hasSize(12);
+        assertThat(keyView.retrieve(equal(HAS_VALID_CERTS, true))).hasSize(12);
+        assertThat(keyView.retrieve("SELECT * FROM keys WHERE getAlias LIKE 'Z%'")).hasSize(3);
+        assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
+        assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
+
         log.info("Arrr! {}", store.aliases());
     }
 
