@@ -12,10 +12,10 @@ import lombok.val;
 
 import javax.crypto.SecretKey;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
@@ -43,7 +43,7 @@ public class KeyView {
         this.source = source;
         keys.addAll(readKeys(source, keyPassword));
         keys.addIndex(RadixTreeIndex.onAttribute(QueryableKey.ID));
-        keys.addIndex(HashIndex.onAttribute(QueryableKey.IS_TRUST_CERT));
+        keys.addIndex(HashIndex.onAttribute(IS_TRUST_CERT));
         keys.addIndex(HashIndex.onAttribute(IS_PRIVATE));
         keys.addIndex(HashIndex.onAttribute(QueryableKey.IS_SECRET));
         keys.addIndex(HashIndex.onAttribute(QueryableKey.CERT));
@@ -59,40 +59,27 @@ public class KeyView {
         return new QueryResult<>(parser.retrieve(keys, query));
     }
 
-    public PrivateKeyFilterableCollection privateKeys() {
+    public FilterableCollection<KeyStore.PrivateKeyEntry, PrivateKey> privateKeys() {
         try (val privateKeys = keys.retrieve(equal(IS_PRIVATE, true))) {
-            return new PrivateKeyFilterableCollection(privateKeys);
+            return new FilterableCollection<>(privateKeys, KeyStore.PrivateKeyEntry::getPrivateKey);
         }
     }
 
-    public ResultCollection<SecretKey> secretKeys() {
-        try (val secretKeys = keys.retrieve(equal(IS_SECRET, true)).stream()) {
-            return secretKeys
-                    .map(it -> ((KeyStore.SecretKeyEntry) it.getKey()).getSecretKey())
-                    .collect(
-                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
-                    );
+    public FilterableCollection<KeyStore.SecretKeyEntry, SecretKey> secretKeys() {
+        try (val secretKeys = keys.retrieve(equal(IS_SECRET, true))) {
+            return new FilterableCollection<>(secretKeys, KeyStore.SecretKeyEntry::getSecretKey);
         }
     }
 
-    public ResultCollection<PublicKey> publicKeys() {
-        try (val privateKeys = keys.retrieve(equal(IS_PRIVATE, true)).stream()) {
-            return privateKeys
-                    .map(it -> ((KeyStore.PrivateKeyEntry) it.getKey()).getCertificate())
-                    .map(Certificate::getPublicKey)
-                    .collect(
-                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
-                    );
+    public FilterableCollection<KeyStore.PrivateKeyEntry, PublicKey> publicKeys() {
+        try (val publicKeys = keys.retrieve(equal(IS_PRIVATE, true))) {
+            return new FilterableCollection<>(publicKeys, e -> e.getCertificate().getPublicKey());
         }
     }
 
-    public ResultCollection<Certificate> trustedCerts() {
-        try (val trustedCerts = keys.retrieve(equal(IS_TRUST_CERT, true)).stream()) {
-            return trustedCerts
-                    .map(it -> ((KeyStore.TrustedCertificateEntry) it.getKey()).getTrustedCertificate())
-                    .collect(
-                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
-                    );
+    public FilterableCollection<KeyStore.TrustedCertificateEntry, Certificate> trustedCerts() {
+        try (val trustedCerts = keys.retrieve(equal(IS_TRUST_CERT, true))) {
+            return new FilterableCollection<>(trustedCerts, KeyStore.TrustedCertificateEntry::getTrustedCertificate);
         }
     }
 

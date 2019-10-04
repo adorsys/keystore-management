@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 public class KeyStorageTemplate {
 
     // Maybe set on key level
-    Supplier<char[]> keyPassword;
+    private final Supplier<char[]> keyPassword;
 
     // client may not know key type for provided
     @Singular

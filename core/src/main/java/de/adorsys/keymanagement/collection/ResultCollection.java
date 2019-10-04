@@ -18,9 +18,7 @@ public class ResultCollection<T> implements Collection<T> {
     }
 
     public ResultCollection<T> pickNrandom(int count) {
-        List<T> shuffled = new ArrayList<>(result);
-        Collections.shuffle(shuffled);
-        return new ResultCollection<>(shuffled.subList(0, count));
+        return ShuffleUtil.shuffleAndSelectN(result, count);
     }
 
     public ResultCollection<T> shuffle() {
