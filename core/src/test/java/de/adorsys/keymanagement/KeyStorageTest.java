@@ -52,9 +52,15 @@ class KeyStorageTest {
         assertThat(keyView.retrieve(equal(IS_TRUST_CERT, true))).hasSize(0);
         assertThat(keyView.retrieve(equal(IS_PRIVATE, true))).hasSize(12);
         assertThat(keyView.retrieve(equal(HAS_VALID_CERTS, true))).hasSize(12);
+        assertThat(keyView.retrieve(equal(HAS_VALID_CERTS, true)).toCollection().pickNrandom(2)).hasSize(2);
         assertThat(keyView.retrieve(has(CERT))).hasSize(12);
         assertThat(keyView.privateKeys()).hasSize(12);
+        assertThat(keyView.privateKeys().pickNrandom(2)).hasSize(2);
+        // FIXME - this key is of signing type - we need to allow to differentiate between signing and encryption keys
+        assertThat(keyView.privateKeys().hasAlias(it -> it.startsWith("Z"))).hasSize(1);
+        assertThat(keyView.publicKeys()).hasSize(12);
         assertThat(keyView.secretKeys()).hasSize(2);
+        assertThat(keyView.trustedCerts()).hasSize(0);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getAlias LIKE 'Z%'")).hasSize(3);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);

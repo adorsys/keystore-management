@@ -7,21 +7,20 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.SneakyThrows;
 import lombok.val;
 
 import javax.crypto.SecretKey;
 import java.security.KeyStore;
-import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
 import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static de.adorsys.keymanagement.collection.QueryableKey.IS_PRIVATE;
-import static de.adorsys.keymanagement.collection.QueryableKey.IS_SECRET;
+import static de.adorsys.keymanagement.collection.QueryableKey.*;
 
 // FIXME try-with-resources on retrieve
 // FIXME should be derived from KeyStorage
@@ -52,24 +51,49 @@ public class KeyView {
         //keys.addIndex(HashIndex.onAttribute(QueryableKey.META));
     }
 
-    public ResultSet<QueryableKey> retrieve(Query<QueryableKey> query) {
-        return keys.retrieve(query);
+    public QueryResult<QueryableKey> retrieve(Query<QueryableKey> query) {
+        return new QueryResult<>(keys.retrieve(query));
     }
 
-    public ResultSet<QueryableKey> retrieve(String query) {
-        return parser.retrieve(keys, query);
+    public QueryResult<QueryableKey> retrieve(String query) {
+        return new QueryResult<>(parser.retrieve(keys, query));
     }
 
-    public Collection<PrivateKey> privateKeys() {
-        return keys.retrieve(equal(IS_PRIVATE, true)).stream()
-                .map(it -> ((KeyStore.PrivateKeyEntry) it.getKey()).getPrivateKey())
-                .collect(Collectors.toList());
+    public PrivateKeyFilterableCollection privateKeys() {
+        try (val privateKeys = keys.retrieve(equal(IS_PRIVATE, true))) {
+            return new PrivateKeyFilterableCollection(privateKeys);
+        }
     }
 
-    public Collection<SecretKey> secretKeys() {
-        return keys.retrieve(equal(IS_SECRET, true)).stream()
-                .map(it -> ((KeyStore.SecretKeyEntry) it.getKey()).getSecretKey())
-                .collect(Collectors.toList());
+    public ResultCollection<SecretKey> secretKeys() {
+        try (val secretKeys = keys.retrieve(equal(IS_SECRET, true)).stream()) {
+            return secretKeys
+                    .map(it -> ((KeyStore.SecretKeyEntry) it.getKey()).getSecretKey())
+                    .collect(
+                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
+                    );
+        }
+    }
+
+    public ResultCollection<PublicKey> publicKeys() {
+        try (val privateKeys = keys.retrieve(equal(IS_PRIVATE, true)).stream()) {
+            return privateKeys
+                    .map(it -> ((KeyStore.PrivateKeyEntry) it.getKey()).getCertificate())
+                    .map(Certificate::getPublicKey)
+                    .collect(
+                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
+                    );
+        }
+    }
+
+    public ResultCollection<Certificate> trustedCerts() {
+        try (val trustedCerts = keys.retrieve(equal(IS_TRUST_CERT, true)).stream()) {
+            return trustedCerts
+                    .map(it -> ((KeyStore.TrustedCertificateEntry) it.getKey()).getTrustedCertificate())
+                    .collect(
+                            Collectors.toCollection(() -> new ResultCollection<>(new LinkedHashSet<>()))
+                    );
+        }
     }
 
     @SneakyThrows

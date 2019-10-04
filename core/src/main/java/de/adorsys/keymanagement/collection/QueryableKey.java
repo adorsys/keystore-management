@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.collection;
 
 import com.googlecode.cqengine.attribute.Attribute;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,7 @@ import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 
 @Getter
 @Builder
+@EqualsAndHashCode(of = "alias")
 @RequiredArgsConstructor
 public class QueryableKey {
 
