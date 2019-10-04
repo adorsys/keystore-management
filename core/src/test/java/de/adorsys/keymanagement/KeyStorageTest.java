@@ -27,6 +27,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class KeyStorageTest {
 
+    // NOTE:
+    // If code is red in IDEA - you need custom Lombok plugin:
+    // https://github.com/mplushnikov/lombok-intellij-plugin/releases/tag/0.27_superbuilder_alpha
+    // install it from zip
     @Test
     @SneakyThrows
     void basicTest() {
