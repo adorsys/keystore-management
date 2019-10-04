@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.security.KeyStore;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
 import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 
 @Getter
 @Builder
@@ -20,6 +22,15 @@ public class QueryableKey {
     public static final Attribute<QueryableKey, Boolean> IS_TRUST_CERT = attribute("is_trust_cert", it -> it.getKey() instanceof KeyStore.TrustedCertificateEntry);
     public static final Attribute<QueryableKey, Boolean> IS_SECRET = attribute("is_secret", it -> it.getKey() instanceof KeyStore.SecretKeyEntry);
     public static final Attribute<QueryableKey, Boolean> IS_PRIVATE = attribute("is_private", it -> it.getKey() instanceof KeyStore.PrivateKeyEntry);
+    public static final Attribute<QueryableKey, Certificate> CERT = nullableAttribute(
+            "cert", it -> {
+                if (!(it.getKey() instanceof KeyStore.PrivateKeyEntry)) {
+                    return null;
+                }
+                KeyStore.PrivateKeyEntry pKey = (KeyStore.PrivateKeyEntry) it.getKey();
+                return pKey.getCertificate();
+            });
+
     public static final Attribute<QueryableKey, Boolean> HAS_VALID_CERTS = attribute(
             "has_valid_certs", it -> {
                 if (!(it.getKey() instanceof KeyStore.PrivateKeyEntry)) {

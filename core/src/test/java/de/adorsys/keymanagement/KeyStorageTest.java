@@ -20,6 +20,7 @@ import java.security.Security;
 import java.util.function.Supplier;
 
 import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.has;
 import static de.adorsys.keymanagement.collection.QueryableKey.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,12 +45,16 @@ class KeyStorageTest {
                 .build();
 
         KeyStore store = new KeyStorageGenerator().generate(template);
+        val entry = store.getCreationDate("TTT");
         val keyView = new KeyView(store, password.get());
 
         assertThat(keyView.retrieve(equal(IS_SECRET, true))).hasSize(2);
         assertThat(keyView.retrieve(equal(IS_TRUST_CERT, true))).hasSize(0);
         assertThat(keyView.retrieve(equal(IS_PRIVATE, true))).hasSize(12);
         assertThat(keyView.retrieve(equal(HAS_VALID_CERTS, true))).hasSize(12);
+        assertThat(keyView.retrieve(has(CERT))).hasSize(12);
+        assertThat(keyView.privateKeys()).hasSize(12);
+        assertThat(keyView.secretKeys()).hasSize(2);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getAlias LIKE 'Z%'")).hasSize(3);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
