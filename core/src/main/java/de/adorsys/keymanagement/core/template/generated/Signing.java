@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Signing implements KeyTemplate {
+public class Signing implements GeneratedKeyTemplate {
 
     @NonNull
     @Delegate

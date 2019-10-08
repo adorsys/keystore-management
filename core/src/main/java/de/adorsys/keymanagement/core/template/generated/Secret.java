@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Getter
-public class Secret implements KeyTemplate {
+public class Secret implements GeneratedKeyTemplate {
 
     @NonNull
     @Delegate

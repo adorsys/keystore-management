@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Encrypting implements KeyTemplate {
+public class Encrypting implements GeneratedKeyTemplate {
 
     @NonNull
     @Delegate
