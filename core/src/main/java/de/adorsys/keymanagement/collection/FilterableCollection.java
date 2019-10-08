@@ -3,7 +3,6 @@ package de.adorsys.keymanagement.collection;
 import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.Getter;
 import lombok.experimental.Delegate;
-import lombok.val;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -21,9 +20,8 @@ public class FilterableCollection<E, K> implements Collection<K> {
 
     public FilterableCollection(ResultSet<QueryableKey> resultSet, Function<E, K> getKey) {
         this.result = new LinkedHashSet<>();
-        try (val res = resultSet.stream()) {
-            res.forEach(it -> result.add(new Context<>(it, getKey)));
-        }
+        // not necessary to close, because ResultSet<QueryableKey> resultSet should itself be in try-with-resources
+        resultSet.stream().forEach(it -> result.add(new Context<>(it, getKey)));
         this.keys = result.stream().map(Context::getKey).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 

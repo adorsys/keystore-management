@@ -7,6 +7,7 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
+import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -51,10 +52,16 @@ public class KeyView {
         //keys.addIndex(HashIndex.onAttribute(QueryableKey.META));
     }
 
+    /**
+     * Note that client who calls this should close the result.
+     */
     public QueryResult<QueryableKey> retrieve(Query<QueryableKey> query) {
         return new QueryResult<>(keys.retrieve(query));
     }
 
+    /**
+     * Note that client who calls this should close the result.
+     */
     public QueryResult<QueryableKey> retrieve(String query) {
         return new QueryResult<>(parser.retrieve(keys, query));
     }
@@ -78,7 +85,7 @@ public class KeyView {
     }
 
     public FilterableCollection<KeyStore.TrustedCertificateEntry, Certificate> trustedCerts() {
-        try (val trustedCerts = keys.retrieve(equal(IS_TRUST_CERT, true))) {
+        try (ResultSet<QueryableKey> trustedCerts = keys.retrieve(equal(IS_TRUST_CERT, true))) {
             return new FilterableCollection<>(trustedCerts, KeyStore.TrustedCertificateEntry::getTrustedCertificate);
         }
     }

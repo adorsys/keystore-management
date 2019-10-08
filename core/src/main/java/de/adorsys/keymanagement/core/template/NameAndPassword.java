@@ -1,13 +1,13 @@
-package de.adorsys.keymanagement.template;
+package de.adorsys.keymanagement.core.template;
 
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
+import lombok.RequiredArgsConstructor;
 
 import java.util.function.Supplier;
 
 @Getter
-@SuperBuilder(toBuilder = true)
-public class NamedWithPassword {
+@RequiredArgsConstructor
+public class NameAndPassword implements KeyTemplate {
 
     private final String alias;
     private final String prefix;

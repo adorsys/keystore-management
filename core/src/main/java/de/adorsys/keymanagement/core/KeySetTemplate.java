@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement;
+package de.adorsys.keymanagement.core;
 
 import com.google.common.collect.ImmutableList;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 @Getter
 @Accessors(fluent = true)
 @Builder
-public class KeyStorageTemplate {
+public class KeySetTemplate {
 
     // Maybe set on key level
     private final Supplier<char[]> keyPassword;

@@ -1,16 +1,16 @@
 package de.adorsys.keymanagement.generator;
 
 import de.adorsys.keymanagement.KeyStorageTemplate;
+import de.adorsys.keymanagement.core.template.KeyTemplate;
+import de.adorsys.keymanagement.core.template.generated.Encrypting;
+import de.adorsys.keymanagement.core.template.generated.Secret;
+import de.adorsys.keymanagement.core.template.generated.Signing;
+import de.adorsys.keymanagement.core.template.provided.KeyEntry;
+import de.adorsys.keymanagement.core.template.provided.Provided;
 import de.adorsys.keymanagement.generator.deprecated.types.keystore.ReadKeyPassword;
 import de.adorsys.keymanagement.generator.deprecated.types.keystore.SecretKeyEntry;
 import de.adorsys.keymanagement.generator.generator.*;
 import de.adorsys.keymanagement.generator.types.KeyPairEntry;
-import de.adorsys.keymanagement.template.NamedWithPassword;
-import de.adorsys.keymanagement.template.generated.Encrypting;
-import de.adorsys.keymanagement.template.generated.Secret;
-import de.adorsys.keymanagement.template.generated.Signing;
-import de.adorsys.keymanagement.template.provided.KeyEntry;
-import de.adorsys.keymanagement.template.provided.Provided;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -121,7 +121,7 @@ public class KeyStorageGenerator {
         return null != prefix ? prefix + UUID.randomUUID().toString() : UUID.randomUUID().toString();
     }
 
-    private char[] extractPassword(NamedWithPassword source, KeyStorageTemplate template) {
+    private char[] extractPassword(KeyTemplate source, KeyStorageTemplate template) {
         // FIXME Null check
         return (null != source.getPassword() ? source.getPassword() : template.keyPassword()).get();
     }

@@ -13,7 +13,7 @@ public class QueryResult<T> implements AutoCloseable, Iterable<T> {
     private final ResultSet<T> resultSet;
 
     public Stream<T> stream() {
-        return resultSet.stream();
+        return resultSet.stream().onClose(this::close);
     }
 
     public int size() {

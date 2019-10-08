@@ -3,13 +3,13 @@ skinparam ranksep 20
 skinparam nodesep 100
 
 
-node "Security provider specific" as SPS {
-   [KeyGenerator]
+node "Security provider specific (Adapter)" as SPS {
    [java.KeyStore]
    [KeyStorage]
    [Config]
 }
 node "Generic" as G {
+    [KeyGenerator]
     [KeySetTemplate]
     [KeySet]
     [KeySetView]
@@ -18,6 +18,11 @@ node "Generic" as G {
 }
 
 KeySetTemplate --> KeyGenerator :accepts
+note left
+  Uses generic interfaces
+  that transfer calls to security provider
+  so technically is adapter-specific
+end note
 KeyGenerator --> KeySet :produces
 KeySet --> KeyStorage :build
 Config -up-> KeyStorage

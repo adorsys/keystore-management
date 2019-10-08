@@ -2,10 +2,10 @@ package de.adorsys.keymanagement;
 
 import de.adorsys.keymanagement.collection.KeyView;
 import de.adorsys.keymanagement.generator.KeyStorageGenerator;
-import de.adorsys.keymanagement.template.generated.Encrypting;
-import de.adorsys.keymanagement.template.generated.Secret;
-import de.adorsys.keymanagement.template.generated.Signing;
-import de.adorsys.keymanagement.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.generated.Encrypting;
+import de.adorsys.keymanagement.core.template.generated.Secret;
+import de.adorsys.keymanagement.core.template.generated.Signing;
+import de.adorsys.keymanagement.core.template.provided.Provided;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -52,7 +52,7 @@ class KeyStorageTest {
         val entry = store.getCreationDate("TTT");
         val keyView = new KeyView(store, password.get());
 
-        assertThat(keyView.retrieve(equal(IS_SECRET, true))).hasSize(2);
+        assertThat(keyView.retrieve(equal(IS_SECRET, true)).toCollection()).hasSize(2);
         assertThat(keyView.retrieve(equal(IS_TRUST_CERT, true))).hasSize(0);
         assertThat(keyView.retrieve(equal(IS_PRIVATE, true))).hasSize(12);
         assertThat(keyView.retrieve(equal(HAS_VALID_CERTS, true))).hasSize(12);
