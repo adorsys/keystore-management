@@ -1,0 +1,30 @@
+@startuml
+skinparam ranksep 20
+skinparam nodesep 100
+
+
+node "Security provider specific" as SPS {
+   [KeyGenerator]
+   [java.KeyStore]
+   [KeyStorage]
+   [Config]
+}
+node "Generic" as G {
+    [KeySetTemplate]
+    [KeySet]
+    [KeySetView]
+    [AliasView]
+    [KeyView]
+}
+
+KeySetTemplate --> KeyGenerator :accepts
+KeyGenerator --> KeySet :produces
+KeySet --> KeyStorage :build
+Config -up-> KeyStorage
+KeySet --> KeySetView :asView
+java.KeyStore -> KeyStorage :load
+KeyStorage --> java.KeyStore :save
+KeyStorage --> KeySetView :asView
+KeySetView --> AliasView
+KeySetView --> KeyView
+@enduml

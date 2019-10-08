@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+// FIXME keygeneration is requested to (without persisting them to keystore), so we allow generate->persist
 public class KeyStorageGenerator {
 
     // FIXME Add constructor with executor service to generate keys in parallel
