@@ -25,6 +25,7 @@ public class KeyStoreOperImpl implements KeyStoreOper {
         KeyStore ks = KeyStore.getInstance("UBER");
         ks.load(null);
 
+        keySet.getKeyEntries().forEach(it -> addToKeyStoreAndGetName(ks, it));
         keySet.getKeys().forEach(it -> addToKeyStoreAndGetName(ks, it));
         keySet.getKeyPairs().forEach(it -> addToKeyStoreAndGetName(ks, it));
         return ks;
