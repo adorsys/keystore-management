@@ -19,8 +19,4 @@ public class KeySet {
     private final List<ProvidedKeyEntry> keyEntries;
     private final List<Provided> keys;
     private final List<ProvidedKeyPair> keyPairs;
-
-    public KeySetView asView() {
-        return new KeySetView();
-    }
 }

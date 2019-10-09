@@ -33,7 +33,7 @@ public class SigningKeyGeneratorImpl implements SigningKeyGenerator {
     @SneakyThrows
     private KeyPairData generateSigning(Signing signing) {
         return new KeyPairGeneratorImpl(signing.getAlgo(), signing.getSize(), signing.getSigAlgo(), "PAIR")
-                .generateSignatureKey(signing.getName(),
+                .generateSignatureKey("STUB",
                         new ReadKeyPassword("STUB") // FIXME unneeded
                 );
     }

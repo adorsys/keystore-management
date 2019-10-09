@@ -1,8 +1,9 @@
 package de.adorsys.keymanagement.core.impl;
 
-import de.adorsys.keymanagement.api.KeyStoreGenerator;
+import de.adorsys.keymanagement.api.KeyStoreOper;
 import de.adorsys.keymanagement.core.KeySet;
 import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.security.cert.Certificate;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
+public class KeyStoreOperImpl implements KeyStoreOper {
 
     private final Supplier<char[]> defaultKeyPassword;
 
@@ -24,26 +25,42 @@ public class KeyStoreGeneratorImpl implements KeyStoreGenerator {
         KeyStore ks = KeyStore.getInstance("UBER");
         ks.load(null);
 
-        keySet.getKeys().forEach(it -> addToKeyStore(ks, it));
-        keySet.getKeyPairs().forEach(it -> addToKeyStore(ks, it));
+        keySet.getKeys().forEach(it -> addToKeyStoreAndGetName(ks, it));
+        keySet.getKeyPairs().forEach(it -> addToKeyStoreAndGetName(ks, it));
         return ks;
     }
 
+    @Override
     @SneakyThrows
-    private void addToKeyStore(KeyStore ks, ProvidedKeyPair pair) {
+    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKeyPair pair) {
+        String name = pair.generateName();
         ks.setKeyEntry(
-                pair.getName(),
+                name,
                 pair.getPrivate(), // FIXME: Public key should be somewhere?
                 getPassword(pair),
                 pair.getCertificates().toArray(new Certificate[0])
         );
+
+        return name;
     }
 
+    @Override
     @SneakyThrows
-    private void addToKeyStore(KeyStore ks, Provided key) {
+    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKeyEntry entry) {
+        String name = entry.generateName();
+        KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(entry));
+        ks.setEntry(name, entry.getEntry(), protParam);
+        return name;
+    }
+
+    @Override
+    @SneakyThrows
+    public String addToKeyStoreAndGetName(KeyStore ks, Provided key) {
+        String name = key.generateName();
         KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry((SecretKey) key.getKey());
         KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(key));
-        ks.setEntry(key.getName(), entry, protParam);
+        ks.setEntry(name, entry, protParam);
+        return name;
     }
 
     private char[] getPassword(ProvidedKeyTemplate key) {

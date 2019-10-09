@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.collection;
+package de.adorsys.keymanagement.core.collection.keystore;
 
 import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.Getter;
@@ -68,6 +68,10 @@ public class FilterableCollection<E, K> implements Collection<K> {
 
     public ResultCollection<K> shuffle() {
         return pickNrandom(result.size());
+    }
+
+    public Collection<QueryableKey> asQueryable() {
+        return result.stream().map(Context::getQueryable).collect(Collectors.toList());
     }
 
     @Getter

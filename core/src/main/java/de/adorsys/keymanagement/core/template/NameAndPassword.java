@@ -20,7 +20,7 @@ public class NameAndPassword implements KeyTemplate {
     }
 
     @Override
-    public String getName() {
-        return namingStrategy.getName();
+    public String generateName() {
+        return namingStrategy.generateName();
     }
 }

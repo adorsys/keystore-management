@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.collection;
+package de.adorsys.keymanagement.core.collection.keystore;
 
 import lombok.experimental.UtilityClass;
 

@@ -17,7 +17,7 @@ public class DefaultNamingStrategy implements KeyNamingStrategy {
     }
 
     @Override
-    public String getName() {
+    public String generateName() {
         return null != name ? name : generateName(prefix);
     }
 

@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.core.collection;
+package de.adorsys.keymanagement.core.collection.keyset;
 
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.TransactionalIndexedCollection;
@@ -7,8 +7,8 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.collection.QueryResult;
 import de.adorsys.keymanagement.core.KeySet;
+import de.adorsys.keymanagement.core.collection.keystore.QueryResult;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static de.adorsys.keymanagement.core.collection.QueryableProvided.*;
+import static de.adorsys.keymanagement.core.collection.keyset.QueryableProvided.*;
 
 public class KeySetView {
 

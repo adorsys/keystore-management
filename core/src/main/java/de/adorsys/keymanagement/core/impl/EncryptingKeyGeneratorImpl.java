@@ -33,7 +33,7 @@ public class EncryptingKeyGeneratorImpl implements EncryptingKeyGenerator {
     @SneakyThrows
     private KeyPairData generateEncrypting(Encrypting encrypting) {
         return new KeyPairGeneratorImpl(encrypting.getAlgo(), encrypting.getSize(), encrypting.getSigAlgo(), "PAIR")
-                .generateEncryptionKey(encrypting.getName(),
+                .generateEncryptionKey("STUB",
                         new ReadKeyPassword("STUB") // FIXME unneded
                 );
     }

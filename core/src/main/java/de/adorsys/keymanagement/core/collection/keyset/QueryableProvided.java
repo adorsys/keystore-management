@@ -1,11 +1,13 @@
-package de.adorsys.keymanagement.core.collection;
+package de.adorsys.keymanagement.core.collection.keyset;
 
 import com.googlecode.cqengine.attribute.Attribute;
+import de.adorsys.keymanagement.api.Queryable;
 import de.adorsys.keymanagement.core.template.KeyTemplate;
 import de.adorsys.keymanagement.core.template.provided.Provided;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.val;
 
@@ -20,9 +22,10 @@ import java.util.stream.Stream;
 import static com.googlecode.cqengine.query.QueryFactory.attribute;
 
 @Getter
-public class QueryableProvided {
+@EqualsAndHashCode(of = "alias")
+public class QueryableProvided implements Queryable {
 
-    public static final Attribute<QueryableProvided, String> ID = attribute("id", QueryableProvided::getId);
+    public static final Attribute<QueryableProvided, String> ID = attribute("id", QueryableProvided::getAlias);
     public static final Attribute<QueryableProvided, Boolean> IS_SECRET = attribute(
             "is_secret",
             it -> (null != it.getKey() && it.getKey().getKey() instanceof SecretKey)
@@ -36,7 +39,7 @@ public class QueryableProvided {
                     || (null != it.getPair())
     );
 
-    private final String id;
+    private final String alias;
     private final ProvidedKeyEntry entry;
     private final Provided key;
     private final ProvidedKeyPair pair;
@@ -58,6 +61,6 @@ public class QueryableProvided {
             throw new IllegalArgumentException("Expecting to have only one of: entry or key or pair");
         }
 
-        this.id = nonNull.get(0).getName();
+        this.alias = nonNull.get(0).generateName();
     }
 }

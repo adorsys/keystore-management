@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.collection;
+package de.adorsys.keymanagement.core.collection.keystore;
 
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.TransactionalIndexedCollection;
@@ -7,6 +7,12 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
+import de.adorsys.keymanagement.api.KeyStoreOper;
+import de.adorsys.keymanagement.api.ModifiableView;
+import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -17,17 +23,19 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
 import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static de.adorsys.keymanagement.collection.QueryableKey.*;
+import static de.adorsys.keymanagement.core.collection.keystore.QueryableKey.*;
 
 // FIXME should be derived from KeyStorage
-public class KeyView {
+public class KeyView implements ModifiableView<QueryableKey, ProvidedKeyTemplate> {
 
     @Getter
     private final KeyStore source;
+    private final KeyStoreOper oper;
 
     private final IndexedCollection<QueryableKey> keys = new TransactionalIndexedCollection<>(QueryableKey.class);
     private final SQLParser<QueryableKey> parser = SQLParser.forPojoWithAttributes(
@@ -36,14 +44,15 @@ public class KeyView {
     );
 
     // FIXME key password should not be provided, but rather one should open keystore for querying
-    public KeyView(KeyStore source, char[] keyPassword) {
-        this(source, keyPassword, Collections.emptyList());
+    public KeyView(KeyStore source, KeyStoreOper oper, char[] keyPassword) {
+        this(source, oper, keyPassword, Collections.emptyList());
     }
 
     // FIXME key password should not be provided, but rather one should open keystore for querying
-    public KeyView(KeyStore source, char[] keyPassword, Collection<Index<QueryableKey>> indexes) {
+    public KeyView(KeyStore source, KeyStoreOper oper, char[] keyPassword, Collection<Index<QueryableKey>> indexes) {
         this.source = source;
-        keys.addAll(readKeys(source, keyPassword));
+        this.oper = oper;
+        keys.addAll(readKeys(keyPassword));
         keys.addIndex(RadixTreeIndex.onAttribute(ID));
         keys.addIndex(HashIndex.onAttribute(IS_TRUST_CERT));
         keys.addIndex(HashIndex.onAttribute(IS_PRIVATE));
@@ -91,16 +100,54 @@ public class KeyView {
         }
     }
 
+    @Override
+    public boolean update(Collection<QueryableKey> objectsToRemove, Collection<ProvidedKeyTemplate> objectsToAdd) {
+        objectsToRemove.forEach(this::deleteEntryFromKeystore);
+        Map<String, ProvidedKeyTemplate> addedKeys = new HashMap<>();
+        objectsToAdd.forEach(it -> addKey(addedKeys, it));
+
+        return keys.update(
+                objectsToRemove,
+                addedKeys.entrySet().stream().map(
+                        it -> keyByAlias(
+                                it.getKey(),
+                                it.getValue().getPassword().get())
+                ).collect(Collectors.toList())
+        );
+    }
+
+    private void addKey(Map<String, ProvidedKeyTemplate> addedKeys, ProvidedKeyTemplate it) {
+        if (it instanceof Provided) {
+            addedKeys.put(oper.addToKeyStoreAndGetName(source, (Provided) it), it);
+        } else if (it instanceof ProvidedKeyPair) {
+            addedKeys.put(oper.addToKeyStoreAndGetName(source, (ProvidedKeyPair) it), it);
+        } else if (it instanceof ProvidedKeyEntry) {
+            addedKeys.put(oper.addToKeyStoreAndGetName(source, (ProvidedKeyEntry) it), it);
+        } else {
+            throw new IllegalArgumentException("Unknown type of key to add: " + it.getClass());
+        }
+    }
+
     @SneakyThrows
-    private List<QueryableKey> readKeys(KeyStore keyStore, char[] password) {
+    private List<QueryableKey> readKeys(char[] password) {
         val result = new ArrayList<QueryableKey>();
-        val aliases = keyStore.aliases();
+        val aliases = source.aliases();
         while (aliases.hasMoreElements()) {
             val alias = aliases.nextElement();
-            val key = keyStore.getEntry(alias, new KeyStore.PasswordProtection(password));
-            result.add(new QueryableKey(alias, key));
+            result.add(keyByAlias(alias, password));
         }
 
         return result;
+    }
+
+    @SneakyThrows
+    private QueryableKey keyByAlias(String alias, char[] password) {
+        val key = source.getEntry(alias, new KeyStore.PasswordProtection(password));
+        return new QueryableKey(alias, key);
+    }
+
+    @SneakyThrows
+    private void deleteEntryFromKeystore(QueryableKey toRemove) {
+        source.deleteEntry(toRemove.getAlias());
     }
 }

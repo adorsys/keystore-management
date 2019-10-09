@@ -12,7 +12,7 @@ import java.security.KeyStore;
 import java.util.function.Supplier;
 
 @Getter
-public class ProvidedKeyEntry implements KeyTemplate {
+public class ProvidedKeyEntry implements ProvidedKeyTemplate {
 
     @NonNull
     @Delegate

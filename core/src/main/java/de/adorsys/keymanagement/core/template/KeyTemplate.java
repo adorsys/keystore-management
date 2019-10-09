@@ -4,6 +4,6 @@ import java.util.function.Supplier;
 
 public interface KeyTemplate {
 
-    String getName();
+    String generateName();
     Supplier<char[]> getPassword();
 }

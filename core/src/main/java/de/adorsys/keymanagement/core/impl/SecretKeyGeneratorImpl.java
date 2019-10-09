@@ -29,7 +29,7 @@ public class SecretKeyGeneratorImpl implements SecretKeyGenerator {
                 secret.getSize()
         )
                 .generate(
-                        secret.getName(),
+                        "STUB",
                         new ReadKeyPassword("STUB") // FIXME unneeded
                 );
     }
