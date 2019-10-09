@@ -1,7 +1,13 @@
 package de.adorsys.keymanagement;
 
 import de.adorsys.keymanagement.collection.KeyView;
-import de.adorsys.keymanagement.generator.KeyStorageGenerator;
+import de.adorsys.keymanagement.core.KeyGenerator;
+import de.adorsys.keymanagement.core.KeySet;
+import de.adorsys.keymanagement.core.KeySetTemplate;
+import de.adorsys.keymanagement.core.impl.EncryptingKeyGeneratorImpl;
+import de.adorsys.keymanagement.core.impl.KeyStoreGeneratorImpl;
+import de.adorsys.keymanagement.core.impl.SecretKeyGeneratorImpl;
+import de.adorsys.keymanagement.core.impl.SigningKeyGeneratorImpl;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
@@ -15,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.KeyStore;
 import java.security.Security;
 import java.util.function.Supplier;
 
@@ -39,8 +44,7 @@ class KeyStorageTest {
         Supplier<char[]> password = "Password"::toCharArray;
         Supplier<char[]> password2 = "Password Other"::toCharArray;
 
-        KeyStorageTemplate template = KeyStorageTemplate.builder()
-                .keyPassword(password)
+        KeySetTemplate template = KeySetTemplate.builder()
                 .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSecretKey(Secret.with().prefix("ZZZ").build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
@@ -48,8 +52,13 @@ class KeyStorageTest {
                 .generatedEncryptionKeys(Encrypting.with().password(password).prefix("TTT").build().repeat(10))
                 .build();
 
-        KeyStore store = new KeyStorageGenerator().generate(template);
-        val entry = store.getCreationDate("TTT");
+        KeySet keySet = new KeyGenerator(
+                new EncryptingKeyGeneratorImpl(),
+                new SecretKeyGeneratorImpl(),
+                new SigningKeyGeneratorImpl()
+        ).generate(template);
+
+        val store = new KeyStoreGeneratorImpl(password).generate(keySet);
         val keyView = new KeyView(store, password.get());
 
         assertThat(keyView.retrieve(equal(IS_SECRET, true)).toCollection()).hasSize(2);

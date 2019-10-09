@@ -4,23 +4,19 @@ import com.google.common.collect.ImmutableList;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
-import de.adorsys.keymanagement.core.template.provided.KeyEntry;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.Accessors;
 
-import java.util.function.Supplier;
-
 @Getter
 @Accessors(fluent = true)
 @Builder
 public class KeySetTemplate {
-
-    // Maybe set on key level
-    private final Supplier<char[]> keyPassword;
 
     // client may not know key type for provided
     @Singular
@@ -28,7 +24,11 @@ public class KeySetTemplate {
 
     // client may not know key type for provided
     @Singular
-    private final ImmutableList<@NonNull KeyEntry> providedKeyEntries;
+    private final ImmutableList<@NonNull ProvidedKeyPair> providedPairs;
+
+    // client may not know key type for provided
+    @Singular
+    private final ImmutableList<@NonNull ProvidedKeyEntry> providedKeyEntries;
 
     // client should know what he wants to generate
     @Singular

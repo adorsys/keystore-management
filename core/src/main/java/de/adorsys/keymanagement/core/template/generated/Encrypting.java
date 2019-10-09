@@ -1,8 +1,10 @@
 package de.adorsys.keymanagement.core.template.generated;
 
+import de.adorsys.keymanagement.core.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.core.template.KeyTemplate;
 import de.adorsys.keymanagement.core.template.NameAndPassword;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
 
@@ -11,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Getter
 public class Encrypting implements GeneratedKeyTemplate {
 
     @NonNull
@@ -34,7 +37,7 @@ public class Encrypting implements GeneratedKeyTemplate {
     @Builder(builderMethodName = "with")
     Encrypting(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
                       Integer keySize) {
-        this.keyTemplate = new NameAndPassword(alias, prefix, password);
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo);
     }
 }

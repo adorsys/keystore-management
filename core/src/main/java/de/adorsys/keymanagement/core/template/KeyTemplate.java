@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 public interface KeyTemplate {
 
-    String getAlias();
-    String getPrefix();
+    String getName();
     Supplier<char[]> getPassword();
 }

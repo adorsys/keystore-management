@@ -8,11 +8,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
 
-import java.security.Key;
+import java.security.KeyStore;
 import java.util.function.Supplier;
 
 @Getter
-public class Provided implements ProvidedKeyTemplate {
+public class ProvidedKeyEntry implements KeyTemplate {
 
     @NonNull
     @Delegate
@@ -20,17 +20,17 @@ public class Provided implements ProvidedKeyTemplate {
 
     @NonNull
     @Delegate
-    private final Key key;
+    private final KeyStore.Entry entry;
 
     @Builder(builderClassName = "Templated", toBuilder = true)
-    Provided(@NonNull KeyTemplate keyTemplate, @NonNull Key key) {
+    ProvidedKeyEntry(@NonNull KeyTemplate keyTemplate, @NonNull KeyStore.Entry entry) {
         this.keyTemplate = keyTemplate;
-        this.key = key;
+        this.entry = entry;
     }
 
     @Builder(builderMethodName = "with")
-    Provided(String alias, String prefix, Supplier<char[]> password, @NonNull Key key) {
+    ProvidedKeyEntry(String alias, String prefix, Supplier<char[]> password, @NonNull KeyStore.Entry entry) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
-        this.key = key;
+        this.entry = entry;
     }
 }

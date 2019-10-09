@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.core.template.generated;
 
+import de.adorsys.keymanagement.core.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.core.template.KeyTemplate;
 import de.adorsys.keymanagement.core.template.NameAndPassword;
 import lombok.Builder;
@@ -35,7 +36,7 @@ public class Secret implements GeneratedKeyTemplate {
 
     @Builder(builderMethodName = "with")
     public Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize) {
-        this.keyTemplate = new NameAndPassword(alias, prefix, password);
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.encryptionTemplate = SecretKeyEncryptionTemplate.of(algo, keySize);
     }
 }
