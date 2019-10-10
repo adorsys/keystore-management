@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.core.collection.keystore;
 
 import com.googlecode.cqengine.attribute.Attribute;
 import de.adorsys.keymanagement.api.Queryable;
+import de.adorsys.keymanagement.core.WithAlias;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 @Builder
 @EqualsAndHashCode(of = "alias")
 @RequiredArgsConstructor
-public class QueryableKey implements Queryable {
+public class QueryableKey implements Queryable, WithAlias {
 
     public static final Attribute<QueryableKey, String> ID = attribute("id", QueryableKey::getAlias);
     public static final Attribute<QueryableKey, KeyMetadata> META = attribute("meta", QueryableKey::getMetadata);
@@ -57,7 +58,7 @@ public class QueryableKey implements Queryable {
     private final KeyMetadata metadata;
     private final KeyStore.Entry key;
 
-    QueryableKey(String alias, KeyStore.Entry entry) {
+    public QueryableKey(String alias, KeyStore.Entry entry) {
         this.alias = alias;
         this.metadata = null;
         this.key = entry;

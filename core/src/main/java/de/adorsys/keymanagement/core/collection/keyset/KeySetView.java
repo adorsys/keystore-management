@@ -24,14 +24,15 @@ import static de.adorsys.keymanagement.core.collection.keyset.QueryableProvided.
 
 public class KeySetView {
 
+    private static final SQLParser<QueryableProvided> PARSER = SQLParser.forPojoWithAttributes(
+            QueryableProvided.class,
+            createAttributes(QueryableProvided.class, GETTER_METHODS_ONLY)
+    );
+
     @Getter
     private final KeySet source;
 
     private final IndexedCollection<QueryableProvided> keys = new TransactionalIndexedCollection<>(QueryableProvided.class);
-    private final SQLParser<QueryableProvided> parser = SQLParser.forPojoWithAttributes(
-            QueryableProvided.class,
-            createAttributes(QueryableProvided.class, GETTER_METHODS_ONLY)
-    );
 
     public KeySetView(KeySet source) {
         this(source, Collections.emptyList());
@@ -57,7 +58,7 @@ public class KeySetView {
      * Note that client who calls this should close the result.
      */
     public QueryResult<QueryableProvided> retrieve(String query) {
-        return new QueryResult<>(parser.retrieve(keys, query));
+        return new QueryResult<>(PARSER.retrieve(keys, query));
     }
 
     @SneakyThrows

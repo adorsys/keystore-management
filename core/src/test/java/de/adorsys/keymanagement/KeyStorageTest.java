@@ -3,7 +3,7 @@ package de.adorsys.keymanagement;
 import de.adorsys.keymanagement.core.KeyGenerator;
 import de.adorsys.keymanagement.core.KeySet;
 import de.adorsys.keymanagement.core.KeySetTemplate;
-import de.adorsys.keymanagement.core.collection.keystore.KeyView;
+import de.adorsys.keymanagement.core.collection.keystore.view.KeyView;
 import de.adorsys.keymanagement.core.impl.EncryptingKeyGeneratorImpl;
 import de.adorsys.keymanagement.core.impl.KeyStoreOperImpl;
 import de.adorsys.keymanagement.core.impl.SecretKeyGeneratorImpl;
