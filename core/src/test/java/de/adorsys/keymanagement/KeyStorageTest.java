@@ -3,6 +3,7 @@ package de.adorsys.keymanagement;
 import de.adorsys.keymanagement.core.KeyGenerator;
 import de.adorsys.keymanagement.core.KeySet;
 import de.adorsys.keymanagement.core.KeySetTemplate;
+import de.adorsys.keymanagement.core.collection.keystore.QueryableKey;
 import de.adorsys.keymanagement.core.collection.keystore.view.AliasView;
 import de.adorsys.keymanagement.core.collection.keystore.view.KeyView;
 import de.adorsys.keymanagement.core.impl.EncryptingKeyGeneratorImpl;
@@ -27,6 +28,8 @@ import java.security.KeyStore;
 import java.security.Security;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -163,6 +166,40 @@ class KeyStorageTest {
         assertThat(countKeysByPrefixInKeystore(store, "NNNN")).isEqualTo(10);
     }
 
+    @Test
+    @SneakyThrows
+    void cloneKeyStoreTest() {
+        Security.addProvider(new BouncyCastleProvider());
+
+        Supplier<char[]> password = "Password"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedSecretKeys(Secret.with().prefix("SSSS").build().repeat(10))
+                .generatedEncryptionKeys(Encrypting.with().prefix("EEEE").build().repeat(10))
+                .build();
+        KeySet keySet = new KeyGenerator(
+                new EncryptingKeyGeneratorImpl(),
+                new SecretKeyGeneratorImpl(),
+                new SigningKeyGeneratorImpl()
+        ).generate(template);
+
+        val store = new KeyStoreOperImpl(password).generate(keySet);
+        val keyView = new KeyView(store, new KeyStoreOperImpl(password), password.get());
+
+        val allKeys = keyView.retrieve(all(QueryableKey.class));
+        KeySet clone = KeySet.builder().keyEntries(allKeys.stream().map(
+                it -> ProvidedKeyEntry.with()
+                        .alias(it.getAlias())
+                        .password(password)
+                        .entry(it.getKey())
+                        .build()
+                ).collect(Collectors.toList())
+        ).build();
+
+        val clonedStore = new KeyStoreOperImpl(password).generate(clone);
+
+        validateSameAliases(store, clonedStore);
+    }
+
     @SneakyThrows
     private int countKeysByPrefixInKeystore(KeyStore keyStore, String prefix) {
         Enumeration<String> aliases = keyStore.aliases();
@@ -172,6 +209,23 @@ class KeyStorageTest {
         }
 
         return result;
+    }
+
+    @SneakyThrows
+    private void validateSameAliases(KeyStore keyStoreOne, KeyStore keyStoreTwo) {
+        Enumeration<String> aliases = keyStoreOne.aliases();
+        Set<String> one = new HashSet<>();
+        while (aliases.hasMoreElements()) {
+            one.add(aliases.nextElement());
+        }
+
+        aliases = keyStoreTwo.aliases();
+        Set<String> two = new HashSet<>();
+        while (aliases.hasMoreElements()) {
+            two.add(aliases.nextElement());
+        }
+
+        assertThat(two).containsExactlyElementsOf(one);
     }
 
     @SneakyThrows
