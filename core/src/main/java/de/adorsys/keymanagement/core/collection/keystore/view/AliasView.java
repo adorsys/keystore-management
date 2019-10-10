@@ -5,9 +5,9 @@ import com.googlecode.cqengine.TransactionalIndexedCollection;
 import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
-import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.KeyStoreOper;
 import de.adorsys.keymanagement.core.collection.keystore.KeyAlias;
+import de.adorsys.keymanagement.core.collection.keystore.QueryResult;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -44,8 +44,8 @@ public class AliasView extends KeyStoreUpdatingView<KeyAlias, ProvidedKeyTemplat
         indexes.forEach(aliases::addIndex);
     }
 
-    public ResultSet<KeyAlias> retrieve(Query<KeyAlias> query) {
-        return aliases.retrieve(query);
+    public QueryResult<KeyAlias> retrieve(Query<KeyAlias> query) {
+        return new QueryResult<>(aliases.retrieve(query));
     }
 
     @Override

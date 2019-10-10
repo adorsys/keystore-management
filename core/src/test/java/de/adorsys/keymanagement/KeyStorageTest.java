@@ -3,6 +3,7 @@ package de.adorsys.keymanagement;
 import de.adorsys.keymanagement.core.KeyGenerator;
 import de.adorsys.keymanagement.core.KeySet;
 import de.adorsys.keymanagement.core.KeySetTemplate;
+import de.adorsys.keymanagement.core.collection.keystore.view.AliasView;
 import de.adorsys.keymanagement.core.collection.keystore.view.KeyView;
 import de.adorsys.keymanagement.core.impl.EncryptingKeyGeneratorImpl;
 import de.adorsys.keymanagement.core.impl.KeyStoreOperImpl;
@@ -29,8 +30,8 @@ import java.util.Enumeration;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static com.googlecode.cqengine.query.QueryFactory.has;
+import static com.googlecode.cqengine.query.QueryFactory.*;
+import static de.adorsys.keymanagement.core.collection.keystore.KeyAlias.A_ID;
 import static de.adorsys.keymanagement.core.collection.keystore.QueryableKey.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,6 +79,43 @@ class KeyStorageTest {
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getAlias LIKE 'Z%'")).hasSize(3);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
         assertThat(keyView.retrieve("SELECT * FROM keys WHERE getKey IS NOT NULL")).hasSize(14);
+    }
+
+    @Test
+    @SneakyThrows
+    void updateKeystoreThroughAliasTest() {
+        Security.addProvider(new BouncyCastleProvider());
+
+        Supplier<char[]> password = "Password"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedSecretKeys(Secret.with().prefix("SSSS").build().repeat(10))
+                .generatedEncryptionKeys(Encrypting.with().prefix("EEEE").build().repeat(10))
+                .build();
+        KeySet keySet = new KeyGenerator(
+                new EncryptingKeyGeneratorImpl(),
+                new SecretKeyGeneratorImpl(),
+                new SigningKeyGeneratorImpl()
+        ).generate(template);
+
+        val store = new KeyStoreOperImpl(password).generate(keySet);
+        val keyView = new AliasView(store, new KeyStoreOperImpl(password));
+
+        assertThat(countKeysByPrefixInKeystore(store, "EEEE")).isEqualTo(10);
+
+        val privateKeys = keyView.retrieve(startsWith(A_ID, "EEEE")).toCollection();
+        keyView.update(
+                privateKeys,
+                Collections.emptyList()
+        );
+
+        assertThat(countKeysByPrefixInKeystore(store, "EEEE")).isZero();
+
+        keyView.update(
+                Collections.emptyList(),
+                Collections.singleton(Provided.with().alias("QQQQ").key(stubSecretKey()).build())
+        );
+
+        assertThat(countKeysByPrefixInKeystore(store, "QQQQ")).isEqualTo(1);
     }
 
     @Test
