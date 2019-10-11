@@ -10,6 +10,6 @@ class ViewUtil {
 
     static final Function<Member, String> SNAKE_CASE = it -> it.getName()
             .replaceAll("^get", "")
-            .replaceAll("(.+)([A-Z])", "$1_$2") // to snake-case
+            .replaceAll("([^A-Z]+)([A-Z])", "$1_$2") // to snake-case
             .toLowerCase();
 }

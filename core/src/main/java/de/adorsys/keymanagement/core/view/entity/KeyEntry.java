@@ -23,7 +23,7 @@ public class KeyEntry extends KeyAlias {
         return entry instanceof KeyStore.PrivateKeyEntry;
     }
 
-    public boolean isTrustCert() {
+    public boolean isTrustedCert() {
         return entry instanceof KeyStore.TrustedCertificateEntry;
     }
 }

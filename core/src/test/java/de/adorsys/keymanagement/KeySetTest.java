@@ -59,6 +59,10 @@ class KeySetTest {
 
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
         assertThat(source.aliases()).hasSize(15);
+
+        assertThat(entryView.privateKeys()).hasSize(12);
+        assertThat(entryView.secretKeys()).hasSize(3);
+        assertThat(entryView.trustedCerts()).hasSize(0);
     }
 
     @SneakyThrows

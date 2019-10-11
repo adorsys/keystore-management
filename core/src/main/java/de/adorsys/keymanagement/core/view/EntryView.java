@@ -66,6 +66,18 @@ public class EntryView extends UpdatingView<KeyEntry> {
         return new QueryResult<>(keys.retrieve(QueryFactory.all(KeyEntry.class))).toCollection();
     }
 
+    public QueryResult<KeyEntry> secretKeys() {
+        return retrieve("SELECT * FROM keys WHERE is_secret = true");
+    }
+
+    public QueryResult<KeyEntry> privateKeys() {
+        return retrieve("SELECT * FROM keys WHERE is_private = true");
+    }
+
+    public QueryResult<KeyEntry> trustedCerts() {
+        return retrieve("SELECT * FROM keys WHERE is_trusted_cert = true");
+    }
+
     @Override
     protected String getKeyId(KeyEntry ofKey) {
         return ofKey.getAlias();
