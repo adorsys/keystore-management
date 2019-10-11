@@ -7,17 +7,17 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.util.stream.Stream;
 
-public abstract class KeySource {
+public interface KeySource {
 
-    public abstract Stream<String> aliases();
+    Stream<String> aliases();
 
     // T acts as a type-selector so can be safely used for KeyStore too
-    public abstract <T extends ProvidedKeyTemplate> Stream<String> aliasesFor(Class<T> clazz);
+    <T extends ProvidedKeyTemplate> Stream<String> aliasesFor(Class<T> clazz);
 
-    public abstract KeyStore.Entry asEntry(String alias);
-    public abstract KeyPair asPair(String alias);
-    public abstract Key asKey(String alias);
+    KeyStore.Entry asEntry(String alias);
+    KeyPair asPair(String alias);
+    Key asKey(String alias);
 
-    public abstract void remove(String keyId);
-    public abstract String addAndReturnId(ProvidedKeyTemplate keyTemplate);
+    void remove(String keyId);
+    String addAndReturnId(ProvidedKeyTemplate keyTemplate);
 }

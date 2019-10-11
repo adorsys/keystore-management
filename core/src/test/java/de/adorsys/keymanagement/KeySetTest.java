@@ -1,17 +1,17 @@
 package de.adorsys.keymanagement;
 
-import de.adorsys.keymanagement.core.generator.KeyGenerator;
+import de.adorsys.keymanagement.core.generator.*;
+import de.adorsys.keymanagement.core.persist.KeyStoreOperImpl;
 import de.adorsys.keymanagement.core.source.KeySet;
-import de.adorsys.keymanagement.core.generator.KeySetTemplate;
-import de.adorsys.keymanagement.core.generator.EncryptingKeyGeneratorImpl;
-import de.adorsys.keymanagement.core.generator.SecretKeyGeneratorImpl;
-import de.adorsys.keymanagement.core.generator.SigningKeyGeneratorImpl;
+import de.adorsys.keymanagement.core.source.KeyStoreSource;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.core.view.EntryView;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +19,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.Security;
+import java.util.function.Supplier;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class KeySetTest {
@@ -28,6 +31,7 @@ class KeySetTest {
     void basicKeySetTest() {
         Security.addProvider(new BouncyCastleProvider());
 
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSecretKey(Secret.with().prefix("ZZZ").build())
@@ -41,6 +45,12 @@ class KeySetTest {
                 new SecretKeyGeneratorImpl(),
                 new SigningKeyGeneratorImpl()
         ).generate(template);
+        val oper = new KeyStoreOperImpl(password);
+        val store = new KeyStoreOperImpl(password).generate(keySet);
+        val source = new KeyStoreSource(oper, store, id -> password.get());
+        val entryView = new EntryView(source);
+
+        assertThat(entryView.all()).hasSize(14);
     }
 
     @SneakyThrows

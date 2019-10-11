@@ -25,15 +25,36 @@ public class KeyStoreOperImpl implements KeyStoreOper {
         KeyStore ks = KeyStore.getInstance("UBER");
         ks.load(null);
 
-        keySet.getKeyEntries().forEach(it -> addToKeyStoreAndGetName(ks, it));
-        keySet.getKeys().forEach(it -> addToKeyStoreAndGetName(ks, it));
-        keySet.getKeyPairs().forEach(it -> addToKeyStoreAndGetName(ks, it));
+        keySet.getKeyEntries().forEach(it -> doAddToKeyStoreAndGetName(ks, it));
+        keySet.getKeys().forEach(it -> doAddToKeyStoreAndGetName(ks, it));
+        keySet.getKeyPairs().forEach(it -> doAddToKeyStoreAndGetName(ks, it));
         return ks;
     }
 
     @Override
+    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKeyTemplate entry) {
+        if (entry instanceof ProvidedKeyEntry) {
+            return doAddToKeyStoreAndGetName(ks, (ProvidedKeyEntry) entry);
+        }
+        if (entry instanceof ProvidedKeyPair) {
+            return doAddToKeyStoreAndGetName(ks, (ProvidedKeyPair) entry);
+        }
+        if (entry instanceof ProvidedKey) {
+            return doAddToKeyStoreAndGetName(ks, (ProvidedKey) entry);
+        }
+        throw new IllegalArgumentException("Unsupported entry: " + entry.getClass());
+    }
+
     @SneakyThrows
-    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKeyPair pair) {
+    private String doAddToKeyStoreAndGetName(KeyStore ks, ProvidedKeyEntry entry) {
+        String name = entry.generateName();
+        KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(entry));
+        ks.setEntry(name, entry.getEntry(), protParam);
+        return name;
+    }
+
+    @SneakyThrows
+    private String doAddToKeyStoreAndGetName(KeyStore ks, ProvidedKeyPair pair) {
         String name = pair.generateName();
         ks.setKeyEntry(
                 name,
@@ -45,18 +66,8 @@ public class KeyStoreOperImpl implements KeyStoreOper {
         return name;
     }
 
-    @Override
     @SneakyThrows
-    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKeyEntry entry) {
-        String name = entry.generateName();
-        KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(entry));
-        ks.setEntry(name, entry.getEntry(), protParam);
-        return name;
-    }
-
-    @Override
-    @SneakyThrows
-    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKey key) {
+    private String doAddToKeyStoreAndGetName(KeyStore ks, ProvidedKey key) {
         String name = key.generateName();
         KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry((SecretKey) key.getKey());
         KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(key));
