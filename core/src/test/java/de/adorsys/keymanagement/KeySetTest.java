@@ -40,7 +40,7 @@ class KeySetTest {
                 .generatedEncryptionKeys(Encrypting.with().prefix("TTT").build().repeat(10))
                 .build();
 
-        KeySet keySet = new KeyGenerator(
+        KeySet keySet = new DefaultKeyGenerator(
                 new EncryptingKeyGeneratorImpl(),
                 new SecretKeyGeneratorImpl(),
                 new SigningKeyGeneratorImpl()
