@@ -34,7 +34,7 @@ public class QueryResult<T> implements AutoCloseable, Iterable<T> {
         resultSet.close();
     }
 
-    public ResultCollection toCollection() {
+    public ResultCollection<T> toCollection() {
         try (Stream<T> keys = resultSet.stream()) {
             List<T> collected = keys.collect(Collectors.toList());
             return new ResultCollection<>(new LinkedHashSet<>(collected));

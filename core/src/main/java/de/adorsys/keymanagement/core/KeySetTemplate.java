@@ -5,7 +5,7 @@ import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class KeySetTemplate {
 
     // client may not know key type for provided
     @Singular
-    private final ImmutableList<@NonNull Provided> providedKeys;
+    private final ImmutableList<@NonNull ProvidedKey> providedKeys;
 
     // client may not know key type for provided
     @Singular

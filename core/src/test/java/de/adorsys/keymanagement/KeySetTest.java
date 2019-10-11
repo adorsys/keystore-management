@@ -10,7 +10,7 @@ import de.adorsys.keymanagement.core.impl.SigningKeyGeneratorImpl;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -36,7 +36,7 @@ class KeySetTest {
         Security.addProvider(new BouncyCastleProvider());
 
         KeySetTemplate template = KeySetTemplate.builder()
-                .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
+                .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSecretKey(Secret.with().prefix("ZZZ").build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
                 .generatedEncryptionKey(Encrypting.with().alias("TTT").build())

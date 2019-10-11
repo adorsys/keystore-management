@@ -13,7 +13,7 @@ import de.adorsys.keymanagement.core.impl.SigningKeyGeneratorImpl;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.query.QueryFactory.*;
-import static de.adorsys.keymanagement.core.collection.keystore.KeyAlias.A_ID;
+import static de.adorsys.keymanagement.core.view.entity.KeyAlias.A_ID;
 import static de.adorsys.keymanagement.core.collection.keystore.QueryableKey.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +50,7 @@ class KeyStorageTest {
         Supplier<char[]> password2 = "Password Other"::toCharArray;
 
         KeySetTemplate template = KeySetTemplate.builder()
-                .providedKey(Provided.with().prefix("ZZZ").key(stubSecretKey()).build())
+                .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
                 .generatedSecretKey(Secret.with().prefix("ZZZ").build())
                 .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
                 .generatedEncryptionKey(Encrypting.with().password(password).alias("TTT").build())
@@ -115,7 +115,7 @@ class KeyStorageTest {
 
         keyView.update(
                 Collections.emptyList(),
-                Collections.singleton(Provided.with().alias("QQQQ").key(stubSecretKey()).build())
+                Collections.singleton(ProvidedKey.with().alias("QQQQ").key(stubSecretKey()).build())
         );
 
         assertThat(countKeysByPrefixInKeystore(store, "QQQQ")).isEqualTo(1);

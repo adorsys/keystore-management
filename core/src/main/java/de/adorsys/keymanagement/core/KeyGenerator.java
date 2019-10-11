@@ -7,7 +7,7 @@ import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class KeyGenerator {
         this.signingKeyGenerator = signingKeyGenerator;
     }
 
-    public Provided generate(Secret template) {
+    public ProvidedKey generate(Secret template) {
         return secretKeyGenerator.generate(template);
     }
 
@@ -39,15 +39,15 @@ public class KeyGenerator {
     }
 
     public KeySet generate(KeySetTemplate template) {
-        List<Provided> provideds = new ArrayList<>(template.providedKeys());
+        List<ProvidedKey> providedKeys = new ArrayList<>(template.providedKeys());
         List<ProvidedKeyPair> providedPairs = new ArrayList<>(template.providedPairs());
         List<ProvidedKeyEntry> entries = new ArrayList<>(template.providedKeyEntries());
 
-        template.generatedSecretKeys().forEach(it -> provideds.add(generate(it)));
+        template.generatedSecretKeys().forEach(it -> providedKeys.add(generate(it)));
         template.generatedSigningKeys().forEach(it -> providedPairs.add(generate(it)));
         template.generatedEncryptionKeys().forEach(it -> providedPairs.add(generate(it)));
 
         // FIXME - validate key alias/name uniqueness
-        return new KeySet(entries, provideds, providedPairs);
+        return new KeySet(entries, providedKeys, providedPairs);
     }
 }

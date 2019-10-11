@@ -3,7 +3,7 @@ package de.adorsys.keymanagement.core.collection.keyset;
 import com.googlecode.cqengine.attribute.Attribute;
 import de.adorsys.keymanagement.api.Queryable;
 import de.adorsys.keymanagement.core.template.KeyTemplate;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import lombok.Builder;
@@ -41,11 +41,11 @@ public class QueryableProvided implements Queryable {
 
     private final String alias;
     private final ProvidedKeyEntry entry;
-    private final Provided key;
+    private final ProvidedKey key;
     private final ProvidedKeyPair pair;
 
     @Builder(toBuilder = true)
-    public QueryableProvided(ProvidedKeyEntry entry, Provided key, ProvidedKeyPair pair) {
+    public QueryableProvided(ProvidedKeyEntry entry, ProvidedKey key, ProvidedKeyPair pair) {
         this.entry = entry;
         this.key = key;
         this.pair = pair;

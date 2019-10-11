@@ -12,7 +12,7 @@ import java.security.Key;
 import java.util.function.Supplier;
 
 @Getter
-public class Provided implements ProvidedKeyTemplate {
+public class ProvidedKey implements ProvidedKeyTemplate {
 
     @NonNull
     @Delegate
@@ -23,13 +23,13 @@ public class Provided implements ProvidedKeyTemplate {
     private final Key key;
 
     @Builder(builderClassName = "Templated", toBuilder = true)
-    Provided(@NonNull KeyTemplate keyTemplate, @NonNull Key key) {
+    ProvidedKey(@NonNull KeyTemplate keyTemplate, @NonNull Key key) {
         this.keyTemplate = keyTemplate;
         this.key = key;
     }
 
     @Builder(builderMethodName = "with")
-    Provided(String alias, String prefix, Supplier<char[]> password, @NonNull Key key) {
+    ProvidedKey(String alias, String prefix, Supplier<char[]> password, @NonNull Key key) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.key = key;
     }

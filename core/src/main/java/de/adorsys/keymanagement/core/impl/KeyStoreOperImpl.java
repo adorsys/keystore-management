@@ -2,7 +2,7 @@ package de.adorsys.keymanagement.core.impl;
 
 import de.adorsys.keymanagement.api.KeyStoreOper;
 import de.adorsys.keymanagement.core.KeySet;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
@@ -56,7 +56,7 @@ public class KeyStoreOperImpl implements KeyStoreOper {
 
     @Override
     @SneakyThrows
-    public String addToKeyStoreAndGetName(KeyStore ks, Provided key) {
+    public String addToKeyStoreAndGetName(KeyStore ks, ProvidedKey key) {
         String name = key.generateName();
         KeyStore.SecretKeyEntry entry = new KeyStore.SecretKeyEntry((SecretKey) key.getKey());
         KeyStore.ProtectionParameter protParam = new KeyStore.PasswordProtection(getPassword(key));

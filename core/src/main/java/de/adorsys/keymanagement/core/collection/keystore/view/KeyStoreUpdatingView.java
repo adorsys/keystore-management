@@ -2,11 +2,11 @@ package de.adorsys.keymanagement.core.collection.keystore.view;
 
 import de.adorsys.keymanagement.api.KeyStoreOper;
 import de.adorsys.keymanagement.api.ModifiableView;
-import de.adorsys.keymanagement.core.WithAlias;
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
+import de.adorsys.keymanagement.core.view.entity.KeyAlias;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public abstract class KeyStoreUpdatingView<I extends WithAlias, A extends ProvidedKeyTemplate, K> implements ModifiableView<I, A> {
+public abstract class KeyStoreUpdatingView<I extends KeyAlias, A extends ProvidedKeyTemplate, K> implements ModifiableView<I, A> {
 
     private final KeyStore source;
     private final KeyStoreOper oper;
@@ -43,8 +43,8 @@ public abstract class KeyStoreUpdatingView<I extends WithAlias, A extends Provid
     protected abstract K readByAlias(String alias, Supplier<char[]> password);
 
     private void addKey(Map<String, A> addedKeys, A it) {
-        if (it instanceof Provided) {
-            addedKeys.put(oper.addToKeyStoreAndGetName(source, (Provided) it), it);
+        if (it instanceof ProvidedKey) {
+            addedKeys.put(oper.addToKeyStoreAndGetName(source, (ProvidedKey) it), it);
         } else if (it instanceof ProvidedKeyPair) {
             addedKeys.put(oper.addToKeyStoreAndGetName(source, (ProvidedKeyPair) it), it);
         } else if (it instanceof ProvidedKeyEntry) {

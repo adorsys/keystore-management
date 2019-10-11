@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.core;
 
-import de.adorsys.keymanagement.core.template.provided.Provided;
+import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class KeySet {
     private final List<ProvidedKeyEntry> keyEntries;
 
     @Singular
-    private final List<Provided> keys;
+    private final List<ProvidedKey> keys;
 
     @Singular
     private final List<ProvidedKeyPair> keyPairs;

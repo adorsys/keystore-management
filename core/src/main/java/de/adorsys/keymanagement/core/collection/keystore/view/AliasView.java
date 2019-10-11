@@ -6,7 +6,7 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.KeyStoreOper;
-import de.adorsys.keymanagement.core.collection.keystore.KeyAlias;
+import de.adorsys.keymanagement.core.view.entity.KeyAlias;
 import de.adorsys.keymanagement.core.collection.keystore.QueryResult;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
 import lombok.Getter;
