@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement;
 
+import com.google.common.collect.ImmutableList;
 import de.adorsys.keymanagement.core.generator.*;
 import de.adorsys.keymanagement.core.persist.KeyStoreOperImpl;
 import de.adorsys.keymanagement.core.source.KeySet;
@@ -19,6 +20,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.Security;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,11 +48,19 @@ class KeySetTest {
                 new SigningKeyGeneratorImpl()
         ).generate(template);
         val oper = new KeyStoreOperImpl(password);
-        val store = new KeyStoreOperImpl(password).generate(keySet);
+        val store = oper.generate(keySet);
         val source = new KeyStoreSource(oper, store, id -> password.get());
         val entryView = new EntryView(source);
 
         assertThat(entryView.all()).hasSize(14);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'Z%'").toCollection()).hasSize(3);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'TTT%'").toCollection()).hasSize(11);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(2);
+
+        entryView.update(Collections.emptyList(), ImmutableList.of(ProvidedKey.with().alias("MMM").key(stubSecretKey()).build()));
+
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
+        assertThat(source.aliases()).hasSize(15);
     }
 
     @SneakyThrows
