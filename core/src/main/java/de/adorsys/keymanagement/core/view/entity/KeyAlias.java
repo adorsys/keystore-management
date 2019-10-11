@@ -2,7 +2,7 @@ package de.adorsys.keymanagement.core.view.entity;
 
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.attribute.SimpleNullableAttribute;
-import de.adorsys.keymanagement.core.collection.keystore.KeyMetadata;
+import de.adorsys.keymanagement.core.view.metadata.KeyMetadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

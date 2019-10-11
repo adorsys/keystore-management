@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.core.impl;
+package de.adorsys.keymanagement.core.generator;
 
 import de.adorsys.keymanagement.api.SigningKeyGenerator;
 import de.adorsys.keymanagement.core.deprecated.generator.KeyPairData;

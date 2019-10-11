@@ -8,8 +8,8 @@ import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
 import de.adorsys.keymanagement.core.view.entity.KeyAlias;
-import de.adorsys.keymanagement.core.collection.keystore.QueryResult;
-import de.adorsys.keymanagement.core.collection.keystore.ResultCollection;
+import de.adorsys.keymanagement.core.view.query.QueryResult;
+import de.adorsys.keymanagement.core.view.query.ResultCollection;
 import de.adorsys.keymanagement.core.source.KeySource;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -19,13 +19,13 @@ import java.util.Collections;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static de.adorsys.keymanagement.core.view.ViewUtil.PROP_NAME;
+import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class AliasView extends UpdatingView<KeyAlias> {
 
     private static final SQLParser<KeyAlias> PARSER = SQLParser.forPojoWithAttributes(
             KeyAlias.class,
-            createAttributes(KeyAlias.class, GETTER_METHODS_ONLY, PROP_NAME)
+            createAttributes(KeyAlias.class, GETTER_METHODS_ONLY, SNAKE_CASE)
     );
 
     @Getter

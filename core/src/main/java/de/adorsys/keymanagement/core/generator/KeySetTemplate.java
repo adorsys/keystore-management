@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.core;
+package de.adorsys.keymanagement.core.generator;
 
 import com.google.common.collect.ImmutableList;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;

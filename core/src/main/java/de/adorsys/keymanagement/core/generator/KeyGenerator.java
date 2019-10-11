@@ -1,8 +1,9 @@
-package de.adorsys.keymanagement.core;
+package de.adorsys.keymanagement.core.generator;
 
 import de.adorsys.keymanagement.api.EncryptingKeyGenerator;
 import de.adorsys.keymanagement.api.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.SigningKeyGenerator;
+import de.adorsys.keymanagement.core.source.KeySet;
 import de.adorsys.keymanagement.core.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.template.generated.Secret;
 import de.adorsys.keymanagement.core.template.generated.Signing;

@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.core;
+package de.adorsys.keymanagement.core.source;
 
 import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;

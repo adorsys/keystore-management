@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.api;
 
-import de.adorsys.keymanagement.core.KeySet;
+import de.adorsys.keymanagement.core.source.KeySet;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;

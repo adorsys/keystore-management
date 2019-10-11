@@ -1,7 +1,7 @@
-package de.adorsys.keymanagement.core.impl;
+package de.adorsys.keymanagement.core.persist;
 
 import de.adorsys.keymanagement.api.KeyStoreOper;
-import de.adorsys.keymanagement.core.KeySet;
+import de.adorsys.keymanagement.core.source.KeySet;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;

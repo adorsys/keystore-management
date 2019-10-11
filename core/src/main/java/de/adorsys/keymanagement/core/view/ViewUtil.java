@@ -8,5 +8,8 @@ import java.util.function.Function;
 @UtilityClass
 class ViewUtil {
 
-    static final Function<Member, String> PROP_NAME = it -> it.getName().replaceAll("^get", "").toLowerCase();
+    static final Function<Member, String> SNAKE_CASE = it -> it.getName()
+            .replaceAll("^get", "")
+            .replaceAll("([A-Z])", "_\\$1") // to snake-case
+            .toLowerCase();
 }

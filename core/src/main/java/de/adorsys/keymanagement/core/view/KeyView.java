@@ -6,8 +6,8 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.core.collection.keystore.QueryResult;
-import de.adorsys.keymanagement.core.collection.keystore.ResultCollection;
+import de.adorsys.keymanagement.core.view.query.QueryResult;
+import de.adorsys.keymanagement.core.view.query.ResultCollection;
 import de.adorsys.keymanagement.core.source.KeySource;
 import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.view.entity.Key;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static de.adorsys.keymanagement.core.view.ViewUtil.PROP_NAME;
+import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class KeyView extends UpdatingView<Key> {
 
     private static final SQLParser<Key> PARSER = SQLParser.forPojoWithAttributes(
             Key.class,
-            createAttributes(Key.class, GETTER_METHODS_ONLY, PROP_NAME)
+            createAttributes(Key.class, GETTER_METHODS_ONLY, SNAKE_CASE)
     );
 
     @Getter

@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.core.collection.keystore;
+package de.adorsys.keymanagement.core.view.query;
 
 import com.googlecode.cqengine.resultset.ResultSet;
 import lombok.RequiredArgsConstructor;
