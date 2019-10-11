@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 })
 public interface Juggler {
 
-    KeyGenerator generate();
-    KeyStoreCreator keystore();
-    KeySource source();
+    KeyGenerator generateKeys();
+    KeyStoreCreator toKeystore();
+    KeySource readKeys();
 }
