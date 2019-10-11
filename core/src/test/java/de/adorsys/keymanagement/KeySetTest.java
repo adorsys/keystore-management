@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement;
 
-import com.google.common.collect.ImmutableList;
 import de.adorsys.keymanagement.core.generator.*;
 import de.adorsys.keymanagement.core.persist.KeyStoreOperImpl;
 import de.adorsys.keymanagement.core.source.KeySet;
@@ -20,7 +19,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.Security;
-import java.util.Collections;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +55,7 @@ class KeySetTest {
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'TTT%'").toCollection()).hasSize(11);
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(2);
 
-        entryView.update(Collections.emptyList(), ImmutableList.of(ProvidedKey.with().alias("MMM").key(stubSecretKey()).build()));
+        entryView.add(ProvidedKey.with().alias("MMM").key(stubSecretKey()).build());
 
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
         assertThat(source.aliases()).hasSize(15);

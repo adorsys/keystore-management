@@ -5,9 +5,26 @@ import de.adorsys.keymanagement.core.template.provided.ProvidedKeyTemplate;
 import lombok.val;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public abstract class UpdatingView<V> implements View<V> {
+
+    public boolean add(ProvidedKeyTemplate objectToAdd) {
+        return add(Collections.singleton(objectToAdd));
+    }
+
+    public boolean remove(V objectToRemove) {
+        return remove(Collections.singleton(objectToRemove));
+    }
+
+    public boolean add(Collection<ProvidedKeyTemplate> objectsToAdd) {
+        return update(Collections.emptyList(), objectsToAdd);
+    }
+
+    public boolean remove(Collection<V> objectsToRemove) {
+        return update(objectsToRemove, Collections.emptyList());
+    }
 
     public boolean update(Collection<V> objectsToRemove, Collection<ProvidedKeyTemplate> objectsToAdd) {
         KeySource source = getSource();
