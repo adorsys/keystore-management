@@ -5,9 +5,9 @@ import dagger.Module;
 import de.adorsys.keymanagement.api.generator.EncryptingKeyGenerator;
 import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.generator.SigningKeyGenerator;
-import de.adorsys.keymanagement.bouncycastle.adapter.generator.DefaultEncryptingKeyGeneratorImpl;
-import de.adorsys.keymanagement.bouncycastle.adapter.generator.DefaultSecretKeyGeneratorImpl;
-import de.adorsys.keymanagement.bouncycastle.adapter.generator.DefaultSigningKeyGeneratorImpl;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.generator.DefaultEncryptingKeyGeneratorImpl;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.generator.DefaultSecretKeyGeneratorImpl;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.generator.DefaultSigningKeyGeneratorImpl;
 
 @Module
 public abstract class BCGeneratorModule {

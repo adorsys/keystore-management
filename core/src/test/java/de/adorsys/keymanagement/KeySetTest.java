@@ -8,6 +8,7 @@ import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
 import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.metadata.BCPersister;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -83,6 +84,25 @@ class KeySetTest {
 
         assertThat(juggler.readKeys().fromKeyStore(cloned, id -> password.get()).entries().all()).hasSize(14);
         assertThat(juggler.readKeys().fromKeyStore(cloned, id -> password.get()).aliases().all()).hasSize(14);
+    }
+
+    @Test
+    @SneakyThrows
+    void metadataTest() {
+        Security.addProvider(new BouncyCastleProvider());
+
+        Juggler juggler = DaggerJuggler.builder().withMetadataPersistence(new BCPersister()).build();
+
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
+                .generatedSecretKey(Secret.with().prefix("ZZZ").build())
+                .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
+                .generatedEncryptionKey(Encrypting.with().alias("TTT").build())
+                .generatedEncryptionKeys(Encrypting.with().prefix("TTT").build().repeat(10))
+                .build();
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        juggler.toKeystore().generate(keySet, password);
     }
 
     @SneakyThrows

@@ -5,8 +5,8 @@ import dagger.Provides;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataPersistence;
 import de.adorsys.keymanagement.api.metadata.NoOpMetadataPersistence;
-import de.adorsys.keymanagement.bouncycastle.adapter.metadata.BCPersister;
-import de.adorsys.keymanagement.bouncycastle.adapter.metadata.DefaultBCMetadataPersister;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.metadata.BCPersister;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.metadata.DefaultBCMetadataPersister;
 
 import javax.annotation.Nullable;
 
