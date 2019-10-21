@@ -1,17 +1,17 @@
 package de.adorsys.keymanagement.core.generator;
 
-import de.adorsys.keymanagement.api.EncryptingKeyGenerator;
-import de.adorsys.keymanagement.api.KeyGenerator;
-import de.adorsys.keymanagement.api.SecretKeyGenerator;
-import de.adorsys.keymanagement.api.SigningKeyGenerator;
-import de.adorsys.keymanagement.core.types.source.KeySet;
-import de.adorsys.keymanagement.core.types.template.generated.Encrypting;
-import de.adorsys.keymanagement.core.types.template.generated.Secret;
-import de.adorsys.keymanagement.core.types.template.generated.Signing;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKeyEntry;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKeyPair;
-import de.adorsys.keymanagement.core.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.generator.EncryptingKeyGenerator;
+import de.adorsys.keymanagement.api.generator.KeyGenerator;
+import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
+import de.adorsys.keymanagement.api.generator.SigningKeyGenerator;
+import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.source.KeySet;
+import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
+import de.adorsys.keymanagement.api.types.template.generated.Secret;
+import de.adorsys.keymanagement.api.types.template.generated.Signing;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

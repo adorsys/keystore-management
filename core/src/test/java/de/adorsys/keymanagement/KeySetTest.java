@@ -1,11 +1,11 @@
 package de.adorsys.keymanagement;
 
-import de.adorsys.keymanagement.core.types.KeySetTemplate;
-import de.adorsys.keymanagement.core.types.source.KeySet;
-import de.adorsys.keymanagement.core.types.template.generated.Encrypting;
-import de.adorsys.keymanagement.core.types.template.generated.Secret;
-import de.adorsys.keymanagement.core.types.template.generated.Signing;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.source.KeySet;
+import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
+import de.adorsys.keymanagement.api.types.template.generated.Secret;
+import de.adorsys.keymanagement.api.types.template.generated.Signing;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
 import de.adorsys.keymanagement.juggler.services.Juggler;
 import lombok.SneakyThrows;
@@ -82,6 +82,7 @@ class KeySetTest {
         val cloned = juggler.toKeystore().generate(source.copyToKeySet(id -> password.get()));
 
         assertThat(juggler.readKeys().fromKeyStore(cloned, id -> password.get()).entries().all()).hasSize(14);
+        assertThat(juggler.readKeys().fromKeyStore(cloned, id -> password.get()).aliases().all()).hasSize(14);
     }
 
     @SneakyThrows

@@ -1,9 +1,9 @@
 package de.adorsys.keymanagement.juggler.services;
 
 import dagger.Component;
-import de.adorsys.keymanagement.api.KeyGenerator;
 import de.adorsys.keymanagement.api.KeyReader;
-import de.adorsys.keymanagement.api.KeyStoreCreator;
+import de.adorsys.keymanagement.api.generator.KeyGenerator;
+import de.adorsys.keymanagement.api.persist.KeyStoreCreator;
 import de.adorsys.keymanagement.juggler.modules.generator.GeneratorModule;
 import de.adorsys.keymanagement.juggler.modules.keystore.KeyStoreModule;
 import de.adorsys.keymanagement.juggler.modules.persist.PersistModule;

@@ -1,9 +1,9 @@
 package de.adorsys.keymanagement.core.source;
 
-import de.adorsys.keymanagement.api.KeySource;
-import de.adorsys.keymanagement.api.KeyStoreOper;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKeyEntry;
-import de.adorsys.keymanagement.core.types.template.ProvidedKeyTemplate;
+import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
+import de.adorsys.keymanagement.api.source.KeySource;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

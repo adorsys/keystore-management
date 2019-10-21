@@ -1,7 +1,8 @@
 package de.adorsys.keymanagement.api;
 
-import de.adorsys.keymanagement.core.types.KeySetTemplate;
-import de.adorsys.keymanagement.core.types.source.KeySet;
+import de.adorsys.keymanagement.api.source.KeySource;
+import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.core.view.AliasView;
 import de.adorsys.keymanagement.core.view.EntryView;
 

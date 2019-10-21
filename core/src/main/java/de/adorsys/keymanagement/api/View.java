@@ -1,8 +1,7 @@
 package de.adorsys.keymanagement.api;
 
 import com.googlecode.cqengine.query.Query;
-import de.adorsys.keymanagement.core.types.QueryResult;
-import de.adorsys.keymanagement.core.types.ResultCollection;
+import de.adorsys.keymanagement.api.types.ResultCollection;
 
 public interface View<T> {
 

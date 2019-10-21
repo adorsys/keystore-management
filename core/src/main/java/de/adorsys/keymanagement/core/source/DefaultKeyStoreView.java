@@ -1,10 +1,10 @@
 package de.adorsys.keymanagement.core.source;
 
-import de.adorsys.keymanagement.api.KeySource;
 import de.adorsys.keymanagement.api.KeyStoreView;
-import de.adorsys.keymanagement.core.types.KeySetTemplate;
-import de.adorsys.keymanagement.core.types.source.KeySet;
-import de.adorsys.keymanagement.core.types.template.provided.ProvidedKeyEntry;
+import de.adorsys.keymanagement.api.source.KeySource;
+import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.source.KeySet;
+import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.core.view.AliasView;
 import de.adorsys.keymanagement.core.view.EntryView;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ public class DefaultKeyStoreView implements KeyStoreView {
 
     @Override
     public EntryView entries() {
-        return new EntryView(source);
+        return new EntryView(source); // FIXME Inject/provide extra indexes
     }
 
     @Override
     public AliasView aliases() {
-        return new AliasView(source);
+        return new AliasView(source); // FIXME Inject/provide extra indexes
     }
 
     @Override

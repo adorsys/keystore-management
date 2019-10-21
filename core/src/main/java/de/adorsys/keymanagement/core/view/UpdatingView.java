@@ -1,8 +1,8 @@
 package de.adorsys.keymanagement.core.view;
 
-import de.adorsys.keymanagement.api.KeySource;
 import de.adorsys.keymanagement.api.View;
-import de.adorsys.keymanagement.core.types.template.ProvidedKeyTemplate;
+import de.adorsys.keymanagement.api.source.KeySource;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import lombok.val;
 
 import java.util.Collection;
