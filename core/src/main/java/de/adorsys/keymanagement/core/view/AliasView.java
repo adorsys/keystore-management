@@ -7,10 +7,10 @@ import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.core.view.entity.KeyAlias;
-import de.adorsys.keymanagement.core.view.query.QueryResult;
-import de.adorsys.keymanagement.core.view.query.ResultCollection;
-import de.adorsys.keymanagement.core.source.KeySource;
+import de.adorsys.keymanagement.core.types.entity.KeyAlias;
+import de.adorsys.keymanagement.core.types.QueryResult;
+import de.adorsys.keymanagement.core.types.ResultCollection;
+import de.adorsys.keymanagement.api.KeySource;
 import lombok.Getter;
 import lombok.SneakyThrows;
 

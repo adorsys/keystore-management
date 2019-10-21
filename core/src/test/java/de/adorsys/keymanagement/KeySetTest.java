@@ -1,14 +1,14 @@
 package de.adorsys.keymanagement;
 
-import de.adorsys.keymanagement.core.generator.*;
-import de.adorsys.keymanagement.core.persist.KeyStoreOperImpl;
-import de.adorsys.keymanagement.core.source.KeySet;
-import de.adorsys.keymanagement.core.source.KeyStoreSource;
-import de.adorsys.keymanagement.core.template.generated.Encrypting;
-import de.adorsys.keymanagement.core.template.generated.Secret;
-import de.adorsys.keymanagement.core.template.generated.Signing;
-import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.core.types.KeySetTemplate;
+import de.adorsys.keymanagement.core.types.source.KeySet;
+import de.adorsys.keymanagement.core.types.template.generated.Encrypting;
+import de.adorsys.keymanagement.core.types.template.generated.Secret;
+import de.adorsys.keymanagement.core.types.template.generated.Signing;
+import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.view.EntryView;
+import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
+import de.adorsys.keymanagement.juggler.services.Juggler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -31,6 +31,8 @@ class KeySetTest {
     void basicKeySetTest() {
         Security.addProvider(new BouncyCastleProvider());
 
+        Juggler juggler = DaggerJuggler.builder().build();
+
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
@@ -40,14 +42,9 @@ class KeySetTest {
                 .generatedEncryptionKeys(Encrypting.with().prefix("TTT").build().repeat(10))
                 .build();
 
-        KeySet keySet = new DefaultKeyGenerator(
-                new EncryptingKeyGeneratorImpl(),
-                new SecretKeyGeneratorImpl(),
-                new SigningKeyGeneratorImpl()
-        ).generate(template);
-        val oper = new KeyStoreOperImpl(password);
-        val store = oper.generate(keySet);
-        val source = new KeyStoreSource(oper, store, id -> password.get());
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val store = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(store, (id) -> password.get());
         val entryView = new EntryView(source);
 
         assertThat(entryView.all()).hasSize(14);
@@ -55,7 +52,7 @@ class KeySetTest {
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'TTT%'").toCollection()).hasSize(11);
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(2);
 
-        entryView.add(ProvidedKey.with().alias("MMM").key(stubSecretKey()).build());
+        entryView.add(ProvidedKey.with().password(password).alias("MMM").key(stubSecretKey()).build());
 
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
         assertThat(source.aliases()).hasSize(15);

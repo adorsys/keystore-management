@@ -1,7 +1,7 @@
 package de.adorsys.keymanagement.api;
 
-import de.adorsys.keymanagement.core.template.generated.Secret;
-import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.core.types.template.generated.Secret;
+import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
 
 import javax.crypto.SecretKey;
 

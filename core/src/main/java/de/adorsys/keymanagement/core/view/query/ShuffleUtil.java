@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.core.view.query;
 
+import de.adorsys.keymanagement.core.types.ResultCollection;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;

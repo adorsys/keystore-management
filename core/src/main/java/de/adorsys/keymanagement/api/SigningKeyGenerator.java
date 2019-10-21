@@ -1,7 +1,7 @@
 package de.adorsys.keymanagement.api;
 
-import de.adorsys.keymanagement.core.template.generated.Signing;
-import de.adorsys.keymanagement.core.template.provided.ProvidedKeyPair;
+import de.adorsys.keymanagement.core.types.template.generated.Signing;
+import de.adorsys.keymanagement.core.types.template.provided.ProvidedKeyPair;
 
 import java.security.KeyPair;
 

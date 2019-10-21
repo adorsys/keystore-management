@@ -6,11 +6,11 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.core.view.query.QueryResult;
-import de.adorsys.keymanagement.core.view.query.ResultCollection;
-import de.adorsys.keymanagement.core.source.KeySource;
-import de.adorsys.keymanagement.core.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.core.view.entity.Key;
+import de.adorsys.keymanagement.core.types.QueryResult;
+import de.adorsys.keymanagement.core.types.ResultCollection;
+import de.adorsys.keymanagement.api.KeySource;
+import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.core.types.entity.Key;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
