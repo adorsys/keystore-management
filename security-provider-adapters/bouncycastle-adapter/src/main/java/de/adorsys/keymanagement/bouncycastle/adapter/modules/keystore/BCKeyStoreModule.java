@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.juggler.modules.keystore;
+package de.adorsys.keymanagement.bouncycastle.adapter.modules.keystore;
 
 import dagger.Binds;
 import dagger.Module;
