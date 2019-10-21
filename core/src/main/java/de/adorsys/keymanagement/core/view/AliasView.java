@@ -42,7 +42,7 @@ public class AliasView extends UpdatingView<KeyAlias> {
     @SneakyThrows
     public AliasView(KeySource source, Collection<Index<KeyAlias>> indexes) {
         this.source = source;
-        source.aliases().forEach(it -> new KeyAlias(it, null)); // FIXME Extract metadata
+        source.aliases().forEach(it -> aliases.add(new KeyAlias(it, null))); // FIXME Extract metadata
         this.aliases.addIndex(RadixTreeIndex.onAttribute(KeyAlias.A_ID));
         indexes.forEach(aliases::addIndex);
     }

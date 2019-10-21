@@ -5,6 +5,10 @@ import lombok.experimental.Delegate;
 
 import java.util.*;
 
+/**
+ * This class is safe to use without try-with-resources as it has all keys loaded.
+ * @param <T>
+ */
 public class ResultCollection<T> implements Collection<T> {
 
     @Delegate

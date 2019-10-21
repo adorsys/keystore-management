@@ -5,5 +5,5 @@ import java.util.function.Function;
 
 public interface KeyReader {
 
-    KeySource fromKeyStore(KeyStore keyStore, Function<String, char[]> keyPassword);
+    KeyStoreView fromKeyStore(KeyStore keyStore, Function<String, char[]> keyPassword);
 }

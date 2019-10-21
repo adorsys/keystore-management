@@ -6,7 +6,6 @@ import de.adorsys.keymanagement.core.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.core.types.template.generated.Secret;
 import de.adorsys.keymanagement.core.types.template.generated.Signing;
 import de.adorsys.keymanagement.core.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.core.view.EntryView;
 import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
 import de.adorsys.keymanagement.juggler.services.Juggler;
 import lombok.SneakyThrows;
@@ -30,6 +29,41 @@ class KeySetTest {
     @SneakyThrows
     void basicKeySetTest() {
         Security.addProvider(new BouncyCastleProvider());
+        Juggler juggler = DaggerJuggler.builder().build();
+
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .providedKey(ProvidedKey.with().prefix("ZZZ").key(stubSecretKey()).build())
+                .generatedSecretKey(Secret.with().prefix("ZZZ").build())
+                .generatedSigningKey(Signing.with().algo("DSA").alias("ZZZ").build())
+                .generatedEncryptionKey(Encrypting.with().alias("TTT").build())
+                .generatedEncryptionKeys(Encrypting.with().prefix("TTT").build().repeat(10))
+                .build();
+
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val store = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(store, (id) -> password.get());
+        val entryView = source.entries();
+
+        assertThat(entryView.all()).hasSize(14);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'Z%'").toCollection()).hasSize(3);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'TTT%'").toCollection()).hasSize(11);
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(2);
+
+        entryView.add(ProvidedKey.with().password(password).alias("MMM").key(stubSecretKey()).build());
+
+        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
+        assertThat(source.aliases().all()).hasSize(15);
+
+        assertThat(entryView.privateKeys()).hasSize(12);
+        assertThat(entryView.secretKeys()).hasSize(3);
+        assertThat(entryView.trustedCerts()).hasSize(0);
+    }
+
+    @Test
+    @SneakyThrows
+    void cloningTest() {
+        Security.addProvider(new BouncyCastleProvider());
 
         Juggler juggler = DaggerJuggler.builder().build();
 
@@ -45,21 +79,9 @@ class KeySetTest {
         KeySet keySet = juggler.generateKeys().fromTemplate(template);
         val store = juggler.toKeystore().generate(keySet, password);
         val source = juggler.readKeys().fromKeyStore(store, (id) -> password.get());
-        val entryView = new EntryView(source);
+        val cloned = juggler.toKeystore().generate(source.copyToKeySet(id -> password.get()));
 
-        assertThat(entryView.all()).hasSize(14);
-        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'Z%'").toCollection()).hasSize(3);
-        assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'TTT%'").toCollection()).hasSize(11);
-        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(2);
-
-        entryView.add(ProvidedKey.with().password(password).alias("MMM").key(stubSecretKey()).build());
-
-        assertThat(entryView.retrieve("SELECT * FROM keys WHERE is_secret = true").toCollection()).hasSize(3);
-        assertThat(source.aliases()).hasSize(15);
-
-        assertThat(entryView.privateKeys()).hasSize(12);
-        assertThat(entryView.secretKeys()).hasSize(3);
-        assertThat(entryView.trustedCerts()).hasSize(0);
+        assertThat(juggler.readKeys().fromKeyStore(cloned, id -> password.get()).entries().all()).hasSize(14);
     }
 
     @SneakyThrows
