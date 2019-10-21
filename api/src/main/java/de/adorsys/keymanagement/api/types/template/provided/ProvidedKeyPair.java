@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.template.provided;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
@@ -37,8 +38,8 @@ public class ProvidedKeyPair implements ProvidedKeyTemplate {
 
     @Builder(builderMethodName = "with")
     ProvidedKeyPair(String alias, String prefix, @NonNull Supplier<char[]> password, @NonNull KeyPair pair,
-                    @Singular @NonNull List<Certificate> certificates) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+                    @Singular @NonNull List<Certificate> certificates, KeyMetadata metadata) {
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
         this.certificates = certificates;
         this.pair = pair;
     }

@@ -52,7 +52,7 @@ public class AliasViewImpl extends BaseUpdatingView<KeyAlias> implements AliasVi
     @SneakyThrows
     public AliasViewImpl(KeySource source, Collection<Index<KeyAlias>> indexes) {
         this.source = source;
-        source.aliases().forEach(it -> aliases.add(new KeyAlias(it, null))); // FIXME Extract metadata
+        source.aliases().forEach(it -> aliases.add(new KeyAlias(it.getKey(), it.getMetadata())));
         this.aliases.addIndex(RadixTreeIndex.onAttribute(A_ID));
         indexes.forEach(aliases::addIndex);
     }
@@ -79,7 +79,7 @@ public class AliasViewImpl extends BaseUpdatingView<KeyAlias> implements AliasVi
 
     @Override
     protected KeyAlias viewFromId(String ofKey) {
-        return new KeyAlias(ofKey, null); // FIXME Extract metadata
+        return new KeyAlias(ofKey, source.asAliasWithMeta(ofKey).getMetadata());
     }
 
     @Override

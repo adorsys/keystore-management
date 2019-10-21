@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.template.generated;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
@@ -36,8 +37,9 @@ public class Secret implements GeneratedKeyTemplate {
     }
 
     @Builder(builderMethodName = "with")
-    public Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+    public Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize,
+                  KeyMetadata metadata) {
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
         this.encryptionTemplate = SecretKeyEncryptionTemplate.of(algo, keySize);
     }
 }

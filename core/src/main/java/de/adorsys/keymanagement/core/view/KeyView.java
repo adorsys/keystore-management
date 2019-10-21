@@ -46,7 +46,7 @@ public class KeyView extends BaseUpdatingView<Key> {
         this.source = source;
         keys.addAll(
                 source.aliasesFor(ProvidedKey.class)
-                        .map(it -> new Key(it, null, source.asKey(it)))
+                        .map(it -> new Key(it.getKey(), source.asKey(it.getKey())))
                         .collect(Collectors.toList())
         );
         indexes.forEach(keys::addIndex);
@@ -74,7 +74,7 @@ public class KeyView extends BaseUpdatingView<Key> {
 
     @Override
     protected Key viewFromId(String ofKey) {
-        return new Key(ofKey, null, source.asKey(ofKey)); // FIXME fill metadata
+        return new Key(ofKey, source.asKey(ofKey));
     }
 
     @Override

@@ -47,7 +47,7 @@ public class EntryViewImpl extends BaseUpdatingView<KeyEntry> implements EntryVi
         this.source = source;
         keys.addAll(
                 source.aliasesFor(ProvidedKeyEntry.class)
-                        .map(it -> new KeyEntry(it, null, source.asEntry(it)))
+                        .map(it -> new KeyEntry(it.getKey(), source.asEntry(it.getKey())))
                         .collect(Collectors.toList())
         );
         indexes.forEach(keys::addIndex);
@@ -90,7 +90,7 @@ public class EntryViewImpl extends BaseUpdatingView<KeyEntry> implements EntryVi
 
     @Override
     protected KeyEntry viewFromId(String ofKey) {
-        return new KeyEntry(ofKey, null, source.asEntry(ofKey)); // FIXME fill metadata
+        return new KeyEntry(ofKey, source.asEntry(ofKey));
     }
 
     @Override

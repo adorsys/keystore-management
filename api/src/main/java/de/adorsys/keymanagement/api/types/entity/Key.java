@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement.api.types.entity;
 
-import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import lombok.Getter;
 
 import javax.crypto.SecretKey;
@@ -12,9 +11,9 @@ public class Key extends KeyAlias {
 
     private final java.security.Key key;
 
-    public Key(String alias, KeyMetadata meta, java.security.Key key) {
-        super(alias, meta);
-        this.key = key;
+    public Key(String alias, WithMetadata<java.security.Key> key) {
+        super(alias, key.getMetadata());
+        this.key = key.getKey();
     }
 
     public boolean isSecret() {

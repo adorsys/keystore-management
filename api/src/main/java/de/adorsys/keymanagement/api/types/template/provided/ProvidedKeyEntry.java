@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.template.provided;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
@@ -30,8 +31,9 @@ public class ProvidedKeyEntry implements ProvidedKeyTemplate {
     }
 
     @Builder(builderMethodName = "with")
-    ProvidedKeyEntry(String alias, String prefix, Supplier<char[]> password, @NonNull KeyStore.Entry entry) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+    ProvidedKeyEntry(String alias, String prefix, Supplier<char[]> password, @NonNull KeyStore.Entry entry,
+                     KeyMetadata metadata) {
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
         this.entry = entry;
     }
 }

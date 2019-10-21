@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement.api.types.entity;
 
-import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import lombok.Getter;
 
 import java.security.KeyStore;
@@ -10,9 +9,9 @@ public class KeyEntry extends KeyAlias {
 
     private final KeyStore.Entry entry;
 
-    public KeyEntry(String alias, KeyMetadata meta, KeyStore.Entry entry) {
-        super(alias, meta);
-        this.entry = entry;
+    public KeyEntry(String alias, WithMetadata<KeyStore.Entry> entry) {
+        super(alias, entry.getMetadata());
+        this.entry = entry.getKey();
     }
 
     public boolean isSecret() {

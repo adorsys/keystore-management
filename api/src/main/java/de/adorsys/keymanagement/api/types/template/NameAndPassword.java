@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.template;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,13 @@ public class NameAndPassword implements KeyTemplate {
     private final KeyNamingStrategy namingStrategy;
     private final Supplier<char[]> password;
 
-    public NameAndPassword(@NonNull Supplier<char[]> password) {
+    @Getter
+    private final KeyMetadata metadata;
+
+    public NameAndPassword(@NonNull Supplier<char[]> password, KeyMetadata metadata) {
         this.namingStrategy = new DefaultNamingStrategy(null, null);
         this.password = password;
+        this.metadata = metadata;
     }
 
     @Override

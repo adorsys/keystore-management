@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.template.generated;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
@@ -37,8 +38,8 @@ public class Signing implements GeneratedKeyTemplate {
 
     @Builder(builderMethodName = "with")
     Signing(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
-            Integer keySize) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+            Integer keySize, KeyMetadata metadata) {
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
         this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo);
     }
 }
