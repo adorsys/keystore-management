@@ -38,7 +38,7 @@
         <junit.platform.version>1.4.1</junit.platform.version>
         <assertj.version>3.12.2</assertj.version>
         <mockito.version>2.25.1</mockito.version>
-        <surefire.version>2.22.1</surefire.version>
+        <surefire.version>3.0.0-M3</surefire.version>
     </properties>
 
     <dependencyManagement>
