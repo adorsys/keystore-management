@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.api;
 
 import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.types.ResultCollection;
+import de.adorsys.keymanagement.api.view.QueryResult;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
@@ -9,18 +10,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class QueryResult<T> implements AutoCloseable, Iterable<T> {
+public class CqeQueryResult<T> implements QueryResult<T> {
 
     private final ResultSet<T> resultSet;
 
+    @Override
     public Stream<T> stream() {
         return resultSet.stream().onClose(this::close);
     }
 
+    @Override
     public int size() {
         return resultSet.size();
     }
 
+    @Override
     public boolean isEmpty() {
         return resultSet.isEmpty();
     }
@@ -35,6 +39,7 @@ public class QueryResult<T> implements AutoCloseable, Iterable<T> {
         resultSet.close();
     }
 
+    @Override
     public ResultCollection<T> toCollection() {
         try (Stream<T> keys = resultSet.stream()) {
             List<T> collected = keys.collect(Collectors.toList());

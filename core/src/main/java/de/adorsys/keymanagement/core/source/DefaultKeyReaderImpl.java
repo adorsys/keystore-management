@@ -1,7 +1,7 @@
 package de.adorsys.keymanagement.core.source;
 
-import de.adorsys.keymanagement.api.KeyReader;
-import de.adorsys.keymanagement.api.KeyStoreView;
+import de.adorsys.keymanagement.api.source.KeyReader;
+import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 
 import javax.inject.Inject;

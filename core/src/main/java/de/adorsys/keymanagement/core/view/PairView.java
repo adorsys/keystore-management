@@ -6,11 +6,12 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.api.QueryResult;
+import de.adorsys.keymanagement.api.CqeQueryResult;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyPair;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
+import de.adorsys.keymanagement.api.view.QueryResult;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -22,7 +23,7 @@ import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createA
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
-public class PairView extends UpdatingView<KeyPair> {
+public class PairView extends BaseUpdatingView<KeyPair> {
 
     private static final SQLParser<KeyPair> PARSER = SQLParser.forPojoWithAttributes(
             KeyPair.class,
@@ -53,17 +54,17 @@ public class PairView extends UpdatingView<KeyPair> {
 
     @Override
     public QueryResult<KeyPair> retrieve(Query<KeyPair> query) {
-        return new QueryResult<>(keys.retrieve(query));
+        return new CqeQueryResult<>(keys.retrieve(query));
     }
 
     @Override
     public QueryResult<KeyPair> retrieve(String query) {
-        return new QueryResult<>(keys.retrieve(PARSER.parse(query).getQuery()));
+        return new CqeQueryResult<>(keys.retrieve(PARSER.parse(query).getQuery()));
     }
 
     @Override
     public ResultCollection<KeyPair> all() {
-        return new QueryResult<>(keys.retrieve(QueryFactory.all(KeyPair.class))).toCollection();
+        return new CqeQueryResult<>(keys.retrieve(QueryFactory.all(KeyPair.class))).toCollection();
     }
 
     @Override

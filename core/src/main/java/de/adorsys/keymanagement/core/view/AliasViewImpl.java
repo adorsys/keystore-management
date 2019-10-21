@@ -9,11 +9,13 @@ import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
-import de.adorsys.keymanagement.api.QueryResult;
+import de.adorsys.keymanagement.api.CqeQueryResult;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
+import de.adorsys.keymanagement.api.view.AliasView;
+import de.adorsys.keymanagement.api.view.QueryResult;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -26,7 +28,8 @@ import static com.googlecode.cqengine.query.QueryFactory.attribute;
 import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
-public class AliasView extends UpdatingView<KeyAlias> {
+public class AliasViewImpl extends BaseUpdatingView<KeyAlias> implements AliasView<Query<KeyAlias>> {
+
     public static final SimpleAttribute<KeyAlias, String> A_ID = attribute("alias", KeyAlias::getAlias);
     public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = nullableAttribute("meta", KeyAlias::getMeta);
 
@@ -42,12 +45,12 @@ public class AliasView extends UpdatingView<KeyAlias> {
      */
     private final IndexedCollection<KeyAlias> aliases = new TransactionalIndexedCollection<>(KeyAlias.class);
 
-    public AliasView(KeySource source) {
+    public AliasViewImpl(KeySource source) {
         this(source, Collections.emptyList());
     }
 
     @SneakyThrows
-    public AliasView(KeySource source, Collection<Index<KeyAlias>> indexes) {
+    public AliasViewImpl(KeySource source, Collection<Index<KeyAlias>> indexes) {
         this.source = source;
         source.aliases().forEach(it -> aliases.add(new KeyAlias(it, null))); // FIXME Extract metadata
         this.aliases.addIndex(RadixTreeIndex.onAttribute(A_ID));
@@ -56,17 +59,17 @@ public class AliasView extends UpdatingView<KeyAlias> {
 
     @Override
     public QueryResult<KeyAlias> retrieve(Query<KeyAlias> query) {
-        return new QueryResult<>(aliases.retrieve(query));
+        return new CqeQueryResult<>(aliases.retrieve((query)));
     }
 
     @Override
     public QueryResult<KeyAlias> retrieve(String query) {
-        return new QueryResult<>(aliases.retrieve(PARSER.parse(query).getQuery()));
+        return new CqeQueryResult<>(aliases.retrieve(PARSER.parse(query).getQuery()));
     }
 
     @Override
     public ResultCollection<KeyAlias> all() {
-        return new QueryResult<>(aliases.retrieve(QueryFactory.all(KeyAlias.class))).toCollection();
+        return new CqeQueryResult<>(aliases.retrieve(QueryFactory.all(KeyAlias.class))).toCollection();
     }
 
     @Override
