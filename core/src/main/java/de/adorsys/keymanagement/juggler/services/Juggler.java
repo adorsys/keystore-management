@@ -4,15 +4,15 @@ import dagger.Component;
 import de.adorsys.keymanagement.api.source.KeyReader;
 import de.adorsys.keymanagement.api.generator.KeyGenerator;
 import de.adorsys.keymanagement.api.persist.KeyStoreCreator;
-import de.adorsys.keymanagement.juggler.modules.generator.GeneratorModule;
-import de.adorsys.keymanagement.juggler.modules.keystore.KeyStoreModule;
-import de.adorsys.keymanagement.juggler.modules.persist.PersistModule;
+import de.adorsys.keymanagement.juggler.modules.generator.BCGeneratorModule;
+import de.adorsys.keymanagement.juggler.modules.keystore.BCKeyStoreModule;
+import de.adorsys.keymanagement.juggler.modules.persist.BCPersistModule;
 import de.adorsys.keymanagement.juggler.modules.source.SourceModule;
 
 @Component(modules = {
-        GeneratorModule.class,
-        KeyStoreModule.class,
-        PersistModule.class,
+        BCGeneratorModule.class,
+        BCKeyStoreModule.class,
+        BCPersistModule.class,
         SourceModule.class
 })
 public interface Juggler {
