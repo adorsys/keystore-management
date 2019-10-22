@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.juggler.modules.metadata;
 
+import dagger.Lazy;
 import dagger.Module;
 import dagger.Provides;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
@@ -18,7 +19,7 @@ public class MetadataModule {
     KeyMetadataOper metadataOper(
             @Nullable MetadataPersistenceConfig config,
             @Nullable KeyMetadataPersistence userProvided,
-            ToKeyStoreMetadataPersister persistor) {
+            Lazy<ToKeyStoreMetadataPersister> persistor) {
 
         if (null == config) {
             return new NoOpMetadataPersistence();
@@ -29,7 +30,7 @@ public class MetadataModule {
         }
 
         if (userProvided instanceof WithPersister) {
-            return persistor;
+            return persistor.get();
         }
 
         return userProvided;
