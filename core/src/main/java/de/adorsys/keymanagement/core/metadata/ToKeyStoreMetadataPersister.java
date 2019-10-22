@@ -41,7 +41,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
     @Override
     @SneakyThrows
     public KeyMetadata extract(String forAlias, KeyStore keyStore) {
-        if (forAlias.endsWith(METADATA_SUFFIX)) {
+        if (forAlias.endsWith(METADATA_SUFFIX)) { // FIXME collision prone - i.e. key-name + md5(key-name) + suffix is more collision resilent
             return null;
         }
 
