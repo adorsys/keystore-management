@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.persist;
 
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
+import de.adorsys.keymanagement.api.metadata.NoOpMetadataPersistence;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
@@ -33,25 +34,19 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
     @Override
     @SneakyThrows
     public KeyStore generate(KeySet keySet, Supplier<char[]> defaultPassword) {
-        KeyStore ks = KeyStore.getInstance("UBER"); // FIXME - BCFKS from provided load store config
-        ks.load(null);
+        return generate(keySet, defaultPassword, metadataOper);
+    }
 
-        keySet.getKeyEntries().forEach(it -> {
-            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
-        });
+    @Override
+    @SneakyThrows
+    public KeyStore generateWithoutMetadata(KeySet keySet) {
+        return generate(keySet, () -> null, new NoOpMetadataPersistence());
+    }
 
-        keySet.getKeys().forEach(it -> {
-            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
-        });
-
-        keySet.getKeyPairs().forEach(it -> {
-            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
-        });
-
-        return ks;
+    @Override
+    @SneakyThrows
+    public KeyStore generateWithoutMetadata(KeySet keySet, Supplier<char[]> defaultPassword) {
+        return generate(keySet, defaultPassword, new NoOpMetadataPersistence());
     }
 
     @Override
@@ -66,6 +61,29 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
             return doAddToKeyStoreAndGetName(ks, (ProvidedKey) entry, defaultPassword);
         }
         throw new IllegalArgumentException("Unsupported entry: " + entry.getClass());
+    }
+
+    @SneakyThrows
+    private KeyStore generate(KeySet keySet, Supplier<char[]> defaultPassword, KeyMetadataOper useMetadataOper) {
+        KeyStore ks = KeyStore.getInstance("UBER"); // FIXME - BCFKS from provided load store config
+        ks.load(null);
+
+        keySet.getKeyEntries().forEach(it -> {
+            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
+            useMetadataOper.persistMetadata(alias, it.getMetadata(), ks);
+        });
+
+        keySet.getKeys().forEach(it -> {
+            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
+            useMetadataOper.persistMetadata(alias, it.getMetadata(), ks);
+        });
+
+        keySet.getKeyPairs().forEach(it -> {
+            String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
+            useMetadataOper.persistMetadata(alias, it.getMetadata(), ks);
+        });
+
+        return ks;
     }
 
     @SneakyThrows

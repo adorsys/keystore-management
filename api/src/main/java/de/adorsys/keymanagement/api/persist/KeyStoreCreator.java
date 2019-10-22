@@ -9,4 +9,7 @@ public interface KeyStoreCreator {
 
     KeyStore generate(KeySet keySet);
     KeyStore generate(KeySet keySet, Supplier<char[]> defaultKeyPassword);
+
+    KeyStore generateWithoutMetadata(KeySet keySet);
+    KeyStore generateWithoutMetadata(KeySet keySet, Supplier<char[]> defaultKeyPassword);
 }
