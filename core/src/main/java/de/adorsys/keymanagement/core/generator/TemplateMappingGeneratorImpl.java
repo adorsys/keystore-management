@@ -17,15 +17,15 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultKeyGeneratorImpl implements KeyGenerator {
+public class TemplateMappingGeneratorImpl implements KeyGenerator {
 
     private final EncryptingKeyGenerator encryptingKeyGenerator;
     private final SecretKeyGenerator secretKeyGenerator;
     private final SigningKeyGenerator signingKeyGenerator;
 
     @Inject
-    public DefaultKeyGeneratorImpl(EncryptingKeyGenerator encryptingKeyGenerator, SecretKeyGenerator secretKeyGenerator,
-                                   SigningKeyGenerator signingKeyGenerator) {
+    public TemplateMappingGeneratorImpl(EncryptingKeyGenerator encryptingKeyGenerator, SecretKeyGenerator secretKeyGenerator,
+                                        SigningKeyGenerator signingKeyGenerator) {
         this.encryptingKeyGenerator = encryptingKeyGenerator;
         this.secretKeyGenerator = secretKeyGenerator;
         this.signingKeyGenerator = signingKeyGenerator;

@@ -10,13 +10,14 @@ import de.adorsys.keymanagement.adapter.modules.persist.PersistModule;
 import de.adorsys.keymanagement.adapter.modules.generator.GeneratorModule;
 import de.adorsys.keymanagement.adapter.modules.keystore.KeyStoreModule;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
+import de.adorsys.keymanagement.juggler.modules.generator.TemplateMappingModule;
 import de.adorsys.keymanagement.juggler.modules.metadata.MetadataModule;
 import de.adorsys.keymanagement.juggler.modules.source.SourceModule;
 
 import javax.annotation.Nullable;
 
 @Component(modules = {
-        de.adorsys.keymanagement.juggler.modules.generator.GeneratorModule.class,
+        TemplateMappingModule.class,
         GeneratorModule.class,
         KeyStoreModule.class,
         PersistModule.class,
