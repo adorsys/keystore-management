@@ -53,8 +53,8 @@ public class PairView extends BaseUpdatingView<KeyPair> {
     }
 
     @Override
-    public QueryResult<KeyPair> retrieve(Query<KeyPair> query) {
-        return new CqeQueryResult<>(keys.retrieve(query));
+    public QueryResult<KeyPair> retrieve(Object query) {
+        return new CqeQueryResult<>(keys.retrieve((Query<KeyPair>) query));
     }
 
     @Override

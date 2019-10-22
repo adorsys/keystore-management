@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement.core.view;
 
-import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.view.UpdatingView;
@@ -10,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public abstract class BaseUpdatingView<O> implements UpdatingView<O, Query<O>> {
+public abstract class BaseUpdatingView<O> implements UpdatingView<O> {
 
     public boolean add(ProvidedKeyTemplate objectToAdd) {
         return add(Collections.singleton(objectToAdd));

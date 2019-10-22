@@ -53,8 +53,8 @@ public class KeyView extends BaseUpdatingView<Key> {
     }
 
     @Override
-    public QueryResult<Key> retrieve(Query<Key> query) {
-        return new CqeQueryResult<>(keys.retrieve(query));
+    public QueryResult<Key> retrieve(Object query) {
+        return new CqeQueryResult<>(keys.retrieve((Query<Key>) query));
     }
 
     @Override

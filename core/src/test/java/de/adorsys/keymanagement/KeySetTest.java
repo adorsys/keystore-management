@@ -1,16 +1,13 @@
 package de.adorsys.keymanagement;
 
-import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
-import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.api.view.AliasView;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
@@ -122,7 +119,7 @@ class KeySetTest {
         KeySet keySet = juggler.generateKeys().fromTemplate(template);
         val ks = juggler.toKeystore().generate(keySet, password);
         val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
-        AliasView<Query<KeyAlias>> view = source.aliases();
+        val view = source.aliases();
         assertThat(
                 ((KeyExpirationMetadata)
                         view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()

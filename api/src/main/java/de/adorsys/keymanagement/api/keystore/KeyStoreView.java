@@ -8,10 +8,10 @@ import de.adorsys.keymanagement.api.view.EntryView;
 
 import java.util.function.Function;
 
-public interface KeyStoreView<ALIAS, ENTRY> {
+public interface KeyStoreView {
 
-    EntryView<ENTRY> entries();
-    AliasView<ALIAS> aliases();
+    EntryView entries();
+    AliasView aliases();
     KeySource source();
     KeySet copyToKeySet(Function<String, char[]> keyPassword);
     KeySetTemplate copyToTemplate(Function<String, char[]> keyPassword);
