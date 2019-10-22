@@ -99,8 +99,8 @@ class KeySetTest {
         Security.addProvider(new BouncyCastleProvider());
 
         Juggler juggler = DaggerJuggler.builder()
-                .withMetadataPersister(new WithPersister())
-                .withMetadataPersistenceConfig(
+                .metadataPersister(new WithPersister())
+                .metadataConfig(
                         MetadataPersistenceConfig.builder()
                                 .metadataClass(KeyExpirationMetadata.class)
                                 .build()

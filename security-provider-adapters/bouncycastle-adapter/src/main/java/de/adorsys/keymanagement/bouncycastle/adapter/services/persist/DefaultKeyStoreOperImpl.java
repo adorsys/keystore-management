@@ -84,7 +84,7 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
         String name = pair.generateName();
         ks.setKeyEntry(
                 name,
-                pair.getPrivate(), // FIXME: Public key should be somewhere?
+                pair.getPrivate(),
                 getPassword(pair, defaultPassword),
                 pair.getCertificates().toArray(new Certificate[0])
         );

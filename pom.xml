@@ -30,7 +30,7 @@
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <lombok.version>1.18.10</lombok.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <dagger.version>2.19</dagger.version>
+        <dagger.version>2.24</dagger.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.2</slf4j.version>

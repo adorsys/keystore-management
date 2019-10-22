@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.bouncycastle.adapter.modules.generator;
+package de.adorsys.keymanagement.adapter.modules.generator;
 
 import dagger.Binds;
 import dagger.Module;
@@ -10,7 +10,7 @@ import de.adorsys.keymanagement.bouncycastle.adapter.services.generator.DefaultS
 import de.adorsys.keymanagement.bouncycastle.adapter.services.generator.DefaultSigningKeyGeneratorImpl;
 
 @Module
-public abstract class BCGeneratorModule {
+public abstract class GeneratorModule {
 
     @Binds
     abstract EncryptingKeyGenerator encryptingKeyGenerator(DefaultEncryptingKeyGeneratorImpl keyGenerator);
