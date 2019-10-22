@@ -23,7 +23,7 @@ import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createA
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
-public class KeyView extends BaseUpdatingView<Key> {
+public class KeyView extends BaseUpdatingView<Query<Key>, Key> {
 
     private static final SQLParser<Key> PARSER = SQLParser.forPojoWithAttributes(
             Key.class,
@@ -53,8 +53,8 @@ public class KeyView extends BaseUpdatingView<Key> {
     }
 
     @Override
-    public QueryResult<Key> retrieve(Object query) {
-        return new CqeQueryResult<>(keys.retrieve((Query<Key>) query));
+    public QueryResult<Key> retrieve(Query<Key> query) {
+        return new CqeQueryResult<>(keys.retrieve( query));
     }
 
     @Override

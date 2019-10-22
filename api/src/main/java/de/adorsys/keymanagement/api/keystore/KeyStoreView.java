@@ -10,8 +10,9 @@ import java.util.function.Function;
 
 public interface KeyStoreView {
 
-    EntryView entries();
-    AliasView aliases();
+    <Q> EntryView<Q> entries();
+    <Q> AliasView<Q> aliases();
+
     KeySource source();
     KeySet copyToKeySet(Function<String, char[]> keyPassword);
     KeySetTemplate copyToTemplate(Function<String, char[]> keyPassword);

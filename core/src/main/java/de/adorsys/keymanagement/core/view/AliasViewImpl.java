@@ -28,7 +28,7 @@ import static com.googlecode.cqengine.query.QueryFactory.attribute;
 import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
-public class AliasViewImpl extends BaseUpdatingView<KeyAlias> implements AliasView {
+public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> implements AliasView<Query<KeyAlias>> {
 
     public static final SimpleAttribute<KeyAlias, String> A_ID = attribute("alias", KeyAlias::getAlias);
     public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = nullableAttribute("meta", KeyAlias::getMeta);
@@ -58,8 +58,8 @@ public class AliasViewImpl extends BaseUpdatingView<KeyAlias> implements AliasVi
     }
 
     @Override
-    public QueryResult<KeyAlias> retrieve(Object query) {
-        return new CqeQueryResult<>(aliases.retrieve((Query<KeyAlias>) query));
+    public QueryResult<KeyAlias> retrieve(Query<KeyAlias> query) {
+        return new CqeQueryResult<>(aliases.retrieve(query));
     }
 
     @Override

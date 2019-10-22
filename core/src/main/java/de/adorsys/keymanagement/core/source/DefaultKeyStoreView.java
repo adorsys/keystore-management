@@ -1,8 +1,11 @@
 package de.adorsys.keymanagement.core.source;
 
+import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.entity.KeyAlias;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.api.view.AliasView;
@@ -20,12 +23,12 @@ public class DefaultKeyStoreView implements KeyStoreView {
     private final KeySource source;
 
     @Override
-    public EntryView entries() {
+    public EntryView<Query<KeyEntry>> entries() {
         return new EntryViewImpl(source); // FIXME Inject/provide extra indexes
     }
 
     @Override
-    public AliasView aliases() {
+    public AliasView<Query<KeyAlias>> aliases() {
         return new AliasViewImpl(source); // FIXME Inject/provide extra indexes
     }
 

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public abstract class BaseUpdatingView<O> implements UpdatingView<O> {
+public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
 
     public boolean add(ProvidedKeyTemplate objectToAdd) {
         return add(Collections.singleton(objectToAdd));

@@ -24,7 +24,7 @@ import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createA
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
-public class EntryViewImpl extends BaseUpdatingView<KeyEntry> implements EntryView {
+public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> implements EntryView<Query<KeyEntry>> {
 
     private static final SQLParser<KeyEntry> PARSER = SQLParser.forPojoWithAttributes(
             KeyEntry.class,
@@ -54,8 +54,8 @@ public class EntryViewImpl extends BaseUpdatingView<KeyEntry> implements EntryVi
     }
 
     @Override
-    public QueryResult<KeyEntry> retrieve(Object query) {
-        return new CqeQueryResult<>(keys.retrieve((Query<KeyEntry>) query));
+    public QueryResult<KeyEntry> retrieve(Query<KeyEntry> query) {
+        return new CqeQueryResult<>(keys.retrieve(query));
     }
 
     @Override

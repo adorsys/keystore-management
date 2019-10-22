@@ -4,10 +4,10 @@ import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 
-public interface AliasView extends UpdatingView<KeyAlias> {
+public interface AliasView<Q> extends UpdatingView<Q, KeyAlias> {
 
     @Override
-    QueryResult<KeyAlias> retrieve(Object query);
+    QueryResult<KeyAlias> retrieve(Q query);
 
     @Override
     QueryResult<KeyAlias> retrieve(String query);
