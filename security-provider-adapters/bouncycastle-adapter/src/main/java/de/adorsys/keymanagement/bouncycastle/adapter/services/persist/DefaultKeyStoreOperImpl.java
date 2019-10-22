@@ -38,17 +38,17 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
         keySet.getKeyEntries().forEach(it -> {
             String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata());
+            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
         });
 
         keySet.getKeys().forEach(it -> {
             String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata());
+            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
         });
 
         keySet.getKeyPairs().forEach(it -> {
             String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
-            metadataOper.persistMetadata(alias, it.getMetadata());
+            metadataOper.persistMetadata(alias, it.getMetadata(), ks);
         });
 
         return ks;

@@ -43,7 +43,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
         Enumeration<String> aliases = store.aliases();
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(
-                        new EnumerationToIterator(aliases, metadataOper),
+                        new EnumerationToIterator(store, aliases, metadataOper),
                         Spliterator.ORDERED
                 ), false
         );
@@ -62,7 +62,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
     public WithMetadata<String> asAliasWithMeta(String alias) {
         return WithMetadata.<String>builder()
                 .key(alias)
-                .metadata(metadataOper.extract(alias))
+                .metadata(metadataOper.extract(alias, store))
                 .build();
     }
 
@@ -71,7 +71,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
     public WithMetadata<KeyStore.Entry> asEntry(String alias) {
         return WithMetadata.<KeyStore.Entry>builder()
                 .key(store.getEntry(alias, new KeyStore.PasswordProtection(keyPassword.apply(alias))))
-                .metadata(metadataOper.extract(alias))
+                .metadata(metadataOper.extract(alias, store))
                 .build();
     }
 
@@ -89,22 +89,23 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
     @SneakyThrows
     public void remove(String keyId) {
         store.deleteEntry(keyId);
-        metadataOper.removeMetadata(keyId);
+        metadataOper.removeMetadata(keyId, store);
     }
 
     @Override
     @SneakyThrows
     public String addAndReturnId(ProvidedKeyTemplate keyTemplate) {
         String alias = oper.addToKeyStoreAndGetName(store, keyTemplate, () -> null);
-        metadataOper.persistMetadata(alias, keyTemplate.getMetadata());
+        metadataOper.persistMetadata(alias, keyTemplate.getMetadata(), store);
         return alias;
     }
 
     @RequiredArgsConstructor
     private static class EnumerationToIterator implements Iterator<WithMetadata<String>> {
 
+        private final KeyStore store;
         private final Enumeration<String> source;
-        private final KeyMetadataOper persistMetadata;
+        private final KeyMetadataOper metdataOper;
 
         @Override
         public boolean hasNext() {
@@ -117,7 +118,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
 
             return WithMetadata.<String>builder()
                     .key(next)
-                    .metadata(persistMetadata.extract(next))
+                    .metadata(metdataOper.extract(next, store))
                     .build();
         }
     }

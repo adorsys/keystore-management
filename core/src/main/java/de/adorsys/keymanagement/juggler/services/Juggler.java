@@ -9,7 +9,8 @@ import de.adorsys.keymanagement.api.source.KeyReader;
 import de.adorsys.keymanagement.bouncycastle.adapter.modules.persist.BCPersistModule;
 import de.adorsys.keymanagement.bouncycastle.adapter.modules.generator.BCGeneratorModule;
 import de.adorsys.keymanagement.bouncycastle.adapter.modules.keystore.BCKeyStoreModule;
-import de.adorsys.keymanagement.bouncycastle.adapter.modules.metadata.BCMetadataModule;
+import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
+import de.adorsys.keymanagement.juggler.modules.metadata.MetadataModule;
 import de.adorsys.keymanagement.juggler.modules.source.SourceModule;
 import de.adorsys.keymanagement.juggler.modules.generator.GeneratorModule;
 
@@ -17,10 +18,10 @@ import javax.annotation.Nullable;
 
 @Component(modules = {
         GeneratorModule.class,
-        BCGeneratorModule.class,
+        BCGeneratorModule.class, // FIXME BC* these should be package independent and provided by security-prov-adapter
         BCKeyStoreModule.class,
         BCPersistModule.class,
-        BCMetadataModule.class,
+        MetadataModule.class,
         SourceModule.class
 })
 public interface Juggler {
@@ -33,7 +34,10 @@ public interface Juggler {
     interface Builder {
 
         @BindsInstance
-        Builder withMetadataPersistence(@Nullable KeyMetadataPersistence persistence);
+        Builder withMetadataPersistenceConfig(@Nullable MetadataPersistenceConfig config);
+
+        @BindsInstance
+        Builder withMetadataPersister(@Nullable KeyMetadataPersistence persistence);
 
         Juggler build();
     }

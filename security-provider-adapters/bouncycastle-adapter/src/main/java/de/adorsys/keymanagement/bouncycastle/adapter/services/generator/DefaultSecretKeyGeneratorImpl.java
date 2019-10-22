@@ -5,9 +5,13 @@ import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.SecretKeyData;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.types.keystore.ReadKeyPassword;
+import lombok.SneakyThrows;
 
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.inject.Inject;
+import java.util.function.Supplier;
 
 public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
 
@@ -26,6 +30,14 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
                 .keyTemplate(fromTemplate)
                 .key(generateSecret(fromTemplate).getSecretKey())
                 .build();
+    }
+
+    @Override
+    @SneakyThrows
+    public SecretKey generateFromPassword(Supplier<char[]> password) {
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(password.get());
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_256"); // FIXME configurable
+        return keyFac.generateSecret(pbeKeySpec);
     }
 
     private SecretKeyData generateSecret(Secret secret) {
