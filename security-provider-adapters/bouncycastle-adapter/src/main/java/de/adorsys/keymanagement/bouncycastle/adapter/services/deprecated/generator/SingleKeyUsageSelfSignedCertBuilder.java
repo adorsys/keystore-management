@@ -2,7 +2,6 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.genera
 
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.types.SelfSignedKeyPairData;
 import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.cert.X509CertificateHolder;
 
 import java.security.KeyPair;
@@ -19,7 +18,6 @@ public class SingleKeyUsageSelfSignedCertBuilder {
     private Integer notAfterInDays;
     private Integer notBeforeInDays = 0;
     private X500Name subjectDN;
-    private GeneralNames subjectAltNames;
     private boolean ca;
     private int[] keyUsages;
 

@@ -5,6 +5,7 @@ import de.adorsys.keymanagement.api.generator.KeyGenerator;
 import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.generator.SigningKeyGenerator;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.entity.KeyPairEntry;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
@@ -38,12 +39,14 @@ public class TemplateMappingGeneratorImpl implements KeyGenerator {
 
     @Override
     public ProvidedKeyPair signing(Signing template) {
-        return signingKeyGenerator.generate(template);
+        KeyPairEntry entry = signingKeyGenerator.generate(template);
+        return ProvidedKeyPair.from(entry, template);
     }
 
     @Override
     public ProvidedKeyPair encrypting(Encrypting template) {
-        return encryptingKeyGenerator.generate(template);
+        KeyPairEntry entry = encryptingKeyGenerator.generate(template);
+        return ProvidedKeyPair.from(entry, template);
     }
 
     @Override

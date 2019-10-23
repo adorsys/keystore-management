@@ -1,11 +1,15 @@
 package de.adorsys.keymanagement.api.types.template.provided;
 
+import de.adorsys.keymanagement.api.types.entity.KeyPairEntry;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
-import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
 import de.adorsys.keymanagement.api.types.template.NameAndPassword;
-import lombok.*;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Singular;
 import lombok.experimental.Delegate;
 
 import java.security.KeyPair;
@@ -42,5 +46,14 @@ public class ProvidedKeyPair implements ProvidedKeyTemplate {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
         this.certificates = certificates;
         this.pair = pair;
+    }
+
+    public static ProvidedKeyPair from(KeyPairEntry entry, KeyTemplate template) {
+
+        return ProvidedKeyPair.builder()
+                .keyTemplate(template)
+                .pair(entry.getPair())
+                .certificates(entry.getCertificates())
+                .build();
     }
 }

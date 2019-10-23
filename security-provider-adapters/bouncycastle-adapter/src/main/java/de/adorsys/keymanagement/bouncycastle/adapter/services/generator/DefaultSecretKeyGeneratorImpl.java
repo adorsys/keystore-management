@@ -3,8 +3,7 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.generator;
 import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.SecretKeyData;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.types.keystore.ReadKeyPassword;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.SecretKeyBuilder;
 import lombok.SneakyThrows;
 
 import javax.crypto.SecretKey;
@@ -21,14 +20,14 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
 
     @Override
     public SecretKey generateKey(Secret fromTemplate) {
-        return generateSecret(fromTemplate).getSecretKey();
+        return generateSecret(fromTemplate);
     }
 
     @Override
     public ProvidedKey generate(Secret fromTemplate) {
         return ProvidedKey.builder()
                 .keyTemplate(fromTemplate)
-                .key(generateSecret(fromTemplate).getSecretKey())
+                .key(generateSecret(fromTemplate))
                 .build();
     }
 
@@ -40,14 +39,10 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
         return keyFac.generateSecret(pbeKeySpec);
     }
 
-    private SecretKeyData generateSecret(Secret secret) {
-        return new de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.SecretKeyGeneratorImpl(
-                secret.getAlgo(),
-                secret.getSize()
-        )
-                .generate(
-                        "STUB",
-                        new ReadKeyPassword("STUB") // FIXME unneeded
-                );
+    private SecretKey generateSecret(Secret secret) {
+        return new SecretKeyBuilder()
+                .withKeyAlg(secret.getAlgo())
+                .withKeyLength(secret.getSize())
+                .build();
     }
 }

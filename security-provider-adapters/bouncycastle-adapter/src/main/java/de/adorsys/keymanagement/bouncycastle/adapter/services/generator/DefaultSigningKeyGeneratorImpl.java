@@ -1,17 +1,13 @@
 package de.adorsys.keymanagement.bouncycastle.adapter.services.generator;
 
 import de.adorsys.keymanagement.api.generator.SigningKeyGenerator;
+import de.adorsys.keymanagement.api.types.entity.KeyPairEntry;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
-import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.KeyPairData;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.KeyPairGeneratorImpl;
+import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.KeyPairGenerator;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.V3CertificateUtils;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.types.keystore.ReadKeyPassword;
-import lombok.SneakyThrows;
-import org.bouncycastle.cert.X509CertificateHolder;
 
 import javax.inject.Inject;
-import java.security.KeyPair;
 
 public class DefaultSigningKeyGeneratorImpl implements SigningKeyGenerator {
 
@@ -20,26 +16,18 @@ public class DefaultSigningKeyGeneratorImpl implements SigningKeyGenerator {
     }
 
     @Override
-    public KeyPair generatePair(Signing fromTemplate) {
-        return generateSigning(fromTemplate).getKeyPair().getKeyPair();
-    }
+    public KeyPairEntry generate(Signing fromTemplate) {
+        KeyPairData keyPair = KeyPairGenerator.builder()
+                .keyAlgo(fromTemplate.getAlgo())
+                .keySize(fromTemplate.getSize())
+                .serverSigAlgo(fromTemplate.getSigAlgo())
+                .serverKeyPairName(fromTemplate.getCommonName())
+                .build()
+                .generateSignatureKey();
 
-    @Override
-    public ProvidedKeyPair generate(Signing fromTemplate) {
-        KeyPairData data = generateSigning(fromTemplate);
-        X509CertificateHolder subjectCert = data.getKeyPair().getSubjectCert();
-        return ProvidedKeyPair.builder()
-                .keyTemplate(fromTemplate)
-                .pair(data.getKeyPair().getKeyPair())
-                .certificate(V3CertificateUtils.getX509JavaCertificate(subjectCert))
+        return KeyPairEntry.builder()
+                .pair(keyPair.getKeyPair().getKeyPair())
+                .certificate(V3CertificateUtils.getX509JavaCertificate(keyPair.getKeyPair().getSubjectCert()))
                 .build();
-    }
-
-    @SneakyThrows
-    private KeyPairData generateSigning(Signing signing) {
-        return new KeyPairGeneratorImpl(signing.getAlgo(), signing.getSize(), signing.getSigAlgo(), "PAIR")
-                .generateSignatureKey("STUB",
-                        new ReadKeyPassword("STUB") // FIXME unneeded
-                );
     }
 }

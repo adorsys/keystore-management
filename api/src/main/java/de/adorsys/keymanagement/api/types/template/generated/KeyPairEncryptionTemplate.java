@@ -16,6 +16,9 @@ public class KeyPairEncryptionTemplate {
     @Builder.Default
     private final String sigAlgo = "SHA256withRSA";
 
+    @Builder.Default
+    private final String commonName = "KEY-PAIR";
+
     public interface ExcludeToBuilder {
         KeyPairEncryptionTemplate toBuilder();
     }

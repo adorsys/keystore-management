@@ -5,8 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
+import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.KeyUsage;
-import org.bouncycastle.asn1.x509.X509Extension;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
@@ -90,16 +90,16 @@ public class CaSignedCertificateBuilder {
         v3CertGen = new JcaX509v3CertificateBuilder(issuerDN, serial, notBefore, notAfter, subjectDN, subjectPublicKey);
         JcaX509ExtensionUtils extUtils = V3CertificateUtils.getJcaX509ExtensionUtils();
 
-        v3CertGen.addExtension(X509Extension.basicConstraints, true, basicConstraints);
+        v3CertGen.addExtension(Extension.basicConstraints, true, basicConstraints);
 
-        v3CertGen.addExtension(X509Extension.subjectKeyIdentifier, false,
+        v3CertGen.addExtension(Extension.subjectKeyIdentifier, false,
                 extUtils.createSubjectKeyIdentifier(subjectPublicKey));
 
-        v3CertGen.addExtension(X509Extension.authorityKeyIdentifier, false,
+        v3CertGen.addExtension(Extension.authorityKeyIdentifier, false,
                 extUtils.createAuthorityKeyIdentifier(subjectPublicKey));
 
         if (keyUsageSet) {
-            v3CertGen.addExtension(X509Extension.keyUsage,
+            v3CertGen.addExtension(Extension.keyUsage,
                     true, new KeyUsage(this.keyUsage));
         }
 
