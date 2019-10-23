@@ -5,13 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.adorsys.keymanagement</groupId>
-    <artifactId>platform</artifactId>
+    <artifactId>keystore-management</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>api</module>
         <module>core</module>
         <module>security-provider-adapters</module>
+        <module>juggler</module>
     </modules>
 
     <name>keymanagement</name>

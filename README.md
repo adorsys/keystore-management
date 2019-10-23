@@ -46,7 +46,7 @@ TODO: Migrate to AsciiDoc for automatic snippet embedding.
 -->
 
 ### Generate keystore
-[Example:Generate keystore](core/src/test/java/de/adorsys/keymanagement/examples/NewKeyStoreTest.java#L30-L51)
+[Example:Generate keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/NewKeyStoreTest.java#L30-L51)
 ```groovy
 // Obtain Juggler service instance:
 Juggler juggler = DaggerJuggler.builder().build();
@@ -71,7 +71,7 @@ assertThat(countKeys(store)).isEqualTo(13);
 ```
 
 ### Change keystore password or clone it
-[Example:Clone keystore and change key password](core/src/test/java/de/adorsys/keymanagement/examples/CloneKeyStoreAndChangeKeyPasswordTest.java#L29-L60)
+[Example:Clone keystore and change key password](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/CloneKeyStoreAndChangeKeyPasswordTest.java#L29-L60)
 ```groovy
 // Obtain Juggler service instance:
 Juggler juggler = DaggerJuggler.builder().build();
@@ -106,7 +106,7 @@ assertThat(newKeystore.getKey("MY-KEY", "NEW_PASSWORD!".toCharArray())).isNotNul
 ```
 
 ### Generate secret key
-[Example:Generate secret key](core/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
+[Example:Generate secret key](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
 ```groovy
 // Obtain Juggler service instance:
 Juggler juggler = DaggerJuggler.builder().build();
@@ -124,7 +124,7 @@ assertThat(key.getEncoded()).hasSize(16); // 16 * 8 (sizeof byte) = 128 bits
 ```
 
 ### Open and analyze keystore
-[Example:Query keystore](core/src/test/java/de/adorsys/keymanagement/examples/QueryKeyStoreTest.java#L28-L65)
+[Example:Query keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/QueryKeyStoreTest.java#L28-L65)
 ```groovy
 // Obtain Juggler service
 Juggler juggler = DaggerJuggler.builder().build();
@@ -165,7 +165,7 @@ assertThat(entryView.trustedCerts()).hasSize(0);
 ```
 
 ### Persist key with metadata into keystore
-[Example:Save metadata to keystore](core/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L34-L78)
+[Example:Save metadata to keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L34-L78)
 ```groovy
 // Obtain Juggler service
 Juggler juggler = DaggerJuggler.builder()

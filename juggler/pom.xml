@@ -9,11 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>security-provider-adapters</artifactId>
+    <artifactId>juggler</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>bouncycastle-adapter</module>
+        <module>juggler-bouncycastle</module>
     </modules>
 
 </project>
