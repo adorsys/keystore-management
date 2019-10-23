@@ -1,14 +1,14 @@
 @startuml
-skinparam ranksep 35
+skinparam ranksep 25
 skinparam defaultTextAlignment center
-skinparam nodesep 50
+skinparam nodesep 30
 skinparam shadowing false
 'skinparam linetype ortho
 
-legend
-|= |= Flow legend    |
-|<back:firebrick>   </back>| Key and Keystore   <b>creation    |
-|<back:green>   </back>| Viewing and   <b>reading</b>  from KeyStore        |
+legend right
+    |         | Flow |
+    |<#red>| Key and Keystore   <b>creation   |
+    |<#green>| Viewing and   <b>reading</b>  from KeyStore    |
 endlegend
 
 [<&key> Single key template] as KT
@@ -38,8 +38,8 @@ database "\n<b>Java\n<b>KeyStore\n" as JKS
 node "Juggler.readKeys()" as RK
 
 rectangle "Key View\n" as KV {
-   [Alias view] as av
-   [Key view] as kv
+   rectangle "Alias view" as av
+   rectangle "Key view" as kv
    av -[hidden]down-> kv
 }
 
@@ -47,12 +47,12 @@ node "Query for key" as qsk
 node "Add key" as ak
 node "Remove key" as rk
 
-KST -[bold]-> GK
-KT -[bold]-> GK
-GK -[bold]--> KS
-GK -[bold]up-> SK
-KS -[bold]-> TK
-TK -[bold]-> JKS
+KST -[bold,#red]-> GK
+KT -[bold,#red]-> GK
+GK -[bold,#red]--> KS
+GK -[bold,#red]up-> SK
+KS -[bold,#red]-> TK
+TK -[bold,#red]-> JKS
 JKS -[bold,#green]-->> RK
 RK -[bold,#green]-->> KV
 KV -[bold,#green]up->> KS
