@@ -55,6 +55,41 @@ KeyStore store = juggler.toKeystore().generate(keySet, password);
 assertThat(countKeys(store)).isEqualTo(13);
 ```
 
+### Change keystore password or clone it
+[Example:Clone keystore and change key password](core/src/test/java/de/adorsys/keymanagement/examples/CloneKeyStoreAndChangeKeyPasswordTest.java#L29-L60)
+```groovy
+// Obtain Juggler service instance:
+Juggler juggler = DaggerJuggler.builder().build();
+
+// We want our keystore to have:
+KeySetTemplate template = KeySetTemplate.builder()
+        .providedKey(ProvidedKey.with().alias("MY-KEY").key(stubSecretKey()).build()) // One provided key (i.e. existing) that has alias `MY-KEY`
+        .generatedEncryptionKeys(Encrypting.with().prefix("ENC").build().repeat(10)) // Ten generated private keys (with certificates) that have alias `ENC` + random UUID
+        .build();
+
+// Provide key protection password:
+Supplier<char[]> password = "PASSWORD!"::toCharArray;
+// Generate key set
+KeySet keySet = juggler.generateKeys().fromTemplate(template);
+// Generate KeyStore with each key protected with `PASSWORD!` password
+KeyStore store = juggler.toKeystore().generate(keySet, password);
+// Clone generated KeyStore:
+Supplier<char[]> newPassword = "NEW_PASSWORD!"::toCharArray;
+// Create key set from old keystore that has new password `NEW_PASSWORD!`:
+KeySet clonedSet = juggler.readKeys()
+        .fromKeyStore(store, id -> password.get())
+        .copyToKeySet(id -> newPassword.get());
+// Generate cloned KeyStore with each key protected with `NEW_PASSWORD!` password (provided on key set)
+KeyStore newKeystore = juggler.toKeystore().generate(clonedSet, () -> null);
+
+// Validate old keystore has same key count as new keystore:
+assertThat(countKeys(store)).isEqualTo(countKeys(newKeystore));
+// Validate old keystore has key password `PASSWORD!`
+assertThat(store.getKey("MY-KEY", "PASSWORD!".toCharArray())).isNotNull();
+// Validate new keystore has key password `NEW_PASSWORD!`
+assertThat(newKeystore.getKey("MY-KEY", "NEW_PASSWORD!".toCharArray())).isNotNull();
+```
+
 ### Generate secret key
 [Example:Generate secret key](core/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
 ```groovy
