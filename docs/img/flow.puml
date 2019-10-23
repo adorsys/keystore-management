@@ -1,32 +1,34 @@
 @startuml
-skinparam ranksep 25
+skinparam ranksep 15
 skinparam defaultTextAlignment center
-skinparam nodesep 30
+skinparam nodesep 20
 skinparam shadowing false
 'skinparam linetype ortho
+
+skinparam databaseBackgroundColor Salmon
+skinparam cardBackgroundColor Salmon
 
 legend right
     |         | Flow |
     |<#red>| Key and Keystore   <b>creation   |
     |<#green>| Viewing and   <b>reading</b>  from KeyStore    |
+    |<#Salmon>| Library typical    <b>inputs</b>    |
 endlegend
 
-[<&key> Single key template] as KT
-together " " as GFT {
-   rectangle "Key Set template\n" as KST {
-       rectangle "<&key> Key template 1" as k1
-       rectangle "<&key> Key template 2" as k2
-       k1 -[hidden]down-> k2
-   }
-   KT -[hidden]down-> KST
+card "<&key> Single key template" as KT
+
+card "Key Set template\n" as KST {
+   rectangle "<&key> Key template 1" as k1
+   rectangle "<&key> Key template 2" as k2
 }
+KT -[hidden]down-> KST
 
 node "Juggler.generateKeys()" as GK
 
-rectangle "Key Set\n\nSecretKey,\nPrivateKey,\netc.\n" as KS {
+rectangle "Key Set\nSecretKey,\nPrivateKey,\netc." as KS {
     rectangle "<&key> Key 1" as sk1
     rectangle "<&key> Key 2" as sk2
-    sk1 -[hidden]-> sk2
+    sk1 -[hidden]down-> sk2
  }
 
 rectangle "<&key> Key" as SK
@@ -38,8 +40,8 @@ database "\n<b>Java\n<b>KeyStore\n" as JKS
 node "Juggler.readKeys()" as RK
 
 rectangle "Key View\n" as KV {
-   rectangle "Alias view" as av
-   rectangle "Key view" as kv
+   rectangle "Alias view\naliases()" as av
+   rectangle "Key view\nentries()" as kv
    av -[hidden]down-> kv
 }
 
@@ -49,18 +51,18 @@ node "Remove key" as rk
 
 KST -[bold,#red]-> GK
 KT -[bold,#red]-> GK
-GK -[bold,#red]--> KS
-GK -[bold,#red]up-> SK
-KS -[bold,#red]-> TK
-TK -[bold,#red]-> JKS
+GK -[bold,#red]--> KS  : fromTemplate()
+GK -[bold,#red]up-> SK : secret(),\nsigning(),\nencrypting()
+KS -[bold,#red]--> TK
+TK -[bold,#red]-> JKS : generate()
 JKS -[bold,#green]-->> RK
-RK -[bold,#green]-->> KV
-KV -[bold,#green]up->> KS
-KV -[bold,#green]-->> qsk
-KV -[bold,#green]-->> ak
-KV -[bold,#green]-->> rk
+RK -[bold,#green]-->> KV : fromKeyStore()
+KV -[bold,#green]up->> KS : copyToKeySet()
+KV -[bold,#green]-->> qsk : retrieve()
+KV -[bold,#green]-->> ak : add(),\nupdate()
+KV -[bold,#green]-->> rk : remove(),\nupdate()
 
-GFT -[hidden]right-> GK
+KST -[hidden]down-> GK
 GK -[hidden]down-> KS
 KS -[hidden]up-> SK
 KS -[hidden]right-> TK
