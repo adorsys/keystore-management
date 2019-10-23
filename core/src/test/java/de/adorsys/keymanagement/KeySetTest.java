@@ -120,7 +120,6 @@ class KeySetTest {
         val ks = juggler.toKeystore().generate(keySet, password);
         val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
         val view = source.aliases();
-        view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getAlias();
         assertThat(
                 ((KeyExpirationMetadata)
                         view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()

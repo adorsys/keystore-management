@@ -4,6 +4,14 @@ Additionally to key persistence it provides capability of persisting key metadat
 Querying keys and their metadata is done using CQEngine under the hood - this allows writing complex queries.
 For example one can query for `key instanceof SecretKey`.
 
+#  Problems solved with this library
+
+ -  AES,RSA,etc. fluent encrypting key generation.
+ -  RSA,DSA,etc. fluent signing key generation.
+ -  Fluent storing of key sets into keystore.
+ -  KeyStore querying for keys by alias, key type, key metadata, etc.
+ -  KeyStore manipulation - duplicating, changing key protection password, etc. 
+ -  Key metadata persistence directly inside KeyStore.
 
 #  API description
 
