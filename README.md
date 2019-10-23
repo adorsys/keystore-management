@@ -9,7 +9,7 @@ For example one can query for `key instanceof SecretKey`.
 
 ### API flow diagram
 
-![API flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/keystore-management/develop/docs/img/flow.puml&fmt=svg&vvv=3&sanitize=true)
+![API flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/keystore-management/develop/docs/img/flow.puml&fmt=svg&vvv=4&sanitize=true)
 
 ### Getting access to services
 
