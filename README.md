@@ -13,6 +13,19 @@ For example one can query for `key instanceof SecretKey`.
  -  KeyStore manipulation - duplicating, changing key protection password, etc. 
  -  Key metadata persistence directly inside KeyStore.
 
+# Using library
+
+## Maven
+
+Add dependency (Uses BouncyCastle security provider):
+```xml
+<dependency>
+    <groupId>de.adorsys.keymanagement</groupId>
+    <artifactId>juggler-bouncycastle</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
 #  API description
 
 ### API flow diagram
