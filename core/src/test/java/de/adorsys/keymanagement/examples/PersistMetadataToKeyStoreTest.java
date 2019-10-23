@@ -1,7 +1,6 @@
 package de.adorsys.keymanagement.examples;
 
 import com.googlecode.cqengine.query.Query;
-import com.googlecode.cqengine.query.QueryFactory;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
@@ -68,7 +67,7 @@ class PersistMetadataToKeyStoreTest {
         assertThat(
                 view.retrieve(
                         and(
-                                QueryFactory.has(META), // Key has metadata
+                                has(META), // Key has metadata
                                 lessThan(
                                         attribute(key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter()), // Key expiration date
                                         Instant.now() // current date, so that if expiresAfter < now() key is expired

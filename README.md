@@ -150,7 +150,7 @@ assertThat(entryView.trustedCerts()).hasSize(0);
 ```
 
 ### Persist key with metadata into keystore
-[Example:Save metadata to keystore](core/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L35-L79)
+[Example:Save metadata to keystore](core/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L34-L78)
 ```groovy
 // Obtain Juggler service
 Juggler juggler = DaggerJuggler.builder()
@@ -187,7 +187,7 @@ AliasView<Query<KeyAlias>> view = source.aliases();
 assertThat(
         view.retrieve(
                 and(
-                        QueryFactory.has(META), // Key has metadata
+                        has(META), // Key has metadata
                         lessThan(
                                 attribute(key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter()), // Key expiration date
                                 Instant.now() // current date, so that if expiresAfter < now() key is expired
