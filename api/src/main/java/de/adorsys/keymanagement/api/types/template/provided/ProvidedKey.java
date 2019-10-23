@@ -24,15 +24,20 @@ public class ProvidedKey implements ProvidedKeyTemplate {
     @Delegate
     private final Key key;
 
+    @Getter
+    private final KeyMetadata metadata;
+
     @Builder(builderClassName = "Templated", toBuilder = true)
-    ProvidedKey(@NonNull KeyTemplate keyTemplate, @NonNull Key key) {
+    ProvidedKey(@NonNull KeyTemplate keyTemplate, @NonNull Key key, KeyMetadata metadata) {
         this.keyTemplate = keyTemplate;
+        this.metadata = metadata;
         this.key = key;
     }
 
     @Builder(builderMethodName = "with")
     ProvidedKey(String alias, String prefix, Supplier<char[]> password, @NonNull Key key, KeyMetadata metadata) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+        this.metadata = metadata;
         this.key = key;
     }
 }

@@ -84,6 +84,6 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
 
     @Override
     protected boolean updateCollection(Collection<KeyAlias> keysToRemove, Collection<KeyAlias> keysToAdd) {
-        return aliases.update(Collections.emptyList(), keysToAdd);
+        return aliases.update(keysToRemove, keysToAdd);
     }
 }

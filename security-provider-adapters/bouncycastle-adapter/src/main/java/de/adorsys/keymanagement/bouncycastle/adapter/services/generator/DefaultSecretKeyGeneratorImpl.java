@@ -27,6 +27,7 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
     public ProvidedKey generate(Secret fromTemplate) {
         return ProvidedKey.builder()
                 .keyTemplate(fromTemplate)
+                .metadata(fromTemplate.getMetadata())
                 .key(generateSecret(fromTemplate))
                 .build();
     }

@@ -6,12 +6,12 @@ For example one can query for `key instanceof SecretKey`.
 
 #  Problems solved with this library
 
- -  AES,RSA,etc. fluent encrypting key generation.
- -  RSA,DSA,etc. fluent signing key generation.
- -  Fluent storing of key sets into keystore.
- -  KeyStore querying for keys by alias, key type, key metadata, etc.
- -  KeyStore manipulation - duplicating, changing key protection password, etc. 
- -  Key metadata persistence directly inside KeyStore.
+-  AES,RSA,etc. fluent encrypting key generation.
+-  RSA,DSA,etc. fluent signing key generation.
+-  Fluent storing of key sets into keystore.
+-  KeyStore querying for keys by alias, key type, key metadata, etc.
+-  KeyStore manipulation - duplicating, changing key protection password, etc.
+-  Key metadata persistence directly inside KeyStore.
 
 # Using library
 
@@ -20,9 +20,9 @@ For example one can query for `key instanceof SecretKey`.
 Add dependency (Uses BouncyCastle security provider):
 ```xml
 <dependency>
-    <groupId>de.adorsys.keymanagement</groupId>
-    <artifactId>juggler-bouncycastle</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+<groupId>de.adorsys.keymanagement</groupId>
+<artifactId>juggler-bouncycastle</artifactId>
+<version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -223,6 +223,63 @@ assertThat(
                 )
         ).toCollection()
 ).hasSize(1);
+```
+
+### Update key in keystore based on its metadata
+[Example:Rotate expired key in keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/RotateKeyBasedOnMetadataTest.java#L39-L92)
+```groovy
+// Obtain Juggler service
+Juggler juggler = DaggerJuggler.builder()
+        .metadataPersister(new WithPersister()) // enable metadata persistence
+        .metadataConfig(
+                MetadataPersistenceConfig.builder()
+                        .metadataClass(KeyValidity.class) // define metadata class
+                        .build()
+        )
+        .build();
+
+// Key protection password:
+Supplier<char[]> password = "PASSWORD!"::toCharArray;
+
+// Lazy key template:
+Function<Instant, Encrypting> keyTemplate = expiryDate -> Encrypting.with()
+        .alias("ENC-KEY-1") // key with alias `ENC-KEY-1` in KeyStore// Associated metadata with this key, pretend it is `expired` key
+        .metadata(new KeyValidity(expiryDate))
+        .password(password)
+        .build();
+
+// Key set template that is going to be saved into KeyStore
+KeySetTemplate template = KeySetTemplate.builder()
+        // One private key that can be used for encryption:
+        .generatedEncryptionKey(
+                keyTemplate.apply(Instant.now()) // Will pretend that key has expired
+        )
+        .build();
+
+// Generate key set:
+KeySet keySet = juggler.generateKeys().fromTemplate(template); // Key metadata will indicate that key has expired
+// Generate new KeyStore, it will have metadata in it
+KeyStore ks = juggler.toKeystore().generate(keySet, () -> null);
+// Open KeyStore view to query it:
+KeyStoreView source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
+// Open alias view to query key alias by metadata
+AliasView<Query<KeyAlias>> view = source.aliases();
+// Find expired key:
+ResultCollection<KeyAlias> expired = view.retrieve(KeyValidity.EXPIRED).toCollection();
+assertThat(expired).hasSize(1);
+// replace expired key:
+view.update(
+        expired,
+        Collections.singleton(
+                juggler.generateKeys().encrypting(
+                        keyTemplate.apply(Instant.now().plus(10, ChronoUnit.HOURS)) // Valid for 10 hours from now
+                )
+        )
+);
+// validate there is only one `ENC-KEY-1` key
+assertThat(view.retrieve(equal(A_ID, "ENC-KEY-1")).toCollection()).hasSize(1);
+// and this key is NOT expired
+assertThat(view.retrieve(KeyValidity.EXPIRED).toCollection()).hasSize(0);
 ```
 
 #  Project details

@@ -26,20 +26,26 @@ public class Encrypting implements GeneratedKeyTemplate {
     @Delegate(excludes = KeyPairEncryptionTemplate.ExcludeToBuilder.class)
     private final KeyPairEncryptionTemplate encryptionTemplate;
 
+    @Getter
+    private final KeyMetadata metadata;
+
     public Collection<Encrypting> repeat(int times) {
         return IntStream.range(0, times).boxed().map(it -> this.toBuilder().build()).collect(Collectors.toList());
     }
 
     @Builder(builderClassName = "Templated", toBuilder = true)
-    Encrypting(@NonNull KeyTemplate keyTemplate, @NonNull KeyPairEncryptionTemplate encryptionTemplate) {
+    Encrypting(@NonNull KeyTemplate keyTemplate, @NonNull KeyPairEncryptionTemplate encryptionTemplate,
+               KeyMetadata metadata) {
         this.keyTemplate = keyTemplate;
+        this.metadata = metadata;
         this.encryptionTemplate = encryptionTemplate;
     }
 
     @Builder(builderMethodName = "with")
     Encrypting(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
                Integer keySize, KeyMetadata metadata) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+        this.metadata = metadata;
         this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo);
     }
 }

@@ -24,16 +24,21 @@ public class ProvidedKeyEntry implements ProvidedKeyTemplate {
     @Delegate
     private final KeyStore.Entry entry;
 
+    @Getter
+    private final KeyMetadata metadata;
+
     @Builder(builderClassName = "Templated", toBuilder = true)
-    ProvidedKeyEntry(@NonNull KeyTemplate keyTemplate, @NonNull KeyStore.Entry entry) {
+    ProvidedKeyEntry(@NonNull KeyTemplate keyTemplate, @NonNull KeyStore.Entry entry, KeyMetadata metadata) {
         this.keyTemplate = keyTemplate;
+        this.metadata = metadata;
         this.entry = entry;
     }
 
     @Builder(builderMethodName = "with")
     ProvidedKeyEntry(String alias, String prefix, Supplier<char[]> password, @NonNull KeyStore.Entry entry,
                      KeyMetadata metadata) {
-        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password, metadata);
+        this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
+        this.metadata = metadata;
         this.entry = entry;
     }
 }
