@@ -15,8 +15,38 @@
     </modules>
 
     <name>keymanagement</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <description>
+        Fluent-API to generate encryption keys and keystores.
+        Query-like syntax to read and manipulate keys in keystore.
+    </description>
+    <url>https://github.com/adorsys/keystore-management</url>
+    <scm>
+        <connection>scm:git@github.com:adorsys/keystore-management.git</connection>
+        <developerConnection>scm:git:git@github.com:adorsys/keystore-management.git</developerConnection>
+        <url>git@github.com:adorsys/keystore-management.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Maksym Hryshchenko</name>
+            <email>mhr@adorsys.de</email>
+            <organization>adorsys</organization>
+            <organizationUrl>https://adorsys.de/</organizationUrl>
+        </developer>
+        <developer>
+            <name>Valentyn Berezin</name>
+            <email>vbeex@adorsys.de</email>
+            <organization>adorsys</organization>
+            <organizationUrl>https://adorsys.de/</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
