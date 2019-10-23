@@ -6,6 +6,13 @@ For example one can query for `key instanceof SecretKey`.
 
 
 #  API description
+
+### API flow diagram
+
+![API flow](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/kesytore-management/develop/docs/img/flow.puml&fmt=svg&vvv=1&sanitize=true)
+
+### Getting access to services
+
 All services are available through `Juggler` interface. To obtain instance of it one should call following:
 ```groovy
 Juggler juggler = DaggerJuggler.builder().build();
