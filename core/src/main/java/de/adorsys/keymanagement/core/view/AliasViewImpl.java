@@ -13,6 +13,7 @@ import de.adorsys.keymanagement.api.CqeQueryResult;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
+import de.adorsys.keymanagement.api.types.entity.WithMetadata;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.view.AliasView;
 import de.adorsys.keymanagement.api.view.QueryResult;
@@ -21,6 +22,8 @@ import lombok.SneakyThrows;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
@@ -46,13 +49,25 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
     private final IndexedCollection<KeyAlias> aliases = new TransactionalIndexedCollection<>(KeyAlias.class);
 
     public AliasViewImpl(KeySource source) {
-        this(source, Collections.emptyList());
+        this(source, k -> true, Collections.emptyList());
     }
 
     @SneakyThrows
-    public AliasViewImpl(KeySource source, Collection<Index<KeyAlias>> indexes) {
+    public AliasViewImpl(KeySource source, Predicate<KeyAlias> inclusionFilter) {
+        this(source, inclusionFilter, Collections.emptyList());
+    }
+
+    @SneakyThrows
+    public AliasViewImpl(KeySource source, Predicate<KeyAlias> inclusionFilter, Collection<Index<KeyAlias>> indexes) {
         this.source = source;
-        source.aliases().forEach(it -> aliases.add(new KeyAlias(it.getKey(), it.getMetadata())));
+
+        aliases.addAll(
+                source.aliases()
+                        .map(it -> new KeyAlias(it.getKey(), it.getMetadata(), it.isMetadataEntry()))
+                        .filter(inclusionFilter)
+                        .collect(Collectors.toList())
+        );
+
         this.aliases.addIndex(RadixTreeIndex.onAttribute(A_ID));
         indexes.forEach(aliases::addIndex);
     }
@@ -79,7 +94,8 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
 
     @Override
     protected KeyAlias viewFromId(String ofKey) {
-        return new KeyAlias(ofKey, source.asAliasWithMeta(ofKey).getMetadata());
+        WithMetadata<String> key = source.asAliasWithMeta(ofKey);
+        return new KeyAlias(ofKey, key.getMetadata(), key.isMetadataEntry());
     }
 
     @Override

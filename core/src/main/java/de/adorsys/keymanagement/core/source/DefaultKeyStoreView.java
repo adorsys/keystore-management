@@ -24,11 +24,21 @@ public class DefaultKeyStoreView implements KeyStoreView {
 
     @Override
     public EntryView<Query<KeyEntry>> entries() {
-        return new EntryViewImpl(source); // FIXME Inject/provide extra indexes
+        return new EntryViewImpl(source, k -> !k.isMetadataEntry()); // FIXME Inject/provide extra indexes
     }
 
     @Override
     public AliasView<Query<KeyAlias>> aliases() {
+        return new AliasViewImpl(source, k -> !k.isMetadataEntry()); // FIXME Inject/provide extra indexes
+    }
+
+    @Override
+    public EntryView<Query<KeyEntry>> allEntries() {
+        return new EntryViewImpl(source); // FIXME Inject/provide extra indexes
+    }
+
+    @Override
+    public AliasView<Query<KeyAlias>> allAliases() {
         return new AliasViewImpl(source); // FIXME Inject/provide extra indexes
     }
 

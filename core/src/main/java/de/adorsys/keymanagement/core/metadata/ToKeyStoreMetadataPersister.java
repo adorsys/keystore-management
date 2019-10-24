@@ -8,8 +8,12 @@ import lombok.val;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.CRC32;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Trivial metadata persistence strategy using surrogate key alias - key metadata is persisted by composing
@@ -19,7 +23,8 @@ import java.security.KeyStore;
 @Slf4j
 public class ToKeyStoreMetadataPersister implements MetadataPersister {
 
-    private static final String METADATA_SUFFIX = "-KEY-METADATA";
+    private static final String METADATA_SUFFIX = "KEYMETADATA";
+    private static final Pattern METADATA_PATTERN = Pattern.compile("(.+):([0-9A-F]+)-KEYMETADATA$");
 
     private final MetadataPersistenceConfig persistenceConfig;
     private final SecretKeyGenerator secretKeyGenerator;
@@ -39,15 +44,31 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
     }
 
     @Override
+    public boolean isMetadataEntry(String forAlias, KeyStore keyStore) {
+        if (!forAlias.endsWith(METADATA_SUFFIX)) {
+            return false;
+        }
+
+        Matcher matcher = METADATA_PATTERN.matcher(forAlias);
+        if (!matcher.matches()) {
+            return false;
+        }
+        String keyAlias = matcher.group(1);
+        String crc32 = matcher.group(2);
+
+        return crc32.equals(crc32(keyAlias));
+    }
+
+    @Override
     @SneakyThrows
     public KeyMetadata extract(String forAlias, KeyStore keyStore) {
-        if (forAlias.endsWith(METADATA_SUFFIX)) { // FIXME collision prone - i.e. key-name + md5(key-name) + suffix is more collision resilent
+        if (isMetadataEntry(forAlias, keyStore)) {
             return null;
         }
 
         val metadata = new String(
                 keyStore.getKey(metadataForKeyAlias(forAlias), null).getEncoded(),
-                StandardCharsets.UTF_8
+                UTF_8
         );
 
         return persistenceConfig.getGson().fromJson(metadata, persistenceConfig.getMetadataClass());
@@ -65,8 +86,17 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         );
     }
 
+    // To reduce collision probability metadata has alias `KEY_ID:crc32(KEY_ID)-KEYMETADATA`
+    // This is highly unlikely that someone will persist same
     private String metadataForKeyAlias(String forAlias) {
-        return forAlias + METADATA_SUFFIX;
+        return forAlias + ":" + crc32(forAlias) + "-" + METADATA_SUFFIX;
+    }
+
+    // Reduces collision probability even if someone uses key with alias ending with `-KEY-METADATA`
+    private String crc32(String forAlias) {
+        CRC32 crc = new CRC32();
+        crc.update(forAlias.getBytes(UTF_8));
+        return Long.toHexString(crc.getValue()).toUpperCase();
     }
 
     @Override

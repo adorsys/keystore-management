@@ -13,4 +13,9 @@ public class WithMetadata<T> {
     private final T key;
 
     private final KeyMetadata metadata;
+
+    /**
+     * Indicates whether given alias points not to a true key, but to key metadata.
+     */
+    private final boolean metadataEntry;
 }

@@ -6,6 +6,7 @@ import java.security.KeyStore;
 
 public interface KeyMetadataOper {
 
+    boolean isMetadataEntry(String forAlias, KeyStore keyStore);
     KeyMetadata extract(String forAlias, KeyStore keyStore);
     void persistMetadata(String forAlias, KeyMetadata metadata, KeyStore keyStore);
     void removeMetadata(String forAlias, KeyStore keyStore);

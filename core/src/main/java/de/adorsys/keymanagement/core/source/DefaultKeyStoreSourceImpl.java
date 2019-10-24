@@ -63,6 +63,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
         return WithMetadata.<String>builder()
                 .key(alias)
                 .metadata(metadataOper.extract(alias, store))
+                .metadataEntry(metadataOper.isMetadataEntry(alias, store))
                 .build();
     }
 
@@ -72,6 +73,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
         return WithMetadata.<KeyStore.Entry>builder()
                 .key(store.getEntry(alias, new KeyStore.PasswordProtection(keyPassword.apply(alias))))
                 .metadata(metadataOper.extract(alias, store))
+                .metadataEntry(metadataOper.isMetadataEntry(alias, store))
                 .build();
     }
 
@@ -119,6 +121,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
             return WithMetadata.<String>builder()
                     .key(next)
                     .metadata(metdataOper.extract(next, store))
+                    .metadataEntry(metdataOper.isMetadataEntry(next, store))
                     .build();
         }
     }

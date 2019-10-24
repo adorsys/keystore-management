@@ -10,6 +10,11 @@ import java.security.KeyStore;
 public final class WithPersister implements MetadataPersister {
 
     @Override
+    public boolean isMetadataEntry(String forAlias, KeyStore keyStore) {
+        return false;
+    }
+
+    @Override
     public KeyMetadata extract(String forAlias, KeyStore keyStore) {
         return null;
     }

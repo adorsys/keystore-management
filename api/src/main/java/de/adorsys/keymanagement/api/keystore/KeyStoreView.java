@@ -10,8 +10,25 @@ import java.util.function.Function;
 
 public interface KeyStoreView {
 
+    /**
+     * Returns keystore entries EXCLUDING metadata entries.
+     */
     <Q> EntryView<Q> entries();
+
+    /**
+     * Returns keystore entries EXCLUDING metadata entries.
+     */
     <Q> AliasView<Q> aliases();
+
+    /**
+     * Returns all keystore entries including metadata entries.
+     */
+    <Q> EntryView<Q> allEntries();
+
+    /**
+     * Returns all keystore entries including metadata entries.
+     */
+    <Q> AliasView<Q> allAliases();
 
     KeySource source();
     KeySet copyToKeySet(Function<String, char[]> keyPassword);

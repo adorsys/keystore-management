@@ -12,7 +12,7 @@ public class Key extends KeyAlias {
     private final java.security.Key key;
 
     public Key(String alias, WithMetadata<java.security.Key> key) {
-        super(alias, key.getMetadata());
+        super(alias, key.getMetadata(), key.isMetadataEntry());
         this.key = key.getKey();
     }
 

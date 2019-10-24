@@ -18,6 +18,7 @@ import lombok.SneakyThrows;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
@@ -39,15 +40,21 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
     private final IndexedCollection<KeyEntry> keys = new TransactionalIndexedCollection<>(KeyEntry.class);
 
     public EntryViewImpl(KeySource source) {
-        this(source, Collections.emptyList());
+        this(source, k -> true, Collections.emptyList());
+    }
+
+    public EntryViewImpl(KeySource source, Predicate<KeyEntry> inclusionFilter) {
+        this(source, inclusionFilter, Collections.emptyList());
     }
 
     @SneakyThrows
-    public EntryViewImpl(KeySource source, Collection<Index<KeyEntry>> indexes) {
+    public EntryViewImpl(KeySource source, Predicate<KeyEntry> inclusionFilter, Collection<Index<KeyEntry>> indexes) {
         this.source = source;
+
         keys.addAll(
                 source.aliasesFor(ProvidedKeyEntry.class)
                         .map(it -> new KeyEntry(it.getKey(), source.asEntry(it.getKey())))
+                        .filter(inclusionFilter)
                         .collect(Collectors.toList())
         );
         indexes.forEach(keys::addIndex);

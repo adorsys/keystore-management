@@ -7,6 +7,11 @@ import java.security.KeyStore;
 public class NoOpMetadataPersistence implements KeyMetadataPersistence {
 
     @Override
+    public boolean isMetadataEntry(String forAlias, KeyStore keyStore) {
+        return false;
+    }
+
+    @Override
     public KeyMetadata extract(String forAlias, KeyStore keyStore) {
         return null;
     }

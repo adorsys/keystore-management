@@ -10,7 +10,7 @@ public class KeyEntry extends KeyAlias {
     private final KeyStore.Entry entry;
 
     public KeyEntry(String alias, WithMetadata<KeyStore.Entry> entry) {
-        super(alias, entry.getMetadata());
+        super(alias, entry.getMetadata(), entry.isMetadataEntry());
         this.entry = entry.getKey();
     }
 
