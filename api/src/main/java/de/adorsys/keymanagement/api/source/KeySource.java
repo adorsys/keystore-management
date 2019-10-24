@@ -6,6 +6,7 @@ import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyStore;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public interface KeySource {
@@ -22,4 +23,9 @@ public interface KeySource {
 
     void remove(String keyId);
     String addAndReturnId(ProvidedKeyTemplate keyTemplate);
+
+    /**
+     * List all entries ids that are associated with given key id (i.e. metadata entry)
+     */
+    Set<String> allAssociatedEntries(String keyId);
 }

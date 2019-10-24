@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.core.source;
 
+import com.google.common.collect.ImmutableSet;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.source.KeySource;
@@ -13,10 +14,7 @@ import javax.inject.Inject;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyStore;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -100,6 +98,15 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
         String alias = oper.addToKeyStoreAndGetName(store, keyTemplate, () -> null);
         metadataOper.persistMetadata(alias, keyTemplate.getMetadata(), store);
         return alias;
+    }
+
+    @Override
+    public Set<String> allAssociatedEntries(String keyId) {
+        if (null != metadataOper.extract(keyId, store)) {
+            return ImmutableSet.of(keyId, metadataOper.metadataAliasForKeyAlias(keyId));
+        }
+
+        return ImmutableSet.of(keyId);
     }
 
     @RequiredArgsConstructor

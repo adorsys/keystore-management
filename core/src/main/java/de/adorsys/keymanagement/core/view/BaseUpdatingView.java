@@ -7,6 +7,8 @@ import lombok.val;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
@@ -29,16 +31,28 @@ public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
 
     public boolean update(Collection<O> objectsToRemove, Collection<ProvidedKeyTemplate> objectsToAdd) {
         KeySource source = getSource();
+        List<O> toRemove = objectsToRemove.stream()
+                .map(this::getKeyId)
+                .flatMap(it -> source.allAssociatedEntries(it).stream())
+                .map(this::getViewFromId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
         objectsToRemove.forEach(it -> source.remove(getKeyId(it)));
+
         val newKeys = objectsToAdd.stream()
                 .map(source::addAndReturnId)
-                .map(this::viewFromId)
+                .flatMap(it -> source.allAssociatedEntries(it).stream())
+                .map(this::newViewFromId)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        return updateCollection(objectsToRemove, newKeys);
+
+        return updateCollection(toRemove, newKeys);
     }
 
     protected abstract KeySource getSource();
     protected abstract String getKeyId(O ofKey);
-    protected abstract O viewFromId(String ofKey);
+    protected abstract O newViewFromId(String ofKey);
+    protected abstract O getViewFromId(String ofKey);
     protected abstract boolean updateCollection(Collection<O> keysToRemove, Collection<O> keysToAdd);
 }

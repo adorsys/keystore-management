@@ -67,7 +67,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         }
 
         val metadata = new String(
-                keyStore.getKey(metadataForKeyAlias(forAlias), null).getEncoded(),
+                keyStore.getKey(metadataAliasForKeyAlias(forAlias), null).getEncoded(),
                 UTF_8
         );
 
@@ -79,7 +79,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
     public void persistMetadata(String forAlias, KeyMetadata metadata, KeyStore keyStore) {
         String value = persistenceConfig.getGson().toJson(metadata);
         keyStore.setKeyEntry(
-                metadataForKeyAlias(forAlias),
+                metadataAliasForKeyAlias(forAlias),
                 secretKeyGenerator.generateFromPassword(() -> value.toCharArray()), // FIXME - lighter encryption?
                 null,
                 null
@@ -88,7 +88,8 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
 
     // To reduce collision probability metadata has alias `KEY_ID:crc32(KEY_ID)-KEYMETADATA`
     // This is highly unlikely that someone will persist same
-    private String metadataForKeyAlias(String forAlias) {
+    @Override
+    public String metadataAliasForKeyAlias(String forAlias) {
         return forAlias + ":" + crc32(forAlias) + "-" + METADATA_SUFFIX;
     }
 
@@ -102,6 +103,6 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
     @Override
     @SneakyThrows
     public void removeMetadata(String forAlias, KeyStore keyStore) {
-        keyStore.deleteEntry(forAlias);
+        keyStore.deleteEntry(metadataAliasForKeyAlias(forAlias));
     }
 }
