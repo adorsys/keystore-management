@@ -20,9 +20,9 @@ For example one can query for `key instanceof SecretKey`.
 Add dependency (Uses BouncyCastle security provider):
 ```xml
 <dependency>
-<groupId>de.adorsys.keymanagement</groupId>
-<artifactId>juggler-bouncycastle</artifactId>
-<version>0.0.1-SNAPSHOT</version>
+    <groupId>de.adorsys.keymanagement</groupId>
+    <artifactId>juggler-bouncycastle</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
