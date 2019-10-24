@@ -10,6 +10,7 @@ import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
+import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.CqeQueryResult;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
@@ -109,7 +110,10 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
 
     @Override
     protected KeyEntry getViewFromId(String ofKey) {
-        return retrieve(equal(A_ID, ofKey)).toCollection().first();
+        // Skip view filter
+        try (ResultSet<KeyEntry> byId = keys.retrieve(equal(A_ID, ofKey))) {
+            return byId.uniqueResult();
+        }
     }
 
     @Override

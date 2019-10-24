@@ -9,6 +9,7 @@ import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
+import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.CqeQueryResult;
 import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
@@ -94,7 +95,10 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
 
     @Override
     protected KeyAlias getViewFromId(String ofKey) {
-        return retrieve(equal(A_ID, ofKey)).toCollection().first();
+        // Skip view filter
+        try (ResultSet<KeyAlias> byId = aliases.retrieve(equal(A_ID, ofKey))) {
+            return byId.uniqueResult();
+        }
     }
 
     @Override

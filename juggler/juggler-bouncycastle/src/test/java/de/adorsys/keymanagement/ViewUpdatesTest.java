@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.security.Security;
@@ -29,20 +30,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ViewUpdatesTest {
 
+    private Juggler juggler = DaggerJuggler.builder()
+            .metadataPersister(new WithPersister())
+            .metadataConfig(
+                    MetadataPersistenceConfig.builder()
+                            .metadataClass(EmptyMeta.class)
+                            .build()
+            )
+            .build();
+
+    @BeforeAll
+    static void addBouncyCastle() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     @Test
     @SneakyThrows
     void testMetadataIsRemovedWithKey() {
-        Security.addProvider(new BouncyCastleProvider());
-
-        Juggler juggler = DaggerJuggler.builder()
-                .metadataPersister(new WithPersister())
-                .metadataConfig(
-                        MetadataPersistenceConfig.builder()
-                                .metadataClass(EmptyMeta.class)
-                                .build()
-                )
-                .build();
-
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .generatedEncryptionKey(
@@ -69,17 +73,6 @@ class ViewUpdatesTest {
     @Test
     @SneakyThrows
     void testUpdateAddsMetadata() {
-        Security.addProvider(new BouncyCastleProvider());
-
-        Juggler juggler = DaggerJuggler.builder()
-                .metadataPersister(new WithPersister())
-                .metadataConfig(
-                        MetadataPersistenceConfig.builder()
-                                .metadataClass(EmptyMeta.class)
-                                .build()
-                )
-                .build();
-
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .build();
@@ -102,6 +95,39 @@ class ViewUpdatesTest {
 
         assertThat(view.all()).hasSize(2);
         assertThat(Collections.list(ks.aliases())).hasSize(2);
+    }
+
+    @Test
+    @SneakyThrows
+    void testSimultaneousAddAndRemoveWithMetadata() {
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedEncryptionKey(
+                        Encrypting.with().alias("OLD").metadata(new EmptyMeta()).build()
+                )
+                .build();
+
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val ks = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
+        AliasView<Query<KeyAlias>> view = source.aliases();
+
+        // All entries visible
+        assertThat(view.all()).hasSize(1);
+
+        view.update(
+                view.all(),
+                Collections.singleton(
+                        juggler.generateKeys().secret(
+                                Secret.with().alias("NEW").metadata(new EmptyMeta()).password("AA"::toCharArray).build()
+                        )
+                )
+        );
+
+        // Only non-metadata entries visible
+        assertThat(view.all()).hasSize(1);
+        assertThat(Collections.list(ks.aliases())).hasSize(2);
+        assertThat(Collections.list(ks.aliases())).startsWith("NEW").hasSize(2);
     }
 
     @Getter
