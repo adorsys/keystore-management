@@ -66,8 +66,14 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
             return null;
         }
 
+        String alias = metadataAliasForKeyAlias(forAlias);
+
+        if (!keyStore.containsAlias(alias)) {
+            return null;
+        }
+
         val metadata = new String(
-                keyStore.getKey(metadataAliasForKeyAlias(forAlias), null).getEncoded(),
+                keyStore.getKey(alias, null).getEncoded(),
                 UTF_8
         );
 
