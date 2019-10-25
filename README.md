@@ -118,6 +118,28 @@ assertThat(store.getKey("MY-KEY", "PASSWORD!".toCharArray())).isNotNull();
 assertThat(newKeystore.getKey("MY-KEY", "NEW_PASSWORD!".toCharArray())).isNotNull();
 ```
 
+### Store your own char[] or String securely inside Java Keystore
+
+It is possible your own char sequence in encrypted form inside Keystore using password-based-encryption. This way
+you can store any data in form of SecretKey within java KeyStore.
+
+[Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L20-L33)
+```groovy
+// Obtain Juggler service instance:
+Juggler juggler = DaggerJuggler.builder().build();
+// Generate PBE (password-based encryption) key:
+Key key = juggler.generateKeys().secret(
+        Pbe.with()
+                .alias("AES-KEY") // with alias `AES-KEY` if we will save it to keystore from KeySet
+                .data("MY SECRET DATA".toCharArray()) // This data will be encrypted inside KeyStore when stored
+                .build()
+).getKey();
+
+assertThat(key.getAlgorithm()).isEqualTo("PBEWithHmacSHA256AndAES_256");
+assertThat(key.getEncoded()).isEqualTo("MY SECRET DATA");
+```
+
+
 ### Generate secret key
 [Example:Generate secret key](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
 ```groovy

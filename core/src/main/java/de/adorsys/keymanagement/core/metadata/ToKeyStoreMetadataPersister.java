@@ -2,11 +2,14 @@ package de.adorsys.keymanagement.core.metadata;
 
 import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
+import de.adorsys.keymanagement.api.types.template.generated.Pbe;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import javax.annotation.Nullable;
+import javax.crypto.interfaces.PBEKey;
+import javax.crypto.spec.PBEKeySpec;
 import javax.inject.Inject;
 import java.security.KeyStore;
 import java.util.regex.Matcher;
@@ -72,11 +75,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
             return null;
         }
 
-        val metadata = new String(
-                keyStore.getKey(alias, null).getEncoded(),
-                UTF_8
-        );
-
+        val metadata = new String(((PBEKeySpec) keyStore.getKey(alias, null)).getPassword());
         return persistenceConfig.getGson().fromJson(metadata, persistenceConfig.getMetadataClass());
     }
 
@@ -86,7 +85,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         String value = persistenceConfig.getGson().toJson(metadata);
         keyStore.setKeyEntry(
                 metadataAliasForKeyAlias(forAlias),
-                secretKeyGenerator.generateFromPassword(() -> value.toCharArray()), // FIXME - lighter encryption?
+                secretKeyGenerator.generate(Pbe.with().data(value.toCharArray()).build()).getKey(),
                 null,
                 null
         );
