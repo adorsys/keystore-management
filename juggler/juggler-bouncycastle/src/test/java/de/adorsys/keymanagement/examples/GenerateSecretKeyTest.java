@@ -1,8 +1,8 @@
 package de.adorsys.keymanagement.examples;
 
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class GenerateSecretKeyTest {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Generate secret key
         // Obtain Juggler service instance:
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
         // Generate key:
         Key key = juggler.generateKeys().secret(
                 Secret.with()

@@ -36,7 +36,7 @@ Add dependency (Uses BouncyCastle security provider):
 
 All services are available through `Juggler` interface. To obtain instance of it one should call following:
 ```groovy
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 ```
 This call will provide you with default Juggler implementation.
 
@@ -64,7 +64,7 @@ TODO: Migrate to AsciiDoc for automatic snippet embedding.
 [Example:Generate keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/NewKeyStoreTest.java#L30-L51)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 
 // We want our keystore to have:
 KeySetTemplate template = KeySetTemplate.builder()
@@ -89,7 +89,7 @@ assertThat(countKeys(store)).isEqualTo(13);
 [Example:Clone keystore and change key password](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/CloneKeyStoreAndChangeKeyPasswordTest.java#L29-L60)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 
 // We want our keystore to have:
 KeySetTemplate template = KeySetTemplate.builder()
@@ -128,7 +128,7 @@ you can store any data in form of SecretKey within java KeyStore.
 [Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L31-L52)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 // Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
 // encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
 Supplier<char[]> keyPassword =  "WOW"::toCharArray;
@@ -154,7 +154,7 @@ assertThat(juggler.decode().decodeAsString(keyFromKeyStore.getEncoded())).isEqua
 [Example:Generate secret key](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 // Generate key:
 Key key = juggler.generateKeys().secret(
         Secret.with()
@@ -172,7 +172,7 @@ assertThat(key.getEncoded()).hasSize(16); // 16 * 8 (sizeof byte) = 128 bits
 [Example:Query keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/QueryKeyStoreTest.java#L28-L65)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerJuggler.builder().build();
+Juggler juggler = DaggerBCJuggler.builder().build();
 
 
 KeySetTemplate template = KeySetTemplate.builder()
@@ -213,7 +213,7 @@ assertThat(entryView.trustedCerts()).hasSize(0);
 [Example:Save metadata to keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L34-L78)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerJuggler.builder()
+Juggler juggler = DaggerBCJuggler.builder()
         .metadataPersister(new WithPersister()) // enable metadata persistence
         .metadataConfig(
                 MetadataPersistenceConfig.builder()
@@ -261,7 +261,7 @@ assertThat(
 [Example:Rotate expired key in keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/RotateKeyBasedOnMetadataTest.java#L39-L92)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerJuggler.builder()
+Juggler juggler = DaggerBCJuggler.builder()
         .metadataPersister(new WithPersister()) // enable metadata persistence
         .metadataConfig(
                 MetadataPersistenceConfig.builder()

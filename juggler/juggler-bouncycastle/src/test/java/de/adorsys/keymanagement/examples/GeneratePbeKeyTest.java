@@ -2,24 +2,18 @@ package de.adorsys.keymanagement.examples;
 
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Pbe;
-import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.interfaces.PBEKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.security.KeyStore;
 import java.security.Security;
 import java.util.function.Supplier;
 
-import static java.nio.charset.StandardCharsets.UTF_16BE;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GeneratePbeKeyTest {
@@ -30,7 +24,7 @@ class GeneratePbeKeyTest {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Store your own char array securely in KeyStore
         // Obtain Juggler service instance:
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
         // Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
         // encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
         Supplier<char[]> keyPassword =  "WOW"::toCharArray;

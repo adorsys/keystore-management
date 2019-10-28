@@ -11,8 +11,8 @@ import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.view.AliasView;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -38,7 +38,7 @@ class RotateKeyBasedOnMetadataTest {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Rotate expired key in keystore
         // Obtain Juggler service
-        Juggler juggler = DaggerJuggler.builder()
+        BCJuggler juggler = DaggerBCJuggler.builder()
                 .metadataPersister(new WithPersister()) // enable metadata persistence
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()

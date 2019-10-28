@@ -9,8 +9,8 @@ import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.view.EntryView;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +27,7 @@ class QueryKeyStoreTest {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Query keystore
         // Obtain Juggler service
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
 
 
         KeySetTemplate template = KeySetTemplate.builder()

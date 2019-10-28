@@ -10,8 +10,8 @@ import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.view.AliasView;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ViewUpdatesTest {
 
-    private Juggler juggler = DaggerJuggler.builder()
+    private BCJuggler juggler = DaggerBCJuggler.builder()
             .metadataPersister(new WithPersister())
             .metadataConfig(
                     MetadataPersistenceConfig.builder()

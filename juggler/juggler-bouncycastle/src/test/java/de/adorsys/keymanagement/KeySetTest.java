@@ -10,8 +10,8 @@ import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,7 +37,7 @@ class KeySetTest {
     @SneakyThrows
     void basicKeySetTest() {
         Security.addProvider(new BouncyCastleProvider());
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
 
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
@@ -73,7 +73,7 @@ class KeySetTest {
     void cloningTest() {
         Security.addProvider(new BouncyCastleProvider());
 
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
 
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
@@ -98,7 +98,7 @@ class KeySetTest {
     void metadataTest() {
         Security.addProvider(new BouncyCastleProvider());
 
-        Juggler juggler = DaggerJuggler.builder()
+        BCJuggler juggler = DaggerBCJuggler.builder()
                 .metadataPersister(new WithPersister())
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()

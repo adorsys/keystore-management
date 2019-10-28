@@ -4,8 +4,8 @@ import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.juggler.services.DaggerJuggler;
-import de.adorsys.keymanagement.juggler.services.Juggler;
+import de.adorsys.keymanagement.juggler.services.BCJuggler;
+import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class CloneKeyStoreAndChangeKeyPasswordTest {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Clone keystore and change key password
         // Obtain Juggler service instance:
-        Juggler juggler = DaggerJuggler.builder().build();
+        BCJuggler juggler = DaggerBCJuggler.builder().build();
 
         // We want our keystore to have:
         KeySetTemplate template = KeySetTemplate.builder()
