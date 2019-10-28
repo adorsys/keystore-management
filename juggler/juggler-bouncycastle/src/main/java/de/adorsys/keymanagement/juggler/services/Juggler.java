@@ -5,10 +5,12 @@ import dagger.Component;
 import de.adorsys.keymanagement.adapter.modules.generator.GeneratorModule;
 import de.adorsys.keymanagement.adapter.modules.keystore.KeyStoreModule;
 import de.adorsys.keymanagement.adapter.modules.persist.PersistModule;
+import de.adorsys.keymanagement.adapter.modules.serde.SerdeModule;
 import de.adorsys.keymanagement.adapter.modules.source.DecodeModule;
 import de.adorsys.keymanagement.api.generator.KeyGenerator;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataPersistence;
 import de.adorsys.keymanagement.api.persist.KeyStoreCreator;
+import de.adorsys.keymanagement.api.persist.SerDe;
 import de.adorsys.keymanagement.api.source.KeyDecoder;
 import de.adorsys.keymanagement.api.source.KeyReader;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
@@ -25,7 +27,8 @@ import javax.annotation.Nullable;
         PersistModule.class,
         MetadataModule.class,
         SourceModule.class,
-        DecodeModule.class
+        DecodeModule.class,
+        SerdeModule.class,
 })
 public interface Juggler {
 
@@ -33,6 +36,7 @@ public interface Juggler {
     KeyStoreCreator toKeystore();
     KeyReader readKeys();
     KeyDecoder decode();
+    SerDe serializeDeserialize();
 
     @Component.Builder
     interface Builder {

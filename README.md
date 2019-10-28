@@ -40,11 +40,12 @@ Juggler juggler = DaggerJuggler.builder().build();
 ```
 This call will provide you with default Juggler implementation.
 
-`Juggler` is composed of 4 services representing different kind of operations:
+`Juggler` is composed of 5 services representing different kind of operations:
 - `generateKeys()` to generate Secret/Private/Signing keys(or their set) from simple template
 - `toKeystore()` to persist generated key set into keystore
 - `readKeys()` to read keys from Java keystore and query them by alias/metadata/type/...
 - `decode()` to decode key bytes read from keystore into i.e. String for PBE raw keys
+- `serializeDeserialize()` to serialize/deserialize KeyStore to/from byte array.
 
 ## API examples
 <!--
