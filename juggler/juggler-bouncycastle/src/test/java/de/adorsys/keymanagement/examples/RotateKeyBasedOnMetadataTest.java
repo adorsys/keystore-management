@@ -61,7 +61,7 @@ class RotateKeyBasedOnMetadataTest {
         KeySetTemplate template = KeySetTemplate.builder()
                 // One private key that can be used for encryption:
                 .generatedEncryptionKey(
-                        keyTemplate.apply(Instant.now()) // Will pretend that key has expired
+                        keyTemplate.apply(Instant.now().minusSeconds(10)) // Will pretend that key has expired
                 )
                 .build();
 

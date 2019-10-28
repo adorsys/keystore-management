@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class GenerateSecretKeyTest {
 
     @Test
-    void newKeystore() {
+    void newSecretKey() {
         Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Generate secret key
         // Obtain Juggler service instance:

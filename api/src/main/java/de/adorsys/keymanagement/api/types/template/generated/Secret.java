@@ -26,7 +26,6 @@ public class Secret implements GeneratedKeyTemplate {
     @Delegate(excludes = SecretKeyEncryptionTemplate.ExcludeToBuilder.class)
     private final SecretKeyEncryptionTemplate encryptionTemplate;
 
-    @Getter
     private final KeyMetadata metadata;
 
     public Collection<Secret> repeat(int times) {
@@ -42,7 +41,7 @@ public class Secret implements GeneratedKeyTemplate {
     }
 
     @Builder(builderMethodName = "with")
-    public Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize,
+    Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize,
                   KeyMetadata metadata) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.metadata = metadata;
