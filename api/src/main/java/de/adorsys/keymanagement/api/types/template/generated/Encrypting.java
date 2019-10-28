@@ -43,9 +43,9 @@ public class Encrypting implements GeneratedKeyTemplate {
 
     @Builder(builderMethodName = "with")
     Encrypting(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
-               Integer keySize, KeyMetadata metadata) {
+               Integer keySize, KeyMetadata metadata, String commonName) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.metadata = metadata;
-        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo);
+        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo, commonName);
     }
 }

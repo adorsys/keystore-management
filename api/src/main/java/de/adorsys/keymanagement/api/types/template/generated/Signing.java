@@ -42,9 +42,9 @@ public class Signing implements GeneratedKeyTemplate {
 
     @Builder(builderMethodName = "with")
     Signing(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
-            Integer keySize, KeyMetadata metadata) {
+            Integer keySize, KeyMetadata metadata, String commonName) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.metadata = metadata;
-        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo);
+        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo, commonName);
     }
 }

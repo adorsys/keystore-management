@@ -23,7 +23,7 @@ public class KeyPairEncryptionTemplate {
         KeyPairEncryptionTemplate toBuilder();
     }
 
-    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo) {
+    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName) {
         KeyPairEncryptionTemplate result = KeyPairEncryptionTemplate.builder().build();
 
         if (null != algo) {
@@ -36,6 +36,10 @@ public class KeyPairEncryptionTemplate {
 
         if (null != sigAlgo) {
             result = result.toBuilder().sigAlgo(sigAlgo).build();
+        }
+
+        if (null != commonName) {
+            result = result.toBuilder().commonName(commonName).build();
         }
 
         return result;
