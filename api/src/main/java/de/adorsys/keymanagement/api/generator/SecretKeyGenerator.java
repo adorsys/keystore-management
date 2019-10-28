@@ -10,5 +10,6 @@ import java.util.function.Supplier;
 public interface SecretKeyGenerator {
 
     ProvidedKey generate(Pbe fromTemplate);
+    ProvidedKey generateRaw(Pbe fromTemplate);
     ProvidedKey generate(Secret fromTemplate);
 }

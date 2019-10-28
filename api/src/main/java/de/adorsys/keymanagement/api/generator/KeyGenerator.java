@@ -11,6 +11,9 @@ import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 
 public interface KeyGenerator {
 
+    // Secret will be stored as is (without salt and key derivation)
+    ProvidedKey secretRaw(Pbe template);
+    // Key derivation procedure will be applied
     ProvidedKey secret(Pbe template);
     ProvidedKey secret(Secret template);
     ProvidedKeyPair signing(Signing template);

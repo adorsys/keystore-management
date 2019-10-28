@@ -32,6 +32,15 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
     }
 
     @Override
+    public ProvidedKey generateRaw(Pbe fromTemplate) {
+        return ProvidedKey.builder()
+                .keyTemplate(fromTemplate)
+                .metadata(fromTemplate.getMetadata())
+                .key(generateRawSecret(fromTemplate))
+                .build();
+    }
+
+    @Override
     public ProvidedKey generate(Secret fromTemplate) {
         return ProvidedKey.builder()
                 .keyTemplate(fromTemplate)
@@ -58,6 +67,13 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
                 secret.getIterCount()
         );
 
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), ProviderUtils.bcProvider);
+        return keyFac.generateSecret(pbeKeySpec);
+    }
+
+    @SneakyThrows
+    private SecretKey generateRawSecret(Pbe secret) {
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(secret.getData());
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), ProviderUtils.bcProvider);
         return keyFac.generateSecret(pbeKeySpec);
     }

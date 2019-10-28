@@ -1,6 +1,7 @@
 package de.adorsys.keymanagement.core.metadata;
 
 import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
+import de.adorsys.keymanagement.api.source.KeyDecoder;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.generated.Pbe;
 import lombok.SneakyThrows;
@@ -10,12 +11,14 @@ import lombok.val;
 import javax.annotation.Nullable;
 import javax.crypto.interfaces.PBEKey;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import java.security.KeyStore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
+import static java.nio.charset.StandardCharsets.UTF_16BE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -31,10 +34,13 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
 
     private final MetadataPersistenceConfig persistenceConfig;
     private final SecretKeyGenerator secretKeyGenerator;
+    private final KeyDecoder decoder;
 
     @Inject
     public ToKeyStoreMetadataPersister(
-            @Nullable MetadataPersistenceConfig persistenceConfig, SecretKeyGenerator secretKeyGenerator) {
+            @Nullable MetadataPersistenceConfig persistenceConfig,
+            SecretKeyGenerator secretKeyGenerator,
+            KeyDecoder decoder) {
         /*
          * Should not be nullable, {@link MetadataModule} should provide this class only if {@code persistenceConfig}
          * is not null.
@@ -44,6 +50,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         }
         this.persistenceConfig = persistenceConfig;
         this.secretKeyGenerator = secretKeyGenerator;
+        this.decoder = decoder;
     }
 
     @Override
@@ -75,7 +82,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
             return null;
         }
 
-        val metadata = new String(((PBEKeySpec) keyStore.getKey(alias, null)).getPassword());
+        val metadata = decoder.decodeAsString(keyStore.getKey(alias, null).getEncoded());
         return persistenceConfig.getGson().fromJson(metadata, persistenceConfig.getMetadataClass());
     }
 
@@ -85,7 +92,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         String value = persistenceConfig.getGson().toJson(metadata);
         keyStore.setKeyEntry(
                 metadataAliasForKeyAlias(forAlias),
-                secretKeyGenerator.generate(Pbe.with().data(value.toCharArray()).build()).getKey(),
+                secretKeyGenerator.generateRaw(Pbe.with().data(value.toCharArray()).build()).getKey(),
                 null,
                 null
         );

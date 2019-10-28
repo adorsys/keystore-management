@@ -123,20 +123,28 @@ assertThat(newKeystore.getKey("MY-KEY", "NEW_PASSWORD!".toCharArray())).isNotNul
 It is possible your own char sequence in encrypted form inside Keystore using password-based-encryption. This way
 you can store any data in form of SecretKey within java KeyStore.
 
-[Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L20-L33)
+[Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L31-L52)
 ```groovy
 // Obtain Juggler service instance:
 Juggler juggler = DaggerJuggler.builder().build();
-// Generate PBE (password-based encryption) key:
-Key key = juggler.generateKeys().secret(
+// Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
+// encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
+Supplier<char[]> keyPassword =  "WOW"::toCharArray;
+ProvidedKey key = juggler.generateKeys().secretRaw(
         Pbe.with()
                 .alias("AES-KEY") // with alias `AES-KEY` if we will save it to keystore from KeySet
-                .data("MY SECRET DATA".toCharArray()) // This data will be encrypted inside KeyStore when stored
+                .data("MY SECRET DATA Тест!".toCharArray()) // This data will be encrypted inside KeyStore when stored
+                .password(keyPassword) // Password that will be used to protect key in KeyStore
                 .build()
-).getKey();
+);
 
-assertThat(key.getAlgorithm()).isEqualTo("PBEWithHmacSHA256AndAES_256");
-assertThat(key.getEncoded()).isEqualTo("MY SECRET DATA");
+// Send key to keystore
+KeyStore ks = juggler.toKeystore().generate(KeySet.builder().key(key).build());
+
+// Read key back
+SecretKeySpec keyFromKeyStore = (SecretKeySpec) ks.getKey("AES-KEY", keyPassword.get());
+// Note that BouncyCastle keys are encoded in PKCS12 byte format - UTF-16 big endian + 2 0's padding
+assertThat(juggler.decode().decodeAsString(keyFromKeyStore.getEncoded())).isEqualTo("MY SECRET DATA Тест!");
 ```
 
 
@@ -274,7 +282,7 @@ Function<Instant, Encrypting> keyTemplate = expiryDate -> Encrypting.with()
 KeySetTemplate template = KeySetTemplate.builder()
         // One private key that can be used for encryption:
         .generatedEncryptionKey(
-                keyTemplate.apply(Instant.now()) // Will pretend that key has expired
+                keyTemplate.apply(Instant.now().minusSeconds(10)) // Will pretend that key has expired
         )
         .build();
 

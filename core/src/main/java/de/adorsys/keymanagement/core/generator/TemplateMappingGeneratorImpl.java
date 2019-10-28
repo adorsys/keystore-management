@@ -39,6 +39,11 @@ public class TemplateMappingGeneratorImpl implements KeyGenerator {
     }
 
     @Override
+    public ProvidedKey secretRaw(Pbe template) {
+        return secretKeyGenerator.generateRaw(template);
+    }
+
+    @Override
     public ProvidedKey secret(Secret template) {
         return secretKeyGenerator.generate(template);
     }
