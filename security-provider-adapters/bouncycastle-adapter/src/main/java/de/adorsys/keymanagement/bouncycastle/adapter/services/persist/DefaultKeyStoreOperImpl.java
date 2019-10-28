@@ -3,6 +3,7 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.persist;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.metadata.NoOpMetadataPersistence;
+import de.adorsys.keymanagement.api.types.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
@@ -24,12 +25,18 @@ import java.util.function.Supplier;
 public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     private final KeyMetadataOper metadataOper;
-    private final KeyStoreConfig config;
+    private KeyStoreConfig config;
 
     @Inject
-    public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, KeyStoreConfig config) {
+    public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper) {
         this.metadataOper = metadataOper;
+        this.config = KeyStoreConfig.builder().build();
+    }
+
+    @Override
+    public DefaultKeyStoreOperImpl withConfig(KeyStoreConfig config) {
         this.config = config;
+        return this;
     }
 
     @Override

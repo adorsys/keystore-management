@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.bouncycastle.adapter.services.persist.pbkdf;
+package de.adorsys.keymanagement.api.types.pbkdf;
 
 import lombok.Builder;
 import lombok.Getter;

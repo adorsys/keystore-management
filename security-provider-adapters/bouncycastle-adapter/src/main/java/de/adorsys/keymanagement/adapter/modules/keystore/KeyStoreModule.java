@@ -5,7 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import de.adorsys.keymanagement.api.persist.KeyStoreCreator;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.persist.DefaultKeyStoreOperImpl;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.persist.KeyStoreConfig;
+import de.adorsys.keymanagement.api.types.KeyStoreConfig;
 
 @Module
 public abstract class KeyStoreModule {

@@ -1,7 +1,7 @@
-package de.adorsys.keymanagement.bouncycastle.adapter.services.persist;
+package de.adorsys.keymanagement.api.types;
 
-import de.adorsys.keymanagement.bouncycastle.adapter.services.persist.pbkdf.PBKDF2;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.persist.pbkdf.Scrypt;
+import de.adorsys.keymanagement.api.types.pbkdf.PBKDF2;
+import de.adorsys.keymanagement.api.types.pbkdf.Scrypt;
 import lombok.Builder;
 import lombok.Getter;
 

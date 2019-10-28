@@ -1,11 +1,14 @@
 package de.adorsys.keymanagement.api.persist;
 
+import de.adorsys.keymanagement.api.types.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 
 import java.security.KeyStore;
 import java.util.function.Supplier;
 
 public interface KeyStoreCreator {
+
+    KeyStoreCreator withConfig(KeyStoreConfig config);
 
     /**
      * Generates {@link java.security.KeyStore} from key set. Additionally persists key metadata if
