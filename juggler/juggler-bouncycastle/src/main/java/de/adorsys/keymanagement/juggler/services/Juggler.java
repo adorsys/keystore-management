@@ -32,18 +32,47 @@ import javax.annotation.Nullable;
 })
 public interface Juggler {
 
+    /**
+     * Generates keys or key sets.
+     */
     KeyGenerator generateKeys();
+
+    /**
+     * Creates {@link java.security.KeyStore} from key set.
+     */
     KeyStoreCreator toKeystore();
+
+    /**
+     * Creates key views from different sources, for example from {@link java.security.KeyStore}.
+     * Typically, these key views allows you to perform complicated queries and to add/or remove keys.
+     */
     KeyReader readKeys();
+
+    /**
+     * Decodes keys from their encoded byte representation. Mostly used for PBE keys that are stored as is
+     * in KeyStore.
+     */
     KeyDecoder decode();
+
+    /**
+     * Helper to serialize and deserialize {@link java.security.KeyStore} to and from byte[].
+     */
     SerDe serializeDeserialize();
 
     @Component.Builder
     interface Builder {
 
+        /**
+         * Tells which metadata class to persist within {@link java.security.KeyStore} and how to
+         * serialize/deserialize it.
+         */
         @BindsInstance
         Builder metadataConfig(@Nullable MetadataPersistenceConfig config);
 
+        /**
+         * Tells how to persist class provided by {@link MetadataPersistenceConfig}.
+         * Most probably you want to pass {@link de.adorsys.keymanagement.core.metadata.WithPersister} class here.
+         */
         @BindsInstance
         Builder metadataPersister(@Nullable KeyMetadataPersistence persistence);
 
