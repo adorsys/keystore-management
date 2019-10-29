@@ -79,12 +79,12 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     @SneakyThrows
     private KeyStore generate(KeySet keySet, Supplier<char[]> defaultPassword, KeyMetadataOper useMetadataOper) {
-        String ksType = config.getType();
-        KeyStore ks = KeyStore.getInstance(ksType);
-        if ("BCFKS".equals(ksType)) {
-            loadBCFKSKeystore(ks, config);
+        KeyStore ks;
+        String keyStoreType = config.getType();
+        if ("BCFKS".equals(keyStoreType)) {
+            ks = createBCFKSKeystore(config);
         } else {
-            ks.load(null, null);
+            ks = createKeyStoreByType(keyStoreType);
         }
 
         keySet.getKeyEntries().forEach(it -> {
@@ -161,7 +161,9 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
     }
 
     @SneakyThrows
-    private static KeyStore loadBCFKSKeystore(KeyStore ks, KeyStoreConfig config) {
+    private static KeyStore createBCFKSKeystore(KeyStoreConfig config) {
+        KeyStore ks = KeyStore.getInstance(config.getType());
+
         BCFKSLoadStoreParameter.EncryptionAlgorithm encAlgo =
                 BCFKSLoadStoreParameter.EncryptionAlgorithm.valueOf(config.getEncryptionAlgo());
 
@@ -174,6 +176,13 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
                 .withStoreMacAlgorithm(macAlgo)
                 .build()
         );
+        return ks;
+    }
+
+    @SneakyThrows
+    private static KeyStore createKeyStoreByType(String keyStoreType) {
+        KeyStore ks = KeyStore.getInstance(keyStoreType);
+        ks.load(null, null);
         return ks;
     }
 
