@@ -8,6 +8,12 @@ import java.util.function.Supplier;
 
 public interface KeyStoreCreator {
 
+    /**
+     * Configures keystore before generation with custom parameters. Without it keystore with default values
+     * specified in {@link de.adorsys.keymanagement.api.types.KeyStoreConfig} will be created
+     * @param config
+     * @return configured {@link de.adorsys.keymanagement.api.persist.KeyStoreCreator}
+     */
     KeyStoreCreator withConfig(KeyStoreConfig config);
 
     /**
