@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.api.persist;
 
-import de.adorsys.keymanagement.api.types.KeyStoreConfig;
+import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 
 import java.security.KeyStore;
@@ -10,7 +10,7 @@ public interface KeyStoreCreator {
 
     /**
      * Configures keystore before generation with custom parameters. Without it keystore with default values
-     * specified in {@link de.adorsys.keymanagement.api.types.KeyStoreConfig} will be created
+     * specified in {@link KeyStoreConfig} will be created
      * @param config
      * @return configured {@link de.adorsys.keymanagement.api.persist.KeyStoreCreator}
      */

@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.api.types.pbkdf;
+package de.adorsys.keymanagement.config.keystore.pbkdf;
 
 import lombok.Builder;
 import lombok.Getter;

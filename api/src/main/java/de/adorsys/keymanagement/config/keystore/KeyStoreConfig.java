@@ -1,7 +1,7 @@
-package de.adorsys.keymanagement.api.types;
+package de.adorsys.keymanagement.config.keystore;
 
-import de.adorsys.keymanagement.api.types.pbkdf.PBKDF2;
-import de.adorsys.keymanagement.api.types.pbkdf.Scrypt;
+import de.adorsys.keymanagement.config.keystore.pbkdf.PBKDF2;
+import de.adorsys.keymanagement.config.keystore.pbkdf.Scrypt;
 import lombok.Builder;
 import lombok.Getter;
 
