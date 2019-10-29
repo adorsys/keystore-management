@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     private final KeyMetadataOper metadataOper;
-    private KeyStoreConfig config;
+    private final KeyStoreConfig config;
 
     @Inject
     public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper) {
@@ -33,10 +33,14 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
         this.config = KeyStoreConfig.builder().build();
     }
 
+    private DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, KeyStoreConfig config) {
+        this.metadataOper = metadataOper;
+        this.config = config;
+    }
+
     @Override
     public DefaultKeyStoreOperImpl withConfig(KeyStoreConfig config) {
-        this.config = config;
-        return this;
+        return new DefaultKeyStoreOperImpl(metadataOper, config);
     }
 
     @Override
