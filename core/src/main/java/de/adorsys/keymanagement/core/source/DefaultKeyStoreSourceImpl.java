@@ -68,10 +68,19 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
     @Override
     @SneakyThrows
     public WithMetadata<KeyStore.Entry> asEntry(String alias) {
+        KeyStore.PasswordProtection password;
+        boolean isMetadata = metadataOper.isMetadataEntry(alias, store);
+
+        if (isMetadata) {
+            password = new KeyStore.PasswordProtection(metadataOper.metadataPassword(alias));
+        } else {
+            password = new KeyStore.PasswordProtection(keyPassword.apply(alias));
+        }
+
         return WithMetadata.<KeyStore.Entry>builder()
-                .key(store.getEntry(alias, new KeyStore.PasswordProtection(keyPassword.apply(alias))))
+                .key(store.getEntry(alias, password))
                 .metadata(metadataOper.extract(alias, store))
-                .metadataEntry(metadataOper.isMetadataEntry(alias, store))
+                .metadataEntry(isMetadata)
                 .build();
     }
 

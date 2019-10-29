@@ -18,6 +18,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
@@ -33,10 +34,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class KeySetTest {
 
+    @BeforeAll
+    static void addBouncyCastle() {
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     @Test
     @SneakyThrows
     void basicKeySetTest() {
-        Security.addProvider(new BouncyCastleProvider());
         BCJuggler juggler = DaggerBCJuggler.builder().build();
 
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
@@ -71,8 +76,6 @@ class KeySetTest {
     @Test
     @SneakyThrows
     void cloningTest() {
-        Security.addProvider(new BouncyCastleProvider());
-
         BCJuggler juggler = DaggerBCJuggler.builder().build();
 
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
@@ -96,8 +99,6 @@ class KeySetTest {
     @Test
     @SneakyThrows
     void metadataTest() {
-        Security.addProvider(new BouncyCastleProvider());
-
         BCJuggler juggler = DaggerBCJuggler.builder()
                 .metadataPersister(new WithPersister())
                 .metadataConfig(
@@ -120,6 +121,37 @@ class KeySetTest {
         val ks = juggler.toKeystore().generate(keySet, password);
         val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
         val view = source.aliases();
+        assertThat(
+                ((KeyExpirationMetadata)
+                        view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()
+                ).getExpiresAfter()
+        ).isBefore(Instant.now());
+    }
+
+    @Test
+    @SneakyThrows
+    void metadataEntriesTest() {
+        BCJuggler juggler = DaggerBCJuggler.builder()
+                .metadataPersister(new WithPersister())
+                .metadataConfig(
+                        MetadataPersistenceConfig.builder()
+                                .metadataClass(KeyExpirationMetadata.class)
+                                .build()
+                )
+                .build();
+
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedEncryptionKey(
+                        Encrypting.with().alias("TTT").metadata(new KeyExpirationMetadata(Instant.now())).build()
+                )
+                .build();
+
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val ks = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
+        val view = source.entries();
+
         assertThat(
                 ((KeyExpirationMetadata)
                         view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()

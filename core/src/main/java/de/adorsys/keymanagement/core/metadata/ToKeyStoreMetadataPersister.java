@@ -82,7 +82,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
             return null;
         }
 
-        val metadata = decoder.decodeAsString(keyStore.getKey(alias, null).getEncoded());
+        val metadata = decoder.decodeAsString(keyStore.getKey(alias, metadataPassword(forAlias)).getEncoded());
         return persistenceConfig.getGson().fromJson(metadata, persistenceConfig.getMetadataClass());
     }
 
@@ -93,7 +93,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
         keyStore.setKeyEntry(
                 metadataAliasForKeyAlias(forAlias),
                 secretKeyGenerator.generateRaw(Pbe.with().data(value.toCharArray()).build()).getKey(),
-                null,
+                metadataPassword(forAlias),
                 null
         );
     }
