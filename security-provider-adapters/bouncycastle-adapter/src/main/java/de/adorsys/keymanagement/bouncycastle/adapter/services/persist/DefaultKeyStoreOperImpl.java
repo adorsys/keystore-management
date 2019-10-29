@@ -3,12 +3,18 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.persist;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.metadata.NoOpMetadataPersistence;
+import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
 import lombok.SneakyThrows;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+import org.bouncycastle.crypto.util.PBKDF2Config;
+import org.bouncycastle.crypto.util.PBKDFConfig;
+import org.bouncycastle.crypto.util.ScryptConfig;
+import org.bouncycastle.jcajce.BCFKSLoadStoreParameter;
 
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
@@ -19,10 +25,22 @@ import java.util.function.Supplier;
 public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     private final KeyMetadataOper metadataOper;
+    private final KeyStoreConfig config;
 
     @Inject
     public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper) {
         this.metadataOper = metadataOper;
+        this.config = KeyStoreConfig.builder().build();
+    }
+
+    private DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, KeyStoreConfig config) {
+        this.metadataOper = metadataOper;
+        this.config = config;
+    }
+
+    @Override
+    public DefaultKeyStoreOperImpl withConfig(KeyStoreConfig config) {
+        return new DefaultKeyStoreOperImpl(metadataOper, config);
     }
 
     @Override
@@ -65,8 +83,13 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     @SneakyThrows
     private KeyStore generate(KeySet keySet, Supplier<char[]> defaultPassword, KeyMetadataOper useMetadataOper) {
-        KeyStore ks = KeyStore.getInstance("UBER"); // FIXME - BCFKS from provided load store config
-        ks.load(null);
+        KeyStore ks;
+        String keyStoreType = config.getType();
+        if ("BCFKS".equals(keyStoreType)) {
+            ks = createBCFKSKeystore(config);
+        } else {
+            ks = createKeyStoreByType(keyStoreType);
+        }
 
         keySet.getKeyEntries().forEach(it -> {
             String alias = doAddToKeyStoreAndGetName(ks, it, defaultPassword);
@@ -139,5 +162,58 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
         }
 
         return key.getPassword().get();
+    }
+
+    @SneakyThrows
+    private static KeyStore createBCFKSKeystore(KeyStoreConfig config) {
+        KeyStore ks = KeyStore.getInstance(config.getType());
+
+        BCFKSLoadStoreParameter.EncryptionAlgorithm encAlgo =
+                BCFKSLoadStoreParameter.EncryptionAlgorithm.valueOf(config.getEncryptionAlgo());
+
+        BCFKSLoadStoreParameter.MacAlgorithm macAlgo =
+                BCFKSLoadStoreParameter.MacAlgorithm.valueOf(config.getMacAlgo());
+
+        ks.load(new BCFKSLoadStoreParameter.Builder()
+                .withStoreEncryptionAlgorithm(encAlgo)
+                .withStorePBKDFConfig(pbkdfConfig(config.getPbkdf()))
+                .withStoreMacAlgorithm(macAlgo)
+                .build()
+        );
+        return ks;
+    }
+
+    @SneakyThrows
+    private static KeyStore createKeyStoreByType(String keyStoreType) {
+        KeyStore ks = KeyStore.getInstance(keyStoreType);
+        ks.load(null, null);
+        return ks;
+    }
+
+    @SneakyThrows
+    private static PBKDFConfig pbkdfConfig(KeyStoreConfig.PBKDF config) {
+        if (null != config.getPbkdf2()) {
+            AlgorithmIdentifier prf = (AlgorithmIdentifier) PBKDF2Config.class.getDeclaredField(
+                    config.getPbkdf2().getAlgo()
+            ).get(PBKDF2Config.class);
+
+            return new PBKDF2Config.Builder()
+                    .withIterationCount(config.getPbkdf2().getIterCount())
+                    .withSaltLength(config.getPbkdf2().getSaltLength())
+                    .withPRF(prf)
+                    .build();
+
+        } else if (config.getScrypt() != null) {
+
+            return new ScryptConfig.Builder(
+                    config.getScrypt().getCost(),
+                    config.getScrypt().getBlockSize(),
+                    config.getScrypt().getParallelization()
+            )
+                    .withSaltLength(config.getScrypt().getSaltLength())
+                    .build();
+        }
+
+        throw new IllegalArgumentException("Unknown PBKDF type");
     }
 }

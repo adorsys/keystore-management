@@ -1,9 +1,19 @@
 package de.adorsys.keymanagement.api.persist;
 
+import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
+
 import java.security.KeyStore;
 import java.util.function.Supplier;
 
 public interface SerDe {
+
+    /**
+     * Configures keystore before deserialization with custom parameters. Without it keystore with default values
+     * specified in {@link KeyStoreConfig} will be created
+     * @param config
+     * @return configured {@link de.adorsys.keymanagement.api.persist.SerDe}
+     */
+    SerDe withConfig(KeyStoreConfig config);
 
     /**
      * Serializes {@link java.security.KeyStore} into byte[].
