@@ -4,7 +4,7 @@ import de.adorsys.keymanagement.api.source.KeySource;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 
-public interface EntryView<Q> extends UpdatingView<Q, KeyEntry> {
+public interface EntryView<Q> extends UpdatingView<Q, KeyEntry, String> {
 
     @Override
     QueryResult<KeyEntry> retrieve(Q query);

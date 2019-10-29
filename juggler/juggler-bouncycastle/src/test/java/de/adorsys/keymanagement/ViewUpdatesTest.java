@@ -72,6 +72,29 @@ class ViewUpdatesTest {
 
     @Test
     @SneakyThrows
+    void testMetadataIsRemovedWithKeyById() {
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedEncryptionKey(
+                        Encrypting.with().alias("TTT").metadata(new EmptyMeta()).build()
+                )
+                .build();
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val ks = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
+        AliasView<Query<KeyAlias>> view = source.allAliases();
+
+        // Key and its metadata
+        assertThat(view.all()).hasSize(2);
+
+        view.removeById("TTT");
+
+        assertThat(view.all()).hasSize(0);
+        assertThat(ks.aliases().hasMoreElements()).isFalse();
+    }
+
+    @Test
+    @SneakyThrows
     void testUpdateAddsMetadata() {
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()

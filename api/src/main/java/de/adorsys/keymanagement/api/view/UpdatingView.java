@@ -4,9 +4,11 @@ import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 
 import java.util.Collection;
 
-public interface UpdatingView<Q, O> extends View<Q, O> {
+public interface UpdatingView<Q, O, ID> extends View<Q, O> {
 
     boolean add(ProvidedKeyTemplate objectToAdd);
+    boolean removeById(ID objectToRemove);
+    boolean removeByIds(Collection<ID> objectsToRemove);
     boolean remove(O objectToRemove);
     boolean add(Collection<ProvidedKeyTemplate> objectsToAdd);
     boolean remove(Collection<O> objectsToRemove);

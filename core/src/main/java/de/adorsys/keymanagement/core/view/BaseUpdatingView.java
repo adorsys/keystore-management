@@ -8,10 +8,28 @@ import lombok.val;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
+public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O, String> {
 
     public boolean add(ProvidedKeyTemplate objectToAdd) {
         return add(Collections.singleton(objectToAdd));
+    }
+
+    @Override
+    public boolean removeById(String objectsToRemove) {
+        return removeByIds(Collections.singleton(objectsToRemove));
+    }
+
+    @Override
+    public boolean removeByIds(Collection<String> objectsToRemove) {
+        KeySource source = getSource();
+        List<O> allWithAssociated = objectsToRemove.stream()
+                .flatMap(it -> source.allAssociatedEntries(it).stream())
+                .map(this::getAndValidateViewFromId)
+                .collect(Collectors.toList());
+
+        objectsToRemove.forEach(source::remove); // Cascades inside KeyStore
+
+        return updateCollection(allWithAssociated, Collections.emptyList());
     }
 
     public boolean remove(O objectToRemove) {
@@ -28,13 +46,13 @@ public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
 
     public boolean update(Collection<O> objectsToRemove, Collection<ProvidedKeyTemplate> objectsToAdd) {
         KeySource source = getSource();
-        List<O> toRemove = objectsToRemove.stream()
+        List<O> allWithAssociated = objectsToRemove.stream()
                 .map(this::getKeyId)
                 .flatMap(it -> source.allAssociatedEntries(it).stream())
                 .map(this::getAndValidateViewFromId)
                 .collect(Collectors.toList());
 
-        objectsToRemove.forEach(it -> source.remove(getKeyId(it)));
+        objectsToRemove.forEach(it -> source.remove(getKeyId(it))); // Cascades inside KeyStore
 
         val newKeys = objectsToAdd.stream()
                 .map(source::addAndReturnId)
@@ -42,7 +60,7 @@ public abstract class BaseUpdatingView<Q, O> implements UpdatingView<Q, O> {
                 .map(this::newViewFromId)
                 .collect(Collectors.toList());
 
-        return updateCollection(toRemove, newKeys);
+        return updateCollection(allWithAssociated, newKeys);
     }
 
     protected abstract KeySource getSource();
