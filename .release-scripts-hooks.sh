@@ -1,10 +1,10 @@
 #!/bin/bash
 # ********************** INFO *********************
-# This file is used to define default settings.
-# Please do not change it.
-# To override these settings please define functions
-# with the same name in file hooks.sh in this directory
-# or in file .release-script-hook.sh in parent directory
+# This file is used to override default settings.
+# Therefore only the functions that deviate from
+# provided defaults may be left here.
+# You can use it also in parent directory with the
+# name .release-scripts-hook.sh
 # *************************************************
 set -e
 
@@ -29,14 +29,12 @@ function get_remote_repo_name {
 }
 
 # Hook method to define the develop branch name
-# Parameter $1 - current release version as text
 # Returns the develop branch name as text
 function get_develop_branch_name {
   echo "develop"
 }
 
 # Hook method to define the master branch name
-# Parameter $1 - current release version as text
 # Returns the master branch name as text
 function get_master_branch_name {
   echo "master"
@@ -71,48 +69,5 @@ function build_release_modules {
 # Should set version numbers in your modules
 # Parameter $1 - version as text
 function set_modules_version {
-  echo "Version: $1 - do nothing" >> /dev/null
-}
-
-# Builds the commit message used for your release commit
-# Parameter $1 - release version as text
-function get_release_commit_message {
-  echo "Prepare release $1"
-}
-
-# Builds the commit message used for your commit which setups the next snapshot version
-# Parameter $1 - release version as text
-function get_next_snapshot_commit_message {
-  echo "Start next iteration with $1"
-}
-
-# Builds the tag message used for your release tag
-# Parameter $1 - release version as text
-function get_release_tag_message {
-  echo "Release $1"
-}
-
-# Builds the commit message for your commit which setups the hotfix branch
-# Parameter $1 - hotfix snapshot version
-function get_start_hotfix_commit_message {
-  echo "Start hotfix $1"
-}
-
-# Builds the chommit message for your hotfix release commit
-# Parameter $1 - hotfix release version
-function get_release_hotfix_commit_message {
-  echo "Release hotfix $1"
-}
-
-# Builds the tag message used for your hotfix release tag
-# Parameter $1 - hotfix release version
-function get_hotfix_relesae_tag_message {
-  echo "Release $1"
-}
-
-# Builds the commit message used for setup the next snapshot version after hotfix is released
-# Parameter $1 - next snapshot version
-# Parameter $2 - released hotfix version
-function get_next_snapshot_commit_message_after_hotfix {
-  echo "Start next iteration with $1 after hotfix $2"
+  cd ${SCRIPT_PATH}/.. && mvn -B versions:set -DnewVersion=$1
 }
