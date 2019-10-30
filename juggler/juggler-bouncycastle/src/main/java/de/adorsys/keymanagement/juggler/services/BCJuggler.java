@@ -9,6 +9,7 @@ import de.adorsys.keymanagement.adapter.modules.serde.SerdeModule;
 import de.adorsys.keymanagement.adapter.modules.source.DecodeModule;
 import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataPersistence;
+import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.juggler.modules.generator.TemplateMappingModule;
 import de.adorsys.keymanagement.juggler.modules.metadata.MetadataModule;
@@ -37,6 +38,12 @@ public interface BCJuggler extends Juggler {
          */
         @BindsInstance
         Builder metadataConfig(@Nullable MetadataPersistenceConfig config);
+
+        /**
+         * Configures default keystore type and encryption, can be overridden by withConfig method.
+         */
+        @BindsInstance
+        Builder keyStoreConfig(@Nullable KeyStoreConfig config);
 
         /**
          * Tells how to persist class provided by {@link MetadataPersistenceConfig}.

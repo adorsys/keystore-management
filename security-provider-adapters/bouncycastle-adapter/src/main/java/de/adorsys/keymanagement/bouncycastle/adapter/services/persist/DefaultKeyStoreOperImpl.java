@@ -16,6 +16,7 @@ import org.bouncycastle.crypto.util.PBKDFConfig;
 import org.bouncycastle.crypto.util.ScryptConfig;
 import org.bouncycastle.jcajce.BCFKSLoadStoreParameter;
 
+import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
 import java.security.KeyStore;
@@ -28,14 +29,9 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
     private final KeyStoreConfig config;
 
     @Inject
-    public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper) {
+    public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, @Nullable KeyStoreConfig config) {
         this.metadataOper = metadataOper;
-        this.config = KeyStoreConfig.builder().build();
-    }
-
-    private DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, KeyStoreConfig config) {
-        this.metadataOper = metadataOper;
-        this.config = config;
+        this.config = null == config ? KeyStoreConfig.builder().build() : config;
     }
 
     @Override

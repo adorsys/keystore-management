@@ -10,11 +10,6 @@ import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 @Module
 public abstract class KeyStoreModule {
 
-    @Provides
-    static KeyStoreConfig keyStoreConfig() {
-        return KeyStoreConfig.builder().build();
-    }
-
     @Binds
     abstract KeyStoreCreator creator(DefaultKeyStoreOperImpl oper);
 }

@@ -4,6 +4,7 @@ import de.adorsys.keymanagement.api.persist.SerDe;
 import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import lombok.SneakyThrows;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,8 +16,8 @@ public class DefaultKeyStoreSerde implements SerDe {
     private final KeyStoreConfig config;
 
     @Inject
-    public DefaultKeyStoreSerde(KeyStoreConfig config) {
-        this.config = config;
+    public DefaultKeyStoreSerde(@Nullable KeyStoreConfig config) {
+        this.config = null == config ? KeyStoreConfig.builder().build() : config;
     }
 
     @Override
