@@ -53,7 +53,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
+        <deploy.disabled>false</deploy.disabled>
+        <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
+        <doclint>none</doclint>
+        <src.dir>src/main/java</src.dir>
+        <test.src.dir>src/test/java</test.src.dir>
         <!-- TODO: should be maven.multiModuleProjectDirectory but not using it because Intellij does not support it -->
         <jacoco.reportPath>${basedir}/../../target/jacoco.exec</jacoco.reportPath>
 
@@ -71,7 +75,14 @@
         <mockito.version>2.25.1</mockito.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <gson.version>2.8.6</gson.version>
-        <deploy.disabled>false</deploy.disabled>
+        <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
+        <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -164,6 +175,10 @@
     </dependencyManagement>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
+        <sourceDirectory>${src.dir}</sourceDirectory>
+        <testSourceDirectory>${test.src.dir}</testSourceDirectory>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -270,6 +285,63 @@
     </build>
 
     <profiles>
+        <!--
+        This profile exist to show Lombok-generated code in javadoc without touching dev and release classes.
+        You can generate JavaDoc with comments from lombok using:
+        mvn clean javadoc:aggregate -P javadoc
+        -->
+        <profile>
+            <id>javadoc</id>
+            <properties>
+                <src.dir>target/generated-sources/delombok</src.dir>
+                <test.srt.dir>target/generated-test-sources/delombok</test.srt.dir>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <annotationProcessorPaths>
+                                <path>
+                                    <groupId>com.google.dagger</groupId>
+                                    <artifactId>dagger-compiler</artifactId>
+                                    <version>${dagger.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-maven-plugin</artifactId>
+                        <version>${lombok-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>delombok</goal>
+                                </goals>
+                                <configuration>
+                                    <addOutputDirectory>false</addOutputDirectory>
+                                    <sourceDirectory>src/main/java</sourceDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <!-- Exclude Dagger2 generated code -->
+                            <sourceFileExcludes>**/*Dagger*</sourceFileExcludes>
+                            <sourceFileExcludes>**/*Factory*</sourceFileExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <id>release</id>
             <build>
@@ -277,7 +349,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
+                        <version>${nexus-staging-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype</serverId>
@@ -288,7 +360,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -301,7 +373,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <configuration>
                         </configuration>
                         <executions>
@@ -314,17 +386,30 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                 </plugins>
                 <pluginManagement>
                     <plugins>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>2.7</version>
+                            <version>${maven-project-info-reports-plugin.version}</version>
                         </plugin>
                         <plugin>
                             <artifactId>maven-release-plugin</artifactId>
-                            <version>2.5.2</version>
+                            <version>${maven-release-plugin.version}</version>
                             <configuration>
                                 <releaseProfiles>release</releaseProfiles>
                                 <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -334,7 +419,7 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-jar-plugin</artifactId>
-                            <version>2.6</version>
+                            <version>${maven-jar-plugin.version}</version>
                             <configuration>
                                 <archive>
                                     <manifest>
@@ -356,7 +441,7 @@
                         <plugin>
                             <groupId>org.codehaus.mojo</groupId>
                             <artifactId>buildnumber-maven-plugin</artifactId>
-                            <version>1.3</version>
+                            <version>${buildnumber-maven-plugin.version}</version>
                             <executions>
                                 <execution>
                                     <phase>validate</phase>
@@ -373,7 +458,7 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-deploy-plugin</artifactId>
-                            <version>2.8.1</version>
+                            <version>${maven-deploy-plugin.version}</version>
                             <configuration>
                                 <skip>${deploy.disabled}</skip>
                             </configuration>
