@@ -43,7 +43,7 @@ public class ProvidedKeyPair implements ProvidedKeyTemplate {
     }
 
     @Builder(builderMethodName = "with")
-    ProvidedKeyPair(String alias, String prefix, @NonNull Supplier<char[]> password, @NonNull KeyPair pair,
+    ProvidedKeyPair(String alias, String prefix, Supplier<char[]> password, @NonNull KeyPair pair,
                     @Singular @NonNull List<Certificate> certificates, KeyMetadata metadata) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.metadata = metadata;
