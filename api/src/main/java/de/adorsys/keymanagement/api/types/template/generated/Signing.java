@@ -1,8 +1,8 @@
 package de.adorsys.keymanagement.api.types.template.generated;
 
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
-import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
+import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
 import de.adorsys.keymanagement.api.types.template.NameAndPassword;
 import lombok.Builder;

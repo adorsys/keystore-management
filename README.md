@@ -64,7 +64,7 @@ TODO: Migrate to AsciiDoc for automatic snippet embedding.
 [Example:Generate keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/NewKeyStoreTest.java#L30-L51)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerBCJuggler.builder().build();
+BCJuggler juggler = DaggerBCJuggler.builder().build();
 
 // We want our keystore to have:
 KeySetTemplate template = KeySetTemplate.builder()
@@ -89,7 +89,7 @@ assertThat(countKeys(store)).isEqualTo(13);
 [Example:Clone keystore and change key password](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/CloneKeyStoreAndChangeKeyPasswordTest.java#L29-L60)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerBCJuggler.builder().build();
+BCJuggler juggler = DaggerBCJuggler.builder().build();
 
 // We want our keystore to have:
 KeySetTemplate template = KeySetTemplate.builder()
@@ -125,10 +125,10 @@ assertThat(newKeystore.getKey("MY-KEY", "NEW_PASSWORD!".toCharArray())).isNotNul
 It is possible your own char sequence in encrypted form inside Keystore using password-based-encryption. This way
 you can store any data in form of SecretKey within java KeyStore.
 
-[Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L31-L52)
+[Example:Store your own char array securely in KeyStore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GeneratePbeKeyTest.java#L25-L46)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerBCJuggler.builder().build();
+BCJuggler juggler = DaggerBCJuggler.builder().build();
 // Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
 // encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
 Supplier<char[]> keyPassword =  "WOW"::toCharArray;
@@ -154,7 +154,7 @@ assertThat(juggler.decode().decodeAsString(keyFromKeyStore.getEncoded())).isEqua
 [Example:Generate secret key](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/GenerateSecretKeyTest.java#L19-L33)
 ```groovy
 // Obtain Juggler service instance:
-Juggler juggler = DaggerBCJuggler.builder().build();
+BCJuggler juggler = DaggerBCJuggler.builder().build();
 // Generate key:
 Key key = juggler.generateKeys().secret(
         Secret.with()
@@ -172,7 +172,7 @@ assertThat(key.getEncoded()).hasSize(16); // 16 * 8 (sizeof byte) = 128 bits
 [Example:Query keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/QueryKeyStoreTest.java#L28-L65)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerBCJuggler.builder().build();
+BCJuggler juggler = DaggerBCJuggler.builder().build();
 
 
 KeySetTemplate template = KeySetTemplate.builder()
@@ -213,7 +213,7 @@ assertThat(entryView.trustedCerts()).hasSize(0);
 [Example:Save metadata to keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/PersistMetadataToKeyStoreTest.java#L34-L78)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerBCJuggler.builder()
+BCJuggler juggler = DaggerBCJuggler.builder()
         .metadataPersister(new WithPersister()) // enable metadata persistence
         .metadataConfig(
                 MetadataPersistenceConfig.builder()
@@ -258,10 +258,10 @@ assertThat(
 ```
 
 ### Update key in keystore based on its metadata
-[Example:Rotate expired key in keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/RotateKeyBasedOnMetadataTest.java#L39-L92)
+[Example:Rotate expired key in keystore](juggler/juggler-bouncycastle/src/test/java/de/adorsys/keymanagement/examples/RotateKeyBasedOnMetadataTest.java#L38-L90)
 ```groovy
 // Obtain Juggler service
-Juggler juggler = DaggerBCJuggler.builder()
+BCJuggler juggler = DaggerBCJuggler.builder()
         .metadataPersister(new WithPersister()) // enable metadata persistence
         .metadataConfig(
                 MetadataPersistenceConfig.builder()
@@ -297,11 +297,10 @@ KeyStoreView source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
 // Open alias view to query key alias by metadata
 AliasView<Query<KeyAlias>> view = source.aliases();
 // Find expired key:
-ResultCollection<KeyAlias> expired = view.retrieve(KeyValidity.EXPIRED).toCollection();
-assertThat(expired).hasSize(1);
+KeyAlias expired = view.uniqueResult(KeyValidity.EXPIRED);
 // replace expired key:
 view.update(
-        expired,
+        Collections.singleton(expired),
         Collections.singleton(
                 juggler.generateKeys().encrypting(
                         keyTemplate.apply(Instant.now().plus(10, ChronoUnit.HOURS)) // Valid for 10 hours from now

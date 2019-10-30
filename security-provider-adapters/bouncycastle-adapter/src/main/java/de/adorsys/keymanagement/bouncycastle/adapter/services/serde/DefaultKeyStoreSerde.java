@@ -1,7 +1,7 @@
 package de.adorsys.keymanagement.bouncycastle.adapter.services.serde;
 
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.persist.SerDe;
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import lombok.SneakyThrows;
 
 import javax.annotation.Nullable;

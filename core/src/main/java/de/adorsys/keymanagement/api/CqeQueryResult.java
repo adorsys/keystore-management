@@ -5,7 +5,9 @@ import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.view.QueryResult;
 import lombok.RequiredArgsConstructor;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

@@ -1,10 +1,10 @@
 package de.adorsys.keymanagement.api.types.template.provided;
 
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
-import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
 import de.adorsys.keymanagement.api.types.template.KeyTemplate;
 import de.adorsys.keymanagement.api.types.template.NameAndPassword;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;

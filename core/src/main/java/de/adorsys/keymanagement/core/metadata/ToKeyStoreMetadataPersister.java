@@ -9,16 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
 import javax.annotation.Nullable;
-import javax.crypto.interfaces.PBEKey;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import java.security.KeyStore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
-import static java.nio.charset.StandardCharsets.UTF_16BE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**

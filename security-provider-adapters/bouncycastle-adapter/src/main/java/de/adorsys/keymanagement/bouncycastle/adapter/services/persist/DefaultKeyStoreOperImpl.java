@@ -1,9 +1,9 @@
 package de.adorsys.keymanagement.bouncycastle.adapter.services.persist;
 
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.metadata.NoOpMetadataPersistence;
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;

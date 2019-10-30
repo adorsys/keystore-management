@@ -78,6 +78,20 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
     }
 
     @Override
+    public KeyAlias uniqueResult(Query<KeyAlias> query) {
+        try (ResultSet<KeyAlias> unique = aliases.retrieve(and(viewFilter, query))) {
+            return unique.uniqueResult();
+        }
+    }
+
+    @Override
+    public KeyAlias uniqueResult(String query) {
+        try (ResultSet<KeyAlias> unique = aliases.retrieve(and(viewFilter, PARSER.query(query)))) {
+            return unique.uniqueResult();
+        }
+    }
+
+    @Override
     public ResultCollection<KeyAlias> all() {
         return new CqeQueryResult<>(aliases.retrieve(viewFilter)).toCollection();
     }
@@ -88,13 +102,13 @@ public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> i
     }
 
     @Override
-    protected KeyAlias newViewFromId(String ofKey) {
+    protected KeyAlias fromSource(String ofKey) {
         WithMetadata<String> key = source.asAliasWithMeta(ofKey);
         return new KeyAlias(ofKey, key.getMetadata(), key.isMetadataEntry());
     }
 
     @Override
-    protected KeyAlias getViewFromId(String ofKey) {
+    protected KeyAlias fromCollection(String ofKey) {
         // Skip view filter
         try (ResultSet<KeyAlias> byId = aliases.retrieve(equal(A_ID, ofKey))) {
             return byId.uniqueResult();

@@ -15,4 +15,16 @@ public class KeyAlias {
      * Indicates whether given alias points not to a true key, but to key metadata.
      */
     private final boolean metadataEntry;
+
+    public <T extends KeyMetadata> AliasWithMeta<T> aliasWithMeta(Class<T> metadataClass) {
+        if (metadataEntry) {
+            throw new IllegalStateException("Entry is metadata itself");
+        }
+
+        return new AliasWithMeta<>(getAlias(), getMeta(metadataClass));
+    }
+
+    public <T> T getMeta(Class<T> asClass) {
+        return (T) meta;
+    }
 }

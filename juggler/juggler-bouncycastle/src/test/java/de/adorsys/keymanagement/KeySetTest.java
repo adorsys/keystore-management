@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement;
 
-import com.googlecode.cqengine.query.QueryFactory;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
@@ -26,8 +25,10 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.Security;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.function.Supplier;
 
+import static com.googlecode.cqengine.query.QueryFactory.equal;
 import static de.adorsys.keymanagement.core.view.AliasViewImpl.A_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -103,7 +104,7 @@ class KeySetTest {
                 .metadataPersister(new WithPersister())
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()
-                                .metadataClass(KeyExpirationMetadata.class)
+                                .metadataClass(Metadata.class)
                                 .build()
                 )
                 .build();
@@ -111,10 +112,10 @@ class KeySetTest {
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .providedKey(ProvidedKey.with()
-                        .prefix("ZZZ").key(stubSecretKey()).metadata(new KeyExpirationMetadata(Instant.now()))
+                        .prefix("ZZZ").key(stubSecretKey()).metadata(new Metadata(Instant.now()))
                         .build()
                 ).generatedEncryptionKey(
-                        Encrypting.with().alias("TTT").metadata(new KeyExpirationMetadata(Instant.now())).build()
+                        Encrypting.with().alias("TTT").metadata(new Metadata(Instant.now())).build()
                 )
                 .build();
         KeySet keySet = juggler.generateKeys().fromTemplate(template);
@@ -122,8 +123,8 @@ class KeySetTest {
         val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
         val view = source.aliases();
         assertThat(
-                ((KeyExpirationMetadata)
-                        view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()
+                ((Metadata)
+                        view.uniqueResult(equal(A_ID, "TTT")).getMeta()
                 ).getExpiresAfter()
         ).isBefore(Instant.now());
     }
@@ -135,7 +136,7 @@ class KeySetTest {
                 .metadataPersister(new WithPersister())
                 .metadataConfig(
                         MetadataPersistenceConfig.builder()
-                                .metadataClass(KeyExpirationMetadata.class)
+                                .metadataClass(Metadata.class)
                                 .build()
                 )
                 .build();
@@ -143,7 +144,7 @@ class KeySetTest {
         Supplier<char[]> password = "PASSWORD!"::toCharArray;
         KeySetTemplate template = KeySetTemplate.builder()
                 .generatedEncryptionKey(
-                        Encrypting.with().alias("TTT").metadata(new KeyExpirationMetadata(Instant.now())).build()
+                        Encrypting.with().alias("TTT").metadata(new Metadata(Instant.now())).build()
                 )
                 .build();
 
@@ -153,15 +154,52 @@ class KeySetTest {
         val view = source.entries();
 
         assertThat(
-                ((KeyExpirationMetadata)
-                        view.retrieve(QueryFactory.equal(A_ID, "TTT")).toCollection().first().getMeta()
+                ((Metadata)
+                        view.uniqueResult(equal(A_ID, "TTT")).getMeta()
                 ).getExpiresAfter()
         ).isBefore(Instant.now());
     }
 
+    @Test
+    @SneakyThrows
+    void metadataUpdateTest() {
+        BCJuggler juggler = DaggerBCJuggler.builder()
+                .metadataPersister(new WithPersister())
+                .metadataConfig(
+                        MetadataPersistenceConfig.builder()
+                                .metadataClass(Metadata.class)
+                                .build()
+                )
+                .build();
+
+        Supplier<char[]> password = "PASSWORD!"::toCharArray;
+        KeySetTemplate template = KeySetTemplate.builder()
+                .generatedEncryptionKey(
+                        Encrypting.with().alias("TTT").metadata(new Metadata(Instant.now())).build()
+                )
+                .build();
+
+        KeySet keySet = juggler.generateKeys().fromTemplate(template);
+        val ks = juggler.toKeystore().generate(keySet, password);
+        val source = juggler.readKeys().fromKeyStore(ks, id -> password.get());
+        val view = source.entries();
+
+        val oldMetadata = view.uniqueResult(equal(A_ID, "TTT")).aliasWithMeta(Metadata.class);
+        val newMetadata = oldMetadata.toBuilder().metadata(new Metadata(Instant.MIN)).build();
+        view.update(Collections.singleton(newMetadata));
+
+        assertThat(view.uniqueResult(equal(A_ID, "TTT")).getMeta(Metadata.class).getExpiresAfter())
+                .isEqualTo(Instant.MIN);
+
+        // validate that it was persisted to KeyStore
+        val aliasView = source.aliases();
+        assertThat(aliasView.uniqueResult(equal(A_ID, "TTT")).getMeta(Metadata.class).getExpiresAfter())
+                .isEqualTo(Instant.MIN);
+    }
+
     @Getter
     @RequiredArgsConstructor
-    private static class KeyExpirationMetadata implements KeyMetadata {
+    private static class Metadata implements KeyMetadata {
 
         private final Instant expiresAfter;
     }

@@ -79,6 +79,20 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
     }
 
     @Override
+    public KeyEntry uniqueResult(Query<KeyEntry> query) {
+        try (ResultSet<KeyEntry> unique = keys.retrieve(and(viewFilter, query))) {
+            return unique.uniqueResult();
+        }
+    }
+
+    @Override
+    public KeyEntry uniqueResult(String query) {
+        try (ResultSet<KeyEntry> unique = keys.retrieve(and(viewFilter, PARSER.query(query)))) {
+            return unique.uniqueResult();
+        }
+    }
+
+    @Override
     public ResultCollection<KeyEntry> all() {
         return new CqeQueryResult<>(keys.retrieve(viewFilter)).toCollection();
     }
@@ -104,12 +118,12 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
     }
 
     @Override
-    protected KeyEntry newViewFromId(String ofKey) {
+    protected KeyEntry fromSource(String ofKey) {
         return new KeyEntry(ofKey, source.asEntry(ofKey));
     }
 
     @Override
-    protected KeyEntry getViewFromId(String ofKey) {
+    protected KeyEntry fromCollection(String ofKey) {
         // Skip view filter
         try (ResultSet<KeyEntry> byId = keys.retrieve(equal(A_ID, ofKey))) {
             return byId.uniqueResult();

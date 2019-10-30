@@ -3,7 +3,6 @@ package de.adorsys.keymanagement.examples;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
-import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
@@ -74,11 +73,10 @@ class RotateKeyBasedOnMetadataTest {
         // Open alias view to query key alias by metadata
         AliasView<Query<KeyAlias>> view = source.aliases();
         // Find expired key:
-        ResultCollection<KeyAlias> expired = view.retrieve(KeyValidity.EXPIRED).toCollection();
-        assertThat(expired).hasSize(1);
+        KeyAlias expired = view.uniqueResult(KeyValidity.EXPIRED);
         // replace expired key:
         view.update(
-                expired,
+                Collections.singleton(expired),
                 Collections.singleton(
                         juggler.generateKeys().encrypting(
                                 keyTemplate.apply(Instant.now().plus(10, ChronoUnit.HOURS)) // Valid for 10 hours from now

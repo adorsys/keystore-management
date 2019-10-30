@@ -8,6 +8,11 @@ import de.adorsys.keymanagement.api.view.EntryView;
 
 import java.util.function.Function;
 
+/**
+ * {@link java.security.KeyStore} view from different angles.
+ * IMPORTANT: each opened view (i.e. entries() or metadata()) is independent, so while it will propagate
+ * changes done through it into keystore, it will not see changes done from another view.
+ */
 public interface KeyStoreView {
 
     /**

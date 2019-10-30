@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.source;
 
+import de.adorsys.keymanagement.api.types.entity.AliasWithMeta;
 import de.adorsys.keymanagement.api.types.entity.WithMetadata;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 
@@ -23,9 +24,10 @@ public interface KeySource {
 
     void remove(String keyId);
     String addAndReturnId(ProvidedKeyTemplate keyTemplate);
+    void updateMetadata(AliasWithMeta aliasWithMetadata);
 
     /**
-     * List all entries ids that are associated with given key id (i.e. metadata entry)
+     * List all child entries ids that are associated with given key id (i.e. metadata), INCLUDING itself
      */
     Set<String> allAssociatedEntries(String keyId);
 }

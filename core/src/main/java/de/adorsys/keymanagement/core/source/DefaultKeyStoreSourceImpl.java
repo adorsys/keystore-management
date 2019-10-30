@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import de.adorsys.keymanagement.api.keystore.KeyStoreOper;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataOper;
 import de.adorsys.keymanagement.api.source.KeySource;
+import de.adorsys.keymanagement.api.types.entity.AliasWithMeta;
 import de.adorsys.keymanagement.api.types.entity.WithMetadata;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
@@ -116,6 +117,12 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
         }
 
         return ImmutableSet.of(keyId);
+    }
+
+    @Override
+    public void updateMetadata(AliasWithMeta aliasWithMetadata) {
+        metadataOper.removeMetadata(aliasWithMetadata.getAlias(), store);
+        metadataOper.persistMetadata(aliasWithMetadata.getAlias(), aliasWithMetadata.getMetadata(), store);
     }
 
     @RequiredArgsConstructor

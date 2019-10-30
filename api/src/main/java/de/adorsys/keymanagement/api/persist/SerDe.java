@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.api.persist;
 
-import de.adorsys.keymanagement.config.keystore.KeyStoreConfig;
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 
 import java.security.KeyStore;
 import java.util.function.Supplier;

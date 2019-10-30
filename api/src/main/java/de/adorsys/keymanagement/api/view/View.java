@@ -14,5 +14,7 @@ public interface View<Q, O> {
      */
     QueryResult<O> retrieve(String query);
 
+    O uniqueResult(Q query);
+    O uniqueResult(String query);
     ResultCollection<O> all();
 }
