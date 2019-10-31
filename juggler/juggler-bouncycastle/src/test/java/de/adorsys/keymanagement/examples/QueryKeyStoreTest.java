@@ -11,11 +11,9 @@ import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
 import java.security.KeyStore;
-import java.security.Security;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
