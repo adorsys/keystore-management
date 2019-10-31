@@ -5,6 +5,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CertificateHolder;
 
 import java.security.KeyPair;
+import java.security.Provider;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class SingleKeyUsageSelfSignedCertBuilder {
 
+    private Provider provider;
     private String signatureAlgo;
     private Integer notAfterInDays;
     private Integer notBeforeInDays = 0;
@@ -39,6 +41,7 @@ public class SingleKeyUsageSelfSignedCertBuilder {
         if (dirty) throw new IllegalStateException("Builder can not be reused");
         dirty = true;
         List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
+                .add("provider", provider)
                 .add("subjectDN", subjectDN)
                 .add("signatureAlgo", signatureAlgo)
                 .add("notBeforeInDays", notBeforeInDays)
@@ -52,6 +55,7 @@ public class SingleKeyUsageSelfSignedCertBuilder {
         }
 
         CaSignedCertificateBuilder builder = new CaSignedCertificateBuilder()
+                .withProvider(provider)
                 .withCa(ca)
                 .withNotBeforeInDays(notBeforeInDays)
                 .withNotAfterInDays(notAfterInDays)
@@ -65,10 +69,16 @@ public class SingleKeyUsageSelfSignedCertBuilder {
         return new SelfSignedKeyPairData(keyPair, subjectCert);
     }
 
+    public SingleKeyUsageSelfSignedCertBuilder withProvider(Provider provider) {
+        this.provider = provider;
+        return this;
+    }
+
     public SingleKeyUsageSelfSignedCertBuilder withSubjectDN(X500Name subjectDN) {
         this.subjectDN = subjectDN;
         return this;
     }
+
     public SingleKeyUsageSelfSignedCertBuilder withSignatureAlgo(String signatureAlgo) {
         this.signatureAlgo = signatureAlgo;
         return this;

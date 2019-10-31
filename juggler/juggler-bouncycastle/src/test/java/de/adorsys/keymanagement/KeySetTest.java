@@ -35,11 +35,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class KeySetTest {
 
-    @BeforeAll
-    static void addBouncyCastle() {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     @Test
     @SneakyThrows
     void basicKeySetTest() {

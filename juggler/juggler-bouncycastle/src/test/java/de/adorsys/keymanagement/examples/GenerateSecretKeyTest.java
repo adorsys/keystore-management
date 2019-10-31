@@ -15,7 +15,6 @@ class GenerateSecretKeyTest {
 
     @Test
     void newSecretKey() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Generate secret key
         // Obtain Juggler service instance:
         BCJuggler juggler = DaggerBCJuggler.builder().build();

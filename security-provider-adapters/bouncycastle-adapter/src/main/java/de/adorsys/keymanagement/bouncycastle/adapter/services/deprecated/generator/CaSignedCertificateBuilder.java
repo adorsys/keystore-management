@@ -15,6 +15,7 @@ import org.bouncycastle.operator.ContentSigner;
 
 import java.math.BigInteger;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.util.Date;
 import java.util.List;
@@ -31,8 +32,8 @@ import java.util.List;
  */
 public class CaSignedCertificateBuilder {
 
+    private Provider provider;
     private boolean createCaCert;
-
     private X500Name subjectDN;
 
     private Integer notAfterInDays;
@@ -59,6 +60,7 @@ public class CaSignedCertificateBuilder {
         Date notBefore = notBeforeInDays != null ? DateUtils.addDays(now, notBeforeInDays) : null;
 
         List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
+                .add("provider", provider)
                 .add("X509CertificateBuilder_missing_subject_DN", subjectDN)
                 .add("X509CertificateBuilder_missing_subject_publicKey", subjectPublicKey)
                 .add("X509CertificateBuilder_missing_validity_date_notBefore", notBefore)
@@ -103,7 +105,7 @@ public class CaSignedCertificateBuilder {
                     true, new KeyUsage(this.keyUsage));
         }
 
-        ContentSigner signer = V3CertificateUtils.getContentSigner(issuerPrivatekey, signatureAlgo);
+        ContentSigner signer = V3CertificateUtils.getContentSigner(provider, issuerPrivatekey, signatureAlgo);
 
         return v3CertGen.build(signer);
 
@@ -120,6 +122,11 @@ public class CaSignedCertificateBuilder {
         }
 
         return null;
+    }
+
+    public CaSignedCertificateBuilder withProvider(Provider provider) {
+        this.provider = provider;
+        return this;
     }
 
     public CaSignedCertificateBuilder withCa(boolean ca) {

@@ -26,7 +26,6 @@ class NewKeyStoreTest {
 
     @Test
     void newKeystore() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Generate keystore
         // Obtain Juggler service instance:
         BCJuggler juggler = DaggerBCJuggler.builder().build();

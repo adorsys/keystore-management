@@ -9,14 +9,15 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.cert.X509Certificate;
 
 @UtilityClass
 public class V3CertificateUtils {
 
 	@SneakyThrows
-	public static X509Certificate getX509JavaCertificate(X509CertificateHolder holder) {
-			return new JcaX509CertificateConverter().setProvider(ProviderUtils.bcProvider).getCertificate(holder);
+	public static X509Certificate getX509JavaCertificate(Provider provider, X509CertificateHolder holder) {
+			return new JcaX509CertificateConverter().setProvider(provider).getCertificate(holder);
 	}
 
 	@SneakyThrows
@@ -25,7 +26,7 @@ public class V3CertificateUtils {
 	}
 
 	@SneakyThrows
-	public static ContentSigner getContentSigner(PrivateKey privatekey, String algo) {
-			return new JcaContentSignerBuilder(algo).setProvider(ProviderUtils.bcProvider).build(privatekey);
+	public static ContentSigner getContentSigner(Provider provider, PrivateKey privatekey, String algo) {
+			return new JcaContentSignerBuilder(algo).setProvider(provider).build(privatekey);
 	}
 }

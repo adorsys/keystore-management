@@ -25,7 +25,6 @@ class CloneKeyStoreAndChangeKeyPasswordTest {
     @Test
     @SneakyThrows
     void cloneKeystoreAndChangeKeyPassword() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Clone keystore and change key password
         // Obtain Juggler service instance:
         BCJuggler juggler = DaggerBCJuggler.builder().build();

@@ -4,7 +4,6 @@ import de.adorsys.keymanagement.api.generator.SecretKeyGenerator;
 import de.adorsys.keymanagement.api.types.template.generated.Pbe;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
-import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.ProviderUtils;
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.SecretKeyBuilder;
 import lombok.SneakyThrows;
 
@@ -12,14 +11,18 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.inject.Inject;
+import java.security.Provider;
 import java.security.SecureRandom;
 
 public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
+    private final Provider provider;
+
     @Inject
-    public DefaultSecretKeyGeneratorImpl() {
+    public DefaultSecretKeyGeneratorImpl(Provider provider) {
+        this.provider = provider;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
 
     private SecretKey generateSecret(Secret secret) {
         return new SecretKeyBuilder()
+                .withProvider(provider)
                 .withKeyAlg(secret.getAlgo())
                 .withKeyLength(secret.getSize())
                 .build();
@@ -67,14 +71,14 @@ public class DefaultSecretKeyGeneratorImpl implements SecretKeyGenerator {
                 secret.getIterCount()
         );
 
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), ProviderUtils.bcProvider);
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), provider);
         return keyFac.generateSecret(pbeKeySpec);
     }
 
     @SneakyThrows
     private SecretKey generateRawSecret(Pbe secret) {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(secret.getData());
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), ProviderUtils.bcProvider);
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(secret.getAlgo(), provider);
         return keyFac.generateSecret(pbeKeySpec);
     }
 }

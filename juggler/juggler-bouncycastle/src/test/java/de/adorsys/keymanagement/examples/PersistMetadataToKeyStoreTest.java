@@ -30,7 +30,6 @@ class PersistMetadataToKeyStoreTest {
 
     @Test
     void newKeystore() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Save metadata to keystore
         // Obtain Juggler service
         BCJuggler juggler = DaggerBCJuggler.builder()

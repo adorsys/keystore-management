@@ -34,7 +34,6 @@ class RotateKeyBasedOnMetadataTest {
 
     @Test
     void rotateKeyBasedOnMetadata() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Rotate expired key in keystore
         // Obtain Juggler service
         BCJuggler juggler = DaggerBCJuggler.builder()

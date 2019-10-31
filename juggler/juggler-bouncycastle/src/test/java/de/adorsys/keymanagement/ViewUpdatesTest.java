@@ -39,11 +39,6 @@ class ViewUpdatesTest {
             )
             .build();
 
-    @BeforeAll
-    static void addBouncyCastle() {
-        Security.addProvider(new BouncyCastleProvider());
-    }
-
     @Test
     @SneakyThrows
     void testMetadataIsRemovedWithKey() {

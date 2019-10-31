@@ -8,6 +8,7 @@ import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.KeyUsage;
 
 import java.security.KeyPair;
+import java.security.Provider;
 
 @Builder
 public class KeyPairGenerator {
@@ -15,6 +16,7 @@ public class KeyPairGenerator {
     private static final int[] keyUsageSignature = {KeyUsage.nonRepudiation};
     private static final int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
 
+    private final Provider provider;
     private final String keyAlgo;
     private final int keySize;
     private final String serverSigAlgo;
@@ -35,9 +37,16 @@ public class KeyPairGenerator {
     }
 
     private KeyPairData generate(int[] keyUsages) {
-        KeyPair keyPair = new KeyPairBuilder().withKeyAlg(keyAlgo).withKeyLength(keySize).build();
+        KeyPair keyPair = new KeyPairBuilder()
+                .withProvider(provider)
+                .withKeyAlg(keyAlgo)
+                .withKeyLength(keySize)
+                .build();
+
         X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, serverKeyPairName).build();
+
         SelfSignedKeyPairData keyPairData = new SingleKeyUsageSelfSignedCertBuilder()
+                .withProvider(provider)
                 .withSubjectDN(dn)
                 .withSignatureAlgo(serverSigAlgo)
                 .withNotAfterInDays(daysAfter)

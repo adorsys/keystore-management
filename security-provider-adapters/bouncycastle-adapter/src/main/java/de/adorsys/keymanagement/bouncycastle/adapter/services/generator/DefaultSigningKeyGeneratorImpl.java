@@ -8,16 +8,21 @@ import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generat
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator.V3CertificateUtils;
 
 import javax.inject.Inject;
+import java.security.Provider;
 
 public class DefaultSigningKeyGeneratorImpl implements SigningKeyGenerator {
 
+    private final Provider provider;
+
     @Inject
-    public DefaultSigningKeyGeneratorImpl() {
+    public DefaultSigningKeyGeneratorImpl(Provider provider) {
+        this.provider = provider;
     }
 
     @Override
     public KeyPairEntry generate(Signing fromTemplate) {
         KeyPairData keyPair = KeyPairGenerator.builder()
+                .provider(provider)
                 .keyAlgo(fromTemplate.getAlgo())
                 .keySize(fromTemplate.getSize())
                 .serverSigAlgo(fromTemplate.getSigAlgo())
@@ -27,7 +32,7 @@ public class DefaultSigningKeyGeneratorImpl implements SigningKeyGenerator {
 
         return KeyPairEntry.builder()
                 .pair(keyPair.getKeyPair().getKeyPair())
-                .certificate(V3CertificateUtils.getX509JavaCertificate(keyPair.getKeyPair().getSubjectCert()))
+                .certificate(V3CertificateUtils.getX509JavaCertificate(provider, keyPair.getKeyPair().getSubjectCert()))
                 .build();
     }
 }

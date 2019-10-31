@@ -8,8 +8,7 @@ import java.util.List;
 
 public class SecretKeyBuilder {
 
-	private static Provider provider = ProviderUtils.bcProvider;
-	
+	private Provider provider;
 	private Integer keyLength;
 	private String keyAlg;
 	
@@ -25,6 +24,7 @@ public class SecretKeyBuilder {
 		if(dirty)throw new IllegalStateException("Builder can not be reused");
 		dirty=true;
 		List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
+				.add("provider", provider)
 				.add("keyAlg", keyAlg)
 				.add("keyLength", keyLength)
 				.build();
@@ -41,6 +41,11 @@ public class SecretKeyBuilder {
 
 		kGen.init(keyLength);
 		return kGen.generateKey();
+	}
+
+	public SecretKeyBuilder withProvider(Provider provider) {
+		this.provider = provider;
+		return this;
 	}
 
 	public SecretKeyBuilder withKeyLength(Integer keyLength) {

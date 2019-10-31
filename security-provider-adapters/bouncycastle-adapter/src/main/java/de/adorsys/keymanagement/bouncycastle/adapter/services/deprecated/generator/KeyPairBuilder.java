@@ -3,6 +3,7 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.genera
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 import java.util.List;
 
 /**
@@ -12,7 +13,8 @@ import java.util.List;
  *
  */
 public class KeyPairBuilder {
-	
+
+	private Provider provider;
 	private Integer keyLength;
 	private String keyAlg;
 	
@@ -26,6 +28,7 @@ public class KeyPairBuilder {
 		if(dirty)throw new IllegalStateException("Builder can not be reused");
 		dirty=true;
 		List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
+				.add("provider", provider)
 				.add("keyAlg", keyAlg)
 				.add("keyLength", keyLength)
 				.build();
@@ -36,13 +39,18 @@ public class KeyPairBuilder {
 		// Generate a key pair for the new EndEntity
 		KeyPairGenerator kGen;
 		try {
-			kGen = KeyPairGenerator.getInstance(keyAlg, ProviderUtils.bcProvider);
+			kGen = KeyPairGenerator.getInstance(keyAlg, provider);
 		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalStateException(e);
 		}
 
 		kGen.initialize(keyLength);
 		return kGen.generateKeyPair();
+	}
+
+	public KeyPairBuilder withProvider(Provider provider) {
+		this.provider = provider;
+		return this;
 	}
 
 	public KeyPairBuilder withKeyLength(Integer keyLength) {

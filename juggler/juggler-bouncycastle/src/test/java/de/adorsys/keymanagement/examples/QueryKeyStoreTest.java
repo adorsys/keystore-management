@@ -24,7 +24,6 @@ class QueryKeyStoreTest {
 
     @Test
     void newKeystore() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Query keystore
         // Obtain Juggler service
         BCJuggler juggler = DaggerBCJuggler.builder().build();

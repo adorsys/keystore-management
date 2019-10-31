@@ -21,7 +21,6 @@ class GeneratePbeKeyTest {
     @Test
     @SneakyThrows
     void newPbeRaw() {
-        Security.addProvider(new BouncyCastleProvider());
         // BEGIN_SNIPPET:Store your own char array securely in KeyStore
         // Obtain Juggler service instance:
         BCJuggler juggler = DaggerBCJuggler.builder().build();
