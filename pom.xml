@@ -68,6 +68,8 @@
         <lombok.version>1.18.10</lombok.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <dagger.version>2.24</dagger.version>
+        <schedlock.version>2.5.0</schedlock.version>
+        <mongo.version>3.11.1</mongo.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.2</slf4j.version>
@@ -128,6 +130,28 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+
+            <!-- Extras section -->
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-core</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-provider-jdbc</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-provider-mongo</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongo.version}</version>
             </dependency>
 
             <!-- Test section -->

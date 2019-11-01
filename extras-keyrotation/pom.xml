@@ -13,7 +13,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>distributed-keyrotation</module>
+        <module>keyrotation-core</module>
+        <module>distributed-keyrotation-jdbc</module>
+        <module>distributed-keyrotation-mongo</module>
+        <module>example-spring-distributed-keyrotation</module>
     </modules>
 
 </project>
