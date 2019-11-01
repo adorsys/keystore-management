@@ -64,6 +64,11 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- For REST key exposure -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+        </dependency>
         <!-- REST application will use H2, we migrate it -->
         <dependency>
             <groupId>com.h2database</groupId>

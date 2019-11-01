@@ -8,9 +8,9 @@ import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.view.EntryView;
-import de.adorsys.keymanagement.keyrotation.api.services.KeyGenerator;
+import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStoreAccess;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
-import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
+import de.adorsys.keymanagement.keyrotation.api.services.KeyGenerator;
 import de.adorsys.keymanagement.keyrotation.api.services.Rotation;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyState;
@@ -37,18 +37,18 @@ public class RotationImpl implements Rotation {
     private final KeyRotationConfig config;
     private final Juggler juggler;
     private final Clock timeSource;
-    private final KeyStorePersistence persistence;
+    private final KeyStoreAccess access;
     private final RotationLocker locker;
 
     @Inject
     public RotationImpl(KeyGenerator generator, KeyRotationConfig config,
-                        Juggler juggler, @Nullable Clock timeSource, KeyStorePersistence persistence,
+                        Juggler juggler, @Nullable Clock timeSource, KeyStoreAccess access,
                         RotationLocker locker) {
         this.generator = generator;
         this.config = config;
         this.juggler = juggler;
         this.timeSource = null == timeSource ? Clock.systemUTC() : timeSource;
-        this.persistence = persistence;
+        this.access = access;
         this.locker = locker;
     }
 
@@ -70,9 +70,7 @@ public class RotationImpl implements Rotation {
         dropExpired(keys);
         ensureThereAreEnoughValidKeys(now, keys);
 
-        persistence.write(
-                juggler.serializeDeserialize().serialize(ks, config.keyStorePassword())
-        );
+        access.write(ks);
     }
 
     private void moveValidToLegacy(Instant now, EntryView<Query<KeyEntry>> keys) {
@@ -127,12 +125,12 @@ public class RotationImpl implements Rotation {
     }
 
     private KeyStore readOrCreateKeystoreIfMissing() {
-        byte[] keyStoreBytes = persistence.read();
-        if (null == keyStoreBytes) {
+        KeyStore keyStore = access.read();
+        if (null == keyStore) {
             return juggler.toKeystore().generate(KeySet.builder().build());
         }
 
-        return juggler.serializeDeserialize().deserialize(keyStoreBytes, config.keyStorePassword());
+        return keyStore;
     }
 
     private AliasWithMeta<KeyState> toStatus(KeyEntry key, KeyStatus status) {

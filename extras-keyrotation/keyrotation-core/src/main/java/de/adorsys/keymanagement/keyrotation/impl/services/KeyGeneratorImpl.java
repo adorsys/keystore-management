@@ -14,6 +14,7 @@ import de.adorsys.keymanagement.keyrotation.api.types.KeyType;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.UUID;
 
 public class KeyGeneratorImpl implements KeyGenerator {
 
@@ -32,7 +33,8 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().secret(
                     ((Secret) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.keyPassword()))
+                            // Pinning key name via UUID.randomUUID() fixes key alias
+                            .keyTemplate(new NameAndPassword(UUID.randomUUID().toString(), config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );
@@ -42,7 +44,8 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().signing(
                     ((Signing) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.keyPassword()))
+                            // Pinning key name via UUID.randomUUID() fixes key alias
+                            .keyTemplate(new NameAndPassword(UUID.randomUUID().toString(), config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );
@@ -52,7 +55,8 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().encrypting(
                     ((Encrypting) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.keyPassword()))
+                            // Pinning key name via UUID.randomUUID() fixes key alias
+                            .keyTemplate(new NameAndPassword(UUID.randomUUID().toString(), config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );

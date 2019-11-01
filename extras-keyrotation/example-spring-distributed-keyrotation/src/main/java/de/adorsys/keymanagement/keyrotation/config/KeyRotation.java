@@ -1,7 +1,6 @@
 package de.adorsys.keymanagement.keyrotation.config;
 
 import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
-import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
 import de.adorsys.keymanagement.keyrotation.config.properties.RotationConfiguration;
