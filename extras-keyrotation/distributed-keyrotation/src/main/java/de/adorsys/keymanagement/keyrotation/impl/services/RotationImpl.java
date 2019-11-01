@@ -8,7 +8,14 @@ import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.view.EntryView;
-import de.adorsys.keymanagement.keyrotation.api.*;
+import de.adorsys.keymanagement.keyrotation.api.persistence.KeyGenerator;
+import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
+import de.adorsys.keymanagement.keyrotation.api.services.KeyStorePersistence;
+import de.adorsys.keymanagement.keyrotation.api.services.Rotation;
+import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
+import de.adorsys.keymanagement.keyrotation.api.types.KeyState;
+import de.adorsys.keymanagement.keyrotation.api.types.KeyStatus;
+import de.adorsys.keymanagement.keyrotation.api.types.KeyType;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
@@ -21,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.googlecode.cqengine.query.QueryFactory.*;
-import static de.adorsys.keymanagement.keyrotation.api.KeyState.*;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.*;
 
 @Slf4j
 public class RotationImpl implements Rotation {
@@ -61,7 +68,7 @@ public class RotationImpl implements Rotation {
         moveValidToLegacy(now, keys);
         moveLegacyToExpired(now, keys);
         dropExpired(keys);
-        ensureThereAreEnoughValidKeys(keys);
+        ensureThereAreEnoughValidKeys(now, keys);
     }
 
     private void moveValidToLegacy(Instant now, EntryView<Query<KeyEntry>> keys) {
@@ -88,30 +95,30 @@ public class RotationImpl implements Rotation {
         log.info("Removed expired ids: {}", nameAndType(expired));
     }
 
-    private void ensureThereAreEnoughValidKeys(EntryView<Query<KeyEntry>> keys) {
+    private void ensureThereAreEnoughValidKeys(Instant now, EntryView<Query<KeyEntry>> keys) {
         for (KeyType forType : config.getEnabledFor()) {
             int countValidForType = keys.retrieve(
                     and(equal(TYPE, forType), equal(STATUS, KeyStatus.VALID))
             ).toCollection().size();
 
             int missing = countValidForType - config.getKeysByType().get(forType);
-            generateKeysIfNeeded(keys, forType, missing);
+            generateKeysIfNeeded(now, keys, forType, missing);
         }
     }
 
-    private void generateKeysIfNeeded(EntryView<Query<KeyEntry>> keys, KeyType forType, int missing) {
+    private void generateKeysIfNeeded(Instant now, EntryView<Query<KeyEntry>> keys, KeyType forType, int missing) {
         if (missing <= 0) {
             return;
         }
 
-        List<ProvidedKeyTemplate> generatedKeys = generateKeysForType(forType, missing);
+        List<ProvidedKeyTemplate> generatedKeys = generateKeysForType(now, forType, missing);
         keys.add(generatedKeys);
         log.info("Generated keys: {}", nameAndType(generatedKeys));
     }
 
-    private List<ProvidedKeyTemplate> generateKeysForType(KeyType forType, int count) {
+    private List<ProvidedKeyTemplate> generateKeysForType(Instant now, KeyType forType, int count) {
         return IntStream.range(0, count).boxed()
-                .map(it -> generator.generateValidKey(forType))
+                .map(it -> generator.generateValidKey(now, forType))
                 .collect(Collectors.toList());
     }
 

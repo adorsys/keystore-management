@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.keyrotation.api;
+package de.adorsys.keymanagement.keyrotation.api.types;
 
 import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.support.SimpleFunction;

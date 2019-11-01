@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.keyrotation.api;
+package de.adorsys.keymanagement.keyrotation.api.types;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
@@ -24,18 +24,13 @@ public class RotationConfig implements KeyRotationConfig {
 
     @Builder.Default
     private final Map<KeyType, GeneratedKeyTemplate> keyTemplate = ImmutableMap.of(
-            KeyType.SECRET, Secret.with().password(keyPassword).build(),
-            KeyType.SIGNING, Signing.with().password(keyPassword).build(),
-            KeyType.ENCRYPTING, Encrypting.with().password(keyPassword).build()
+            KeyType.SECRET, Secret.with().build(),
+            KeyType.SIGNING, Signing.with().build(),
+            KeyType.ENCRYPTING, Encrypting.with().build()
     );
 
     @Override
     public Collection<KeyType> getEnabledFor() {
         return keysByType.keySet();
-    }
-
-    @Override
-    public char[] getKeyPassword() {
-        return keyPassword.get();
     }
 }

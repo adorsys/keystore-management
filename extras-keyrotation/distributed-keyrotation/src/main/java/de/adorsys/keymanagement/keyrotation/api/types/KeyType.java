@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.keyrotation.api;
+package de.adorsys.keymanagement.keyrotation.api.types;
 
 public enum KeyType {
 
