@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor;
 import net.javacrumbs.shedlock.core.LockConfiguration;
+import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.mongo.MongoLockProvider;
 import org.bson.Document;
@@ -26,7 +27,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class MongoRotationManager implements KeyStorePersistence, RotationLocker {
 
     private final String keyStoreId;
-    private final MongoLockProvider lockProvider;
+    private final LockProvider lockProvider;
     private final MongoClient client;
     private final String databaseName;
     private final String keyStoreCollectionName;
@@ -37,11 +38,27 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
             String keyStoreId,
             MongoClient client,
             String databaseName,
-            String lockTableName,
+            String lockCollectionName,
             String keyStoreCollectionName,
             Duration lockAtMost) {
         this.keyStoreId = keyStoreId;
-        this.lockProvider = new MongoLockProvider(client, databaseName, lockTableName);
+        this.lockProvider = new MongoLockProvider(client, databaseName, lockCollectionName);
+        this.executor = new DefaultLockingTaskExecutor(lockProvider);
+        this.client = client;
+        this.databaseName = databaseName;
+        this.keyStoreCollectionName = keyStoreCollectionName;
+        this.lockAtMost = lockAtMost;
+    }
+
+    public MongoRotationManager(
+            String keyStoreId,
+            MongoClient client,
+            LockProvider lockProvider,
+            String databaseName,
+            String keyStoreCollectionName,
+            Duration lockAtMost) {
+        this.keyStoreId = keyStoreId;
+        this.lockProvider = lockProvider;
         this.executor = new DefaultLockingTaskExecutor(lockProvider);
         this.client = client;
         this.databaseName = databaseName;

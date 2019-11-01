@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor;
 import net.javacrumbs.shedlock.core.LockConfiguration;
+import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
 
@@ -21,7 +22,7 @@ import java.time.Instant;
 public class JdbcRotationManager implements KeyStorePersistence, RotationLocker {
 
     private final String keyStoreId;
-    private final JdbcLockProvider lockProvider;
+    private final LockProvider lockProvider;
     private final DataSource dataSource;
     private final String keyStoreTableName;
     private final LockingTaskExecutor executor;
@@ -35,6 +36,20 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
             Duration lockAtMost) {
         this.keyStoreId = keyStoreId;
         this.lockProvider = new JdbcLockProvider(dataSource, lockTableName);
+        this.executor = new DefaultLockingTaskExecutor(lockProvider);
+        this.dataSource = dataSource;
+        this.keyStoreTableName = keyStoreTableName;
+        this.lockAtMost = lockAtMost;
+    }
+
+    public JdbcRotationManager(
+            String keyStoreId,
+            DataSource dataSource,
+            LockProvider lockProvider,
+            String keyStoreTableName,
+            Duration lockAtMost) {
+        this.keyStoreId = keyStoreId;
+        this.lockProvider = lockProvider;
         this.executor = new DefaultLockingTaskExecutor(lockProvider);
         this.dataSource = dataSource;
         this.keyStoreTableName = keyStoreTableName;
