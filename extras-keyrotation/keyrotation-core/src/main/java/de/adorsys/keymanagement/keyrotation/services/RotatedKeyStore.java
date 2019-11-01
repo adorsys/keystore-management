@@ -2,9 +2,10 @@ package de.adorsys.keymanagement.keyrotation.services;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import de.adorsys.keymanagement.api.KeyStoreManager;
+import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
-import de.adorsys.keymanagement.keyrotation.api.services.KeyStoreManager;
 import de.adorsys.keymanagement.keyrotation.api.services.KeyView;
 import de.adorsys.keymanagement.keyrotation.api.services.Rotation;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
@@ -27,7 +28,10 @@ public interface RotatedKeyStore {
     interface Builder {
 
         @BindsInstance
-        Builder keyStoreManager(@Nullable KeyStoreManager juggler);
+        Builder keyStoreConfig(@Nullable KeyStoreConfig manager);
+
+        @BindsInstance
+        Builder keyStoreManager(@Nullable KeyStoreManager manager);
 
         @BindsInstance
         Builder timeSource(@Nullable Clock timeSource);

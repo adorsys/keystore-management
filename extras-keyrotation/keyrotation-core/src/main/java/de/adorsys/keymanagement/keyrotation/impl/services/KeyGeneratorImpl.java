@@ -32,7 +32,7 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().secret(
                     ((Secret) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.getKeyPassword()))
+                            .keyTemplate(new NameAndPassword(config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );
@@ -42,7 +42,7 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().signing(
                     ((Signing) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.getKeyPassword()))
+                            .keyTemplate(new NameAndPassword(config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );
@@ -52,7 +52,7 @@ public class KeyGeneratorImpl implements KeyGenerator {
             return juggler.generateKeys().encrypting(
                     ((Encrypting) config.getKeyTemplate().get(forType))
                             .toBuilder()
-                            .keyTemplate(new NameAndPassword(config.getKeyPassword()))
+                            .keyTemplate(new NameAndPassword(config.keyPassword()))
                             .metadata(stateForValidKey(now, forType))
                             .build()
             );

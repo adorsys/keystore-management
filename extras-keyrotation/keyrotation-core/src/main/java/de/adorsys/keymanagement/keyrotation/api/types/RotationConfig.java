@@ -34,4 +34,14 @@ public class RotationConfig implements KeyRotationConfig {
     public Collection<KeyType> getEnabledFor() {
         return countValidByType.keySet();
     }
+
+    @Override
+    public Supplier<char[]> keyPassword() {
+        return keyPassword;
+    }
+
+    @Override
+    public Supplier<char[]> keyStorePassword() {
+        return keyStorePassword;
+    }
 }

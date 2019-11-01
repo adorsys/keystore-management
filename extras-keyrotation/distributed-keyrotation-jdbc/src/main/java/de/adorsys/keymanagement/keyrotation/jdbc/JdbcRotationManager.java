@@ -28,6 +28,9 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
     private final LockingTaskExecutor executor;
     private final Duration lockAtMost;
 
+    /**
+     * KeyStore persistence and rotation locking belong to same Database.
+     */
     public JdbcRotationManager(
             String keyStoreId,
             DataSource dataSource,
@@ -42,6 +45,10 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
         this.lockAtMost = lockAtMost;
     }
 
+    /**
+     * KeyStore persistence happens in JDBC, but locking is provided by other provider
+     * (other RDBMS/database, Redis,...)
+     */
     public JdbcRotationManager(
             String keyStoreId,
             DataSource dataSource,
@@ -64,13 +71,13 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
                 PreparedStatement stmt = conn
                         .prepareStatement("SELECT keystore FROM " + keyStoreTableName + " WHERE id = ?")
         ) {
-            stmt.setString(0, keyStoreId);
+            stmt.setString(1, keyStoreId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
                     return null;
                 }
 
-                Blob blob = rs.getBlob(0);
+                Blob blob = rs.getBlob(1);
                 return blob.getBytes(0, (int) blob.length());
             }
         }
@@ -84,19 +91,22 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
                 PreparedStatement stmt = conn
                         .prepareStatement("UPDATE " + keyStoreTableName + " SET keystore = ? WHERE id = ?")
         ) {
-            stmt.setBlob(0, new SerialBlob(keyStore));
-            stmt.setString(0, keyStoreId);
+            Blob keyStoreBlob = new SerialBlob(keyStore);
+            stmt.setBlob(1, keyStoreBlob);
+            stmt.setString(2, keyStoreId);
             int cnt = stmt.executeUpdate();
 
             if (0 == cnt) {
-                doInsert(conn);
+                doInsert(conn, keyStoreBlob);
             }
         }
     }
 
-    private void doInsert(Connection conn) throws SQLException {
+    private void doInsert(Connection conn, Blob keyStore) throws SQLException {
         try (PreparedStatement insert = conn
                 .prepareStatement("INSERT INTO " + keyStoreTableName + " (id, keystore) VALUES (?, ?)")) {
+            insert.setString(1, keyStoreId);
+            insert.setBlob(2, new SerialBlob(keyStore));
             insert.executeUpdate();
         }
     }

@@ -34,6 +34,9 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
     private final LockingTaskExecutor executor;
     private final Duration lockAtMost;
 
+    /**
+     * KeyStore persistence and rotation locking belong to same Database.
+     */
     public MongoRotationManager(
             String keyStoreId,
             MongoClient client,
@@ -50,6 +53,10 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
         this.lockAtMost = lockAtMost;
     }
 
+    /**
+     * KeyStore persistence happens in Mongo, but locking is provided by other provider
+     * (other RDBMS/database, Redis,...)
+     */
     public MongoRotationManager(
             String keyStoreId,
             MongoClient client,

@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
 import java.security.KeyStore;
 import java.time.Clock;
 import java.time.Instant;
@@ -63,7 +62,7 @@ public class RotationImpl implements Rotation {
         KeyStore ks = readOrCreateKeystoreIfMissing();
         EntryView<Query<KeyEntry>> keys = juggler.readKeys().fromKeyStore(
                 ks,
-                id -> config.getKeyPassword().get()
+                id -> config.keyPassword().get()
         ).entries();
 
         moveValidToLegacy(now, keys);
@@ -72,7 +71,7 @@ public class RotationImpl implements Rotation {
         ensureThereAreEnoughValidKeys(now, keys);
 
         persistence.write(
-                juggler.serializeDeserialize().serialize(ks, config.getKeyStorePassword())
+                juggler.serializeDeserialize().serialize(ks, config.keyStorePassword())
         );
     }
 
@@ -106,7 +105,7 @@ public class RotationImpl implements Rotation {
                     and(equal(TYPE, forType), equal(STATUS, KeyStatus.VALID))
             ).toCollection().size();
 
-            int missing = countValidForType - config.getCountValidByType().get(forType);
+            int missing = config.getCountValidByType().get(forType) - countValidForType;
             generateKeysIfNeeded(now, keys, forType, missing);
         }
     }
@@ -133,7 +132,7 @@ public class RotationImpl implements Rotation {
             return juggler.toKeystore().generate(KeySet.builder().build());
         }
 
-        return juggler.serializeDeserialize().deserialize(keyStoreBytes, config.getKeyPassword());
+        return juggler.serializeDeserialize().deserialize(keyStoreBytes, config.keyStorePassword());
     }
 
     private AliasWithMeta<KeyState> toStatus(KeyEntry key, KeyStatus status) {

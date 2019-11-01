@@ -37,10 +37,10 @@ public interface KeyRotationConfig {
     /**
      * Key password protection within KeyStore.
      */
-    Supplier<char[]> getKeyPassword();
+    Supplier<char[]> keyPassword();
 
     /**
      * KeyStore password protection.
      */
-    Supplier<char[]> getKeyStorePassword();
+    Supplier<char[]> keyStorePassword();
 }
