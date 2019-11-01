@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.keyrotation.api.persistence;
+package de.adorsys.keymanagement.keyrotation.api.services;
 
 import de.adorsys.keymanagement.api.types.ResultCollection;
 

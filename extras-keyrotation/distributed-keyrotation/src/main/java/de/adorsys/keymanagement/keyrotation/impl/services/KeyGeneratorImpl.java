@@ -6,7 +6,7 @@ import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
-import de.adorsys.keymanagement.keyrotation.api.persistence.KeyGenerator;
+import de.adorsys.keymanagement.keyrotation.api.services.KeyGenerator;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyState;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyStatus;

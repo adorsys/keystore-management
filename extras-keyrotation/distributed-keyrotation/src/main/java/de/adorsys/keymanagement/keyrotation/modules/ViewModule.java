@@ -2,7 +2,7 @@ package de.adorsys.keymanagement.keyrotation.modules;
 
 import dagger.Binds;
 import dagger.Module;
-import de.adorsys.keymanagement.keyrotation.api.persistence.KeyView;
+import de.adorsys.keymanagement.keyrotation.api.services.KeyView;
 import de.adorsys.keymanagement.keyrotation.impl.services.KeyViewImpl;
 
 @Module

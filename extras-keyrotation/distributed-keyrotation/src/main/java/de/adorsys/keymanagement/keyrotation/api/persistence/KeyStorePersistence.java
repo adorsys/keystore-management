@@ -1,4 +1,4 @@
-package de.adorsys.keymanagement.keyrotation.api.services;
+package de.adorsys.keymanagement.keyrotation.api.persistence;
 
 import java.security.KeyStore;
 
