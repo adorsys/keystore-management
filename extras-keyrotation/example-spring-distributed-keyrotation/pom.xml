@@ -11,6 +11,10 @@
 
     <artifactId>example-spring-distributed-keyrotation</artifactId>
 
+    <properties>
+        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -64,6 +68,17 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- Swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
         <!-- For REST key exposure -->
         <dependency>
             <groupId>com.nimbusds</groupId>

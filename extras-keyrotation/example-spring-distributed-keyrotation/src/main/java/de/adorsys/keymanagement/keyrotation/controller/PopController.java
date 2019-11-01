@@ -5,6 +5,7 @@ import de.adorsys.keymanagement.api.types.entity.KeyAlias;
 import de.adorsys.keymanagement.keyrotation.api.services.KeyViewWithValidity;
 import de.adorsys.keymanagement.keyrotation.service.JWKExporter;
 import de.adorsys.keymanagement.keyrotation.services.RotatedKeyStore;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,13 +26,15 @@ public class PopController {
     private final RotatedKeyStore rotatedKeyStore;
 
     @GetMapping
+    @ApiOperation("Get Proof-of-Possession valid public keys to encrypt with")
     public ResponseEntity<String> pop() {
         KeyViewWithValidity view = rotatedKeyStore.keys().withValidity(DEFAULT_FILTER);
+
         return ResponseEntity.ok(
                 new JWKSet(new ArrayList<>(
                 exporter.export(
-                        view.all().stream().map(KeyAlias::getAlias).collect(Collectors.toSet())))
-                ).toJSONObject().toJSONString()
+                        view.encryptionKeys().stream().map(KeyAlias::getAlias).collect(Collectors.toSet())))
+                ).toPublicJWKSet().toJSONObject().toJSONString()
         );
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.keyrotation.service.JWKExporter;
 import de.adorsys.keymanagement.keyrotation.services.RotatedKeyStore;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +23,13 @@ public class KeyController {
     private final JWKExporter exporter;
 
     @GetMapping("/{keyId}")
+    @ApiOperation("Get key by id")
     public ResponseEntity<String> key(@PathVariable("keyId") String keyId) {
         return ResponseEntity.ok(exporter.export(keyId).toJSONString());
     }
 
     @GetMapping("/random/secret")
+    @ApiOperation("Get random valid secret key")
     public ResponseEntity<String> randomSecret() {
         KeyEntry randomSecret = Iterables.getFirst(
                 rotatedKeyStore.keys().withValidity(DEFAULT_FILTER).secretKeys().pickNrandom(1),
