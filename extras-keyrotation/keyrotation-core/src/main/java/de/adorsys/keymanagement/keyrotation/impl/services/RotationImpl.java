@@ -128,12 +128,12 @@ public class RotationImpl implements Rotation {
     }
 
     private KeyStore readOrCreateKeystoreIfMissing() {
-        KeyStore ks = juggler.serializeDeserialize().deserialize(persistence.read(), config.getKeyPassword());
-        if (null == ks) {
-            ks = juggler.toKeystore().generate(KeySet.builder().build());
+        byte[] keyStoreBytes = persistence.read();
+        if (null == keyStoreBytes) {
+            return juggler.toKeystore().generate(KeySet.builder().build());
         }
 
-        return ks;
+        return juggler.serializeDeserialize().deserialize(keyStoreBytes, config.getKeyPassword());
     }
 
     private AliasWithMeta<KeyState> toStatus(KeyEntry key, KeyStatus status) {

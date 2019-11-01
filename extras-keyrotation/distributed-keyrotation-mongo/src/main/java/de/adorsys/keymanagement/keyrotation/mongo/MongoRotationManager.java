@@ -72,6 +72,11 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
         Document keyStoreDoc = client.getDatabase(databaseName).getCollection(keyStoreCollectionName)
                 .find(eq("id", keyStoreId))
                 .first();
+
+        if (null == keyStoreDoc) {
+            return null;
+
+        }
         Binary blob = keyStoreDoc.get("keystore", Binary.class);
         return blob.getData();
     }

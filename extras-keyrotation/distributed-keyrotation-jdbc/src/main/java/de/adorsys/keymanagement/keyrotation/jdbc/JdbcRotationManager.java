@@ -66,6 +66,10 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
         ) {
             stmt.setString(0, keyStoreId);
             try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+
                 Blob blob = rs.getBlob(0);
                 return blob.getBytes(0, (int) blob.length());
             }
