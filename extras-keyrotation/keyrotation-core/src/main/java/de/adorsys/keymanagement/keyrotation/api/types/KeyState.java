@@ -30,7 +30,7 @@ public class KeyState implements KeyMetadata {
     );
 
     public static final Function<Instant, Query<KeyEntry>> BECAME_EXPIRED = now -> QueryFactory.and(
-            equal(STATUS, KeyStatus.EXPIRED),
+            equal(STATUS, KeyStatus.LEGACY),
             lessThan(EXPIRE_AT, now)
     );
 

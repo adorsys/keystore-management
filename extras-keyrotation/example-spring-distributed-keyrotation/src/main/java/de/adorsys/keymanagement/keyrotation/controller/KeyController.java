@@ -1,6 +1,7 @@
 package de.adorsys.keymanagement.keyrotation.controller;
 
 import com.google.common.collect.Iterables;
+import com.nimbusds.jose.jwk.JWK;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.keyrotation.service.JWKExporter;
 import de.adorsys.keymanagement.keyrotation.services.RotatedKeyStore;
@@ -25,7 +26,12 @@ public class KeyController {
     @GetMapping("/{keyId}")
     @ApiOperation("Get key by id")
     public ResponseEntity<String> key(@PathVariable("keyId") String keyId) {
-        return ResponseEntity.ok(exporter.export(keyId).toJSONString());
+        JWK key = exporter.export(keyId);
+        if (null == key) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(key.toJSONString());
     }
 
     @GetMapping("/random/secret")
@@ -36,6 +42,11 @@ public class KeyController {
                 null
         );
 
-        return ResponseEntity.ok(exporter.export(randomSecret.getAlias()).toJSONString());
+        JWK key = exporter.export(randomSecret.getAlias());
+        if (null == key) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(key.toJSONString());
     }
 }

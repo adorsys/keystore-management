@@ -127,6 +127,7 @@ public class RotationImpl implements Rotation {
     private KeyStore readOrCreateKeystoreIfMissing() {
         KeyStore keyStore = access.read();
         if (null == keyStore) {
+            log.info("KeyStore does not exists, generating empty");
             return juggler.toKeystore().generate(KeySet.builder().build());
         }
 
@@ -135,8 +136,7 @@ public class RotationImpl implements Rotation {
 
     private AliasWithMeta<KeyState> toStatus(KeyEntry key, KeyStatus status) {
         AliasWithMeta<KeyState> current = key.aliasWithMeta(KeyState.class);
-        current.toBuilder().metadata(current.getMetadata().toBuilder().status(status).build());
-        return current;
+        return current.toBuilder().metadata(current.getMetadata().toBuilder().status(status).build()).build();
     }
 
     private List<String> nameAndType(ResultCollection<KeyEntry> collection) {
