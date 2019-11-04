@@ -30,3 +30,5 @@ rotation:
     type: UBER
 
   schedule: "*/10 * * * * *"
+
+debug: true
