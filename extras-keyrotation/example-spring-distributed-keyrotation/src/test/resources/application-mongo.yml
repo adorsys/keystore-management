@@ -29,4 +29,4 @@ rotation:
     # UBER is faster than BCFKS default and provides sufficient protection for KeyStores that are stored in RDBMS
     type: UBER
 
-  schedule: "*/10 * * * * *"
+  schedule: false
