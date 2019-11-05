@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = "h2")
 class H2FlywayRotationTest extends BaseJdbcDbTest {
 
-
     @Autowired
     private PopRotationValidator validator;
 

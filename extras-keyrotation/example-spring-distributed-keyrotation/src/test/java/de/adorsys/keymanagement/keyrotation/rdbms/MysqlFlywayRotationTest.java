@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = "mysql")
 class MysqlFlywayRotationTest extends BaseJdbcDbTest {
 
-
     @Autowired
     private PopRotationValidator validator;
 
