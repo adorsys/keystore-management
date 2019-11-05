@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles(profiles = "mysql")
-class MysqlFlywayRotationTest extends BaseJdbcDbTest {
+@ActiveProfiles(profiles = "h2")
+class H2FlywayRotationTest extends BaseJdbcDbTest {
 
 
     @Autowired

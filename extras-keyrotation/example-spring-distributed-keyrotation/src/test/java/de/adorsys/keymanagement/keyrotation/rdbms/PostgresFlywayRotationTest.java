@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles(profiles = {"postgres"})
+@ActiveProfiles(profiles = "postgres")
 class PostgresFlywayRotationTest extends BaseJdbcDbTest {
 
     @Autowired

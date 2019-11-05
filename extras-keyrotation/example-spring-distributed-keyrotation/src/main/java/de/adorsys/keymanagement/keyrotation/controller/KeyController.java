@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static de.adorsys.keymanagement.keyrotation.api.types.CommonValidities.DEFAULT_FILTER;
+import static de.adorsys.keymanagement.keyrotation.api.types.CommonValidities.DEFAULT_VALIDITY;
 
 @RestController
 @RequestMapping("/keys")
@@ -38,7 +38,7 @@ public class KeyController {
     @ApiOperation("Get random valid secret key")
     public ResponseEntity<String> randomSecret() {
         KeyEntry randomSecret = Iterables.getFirst(
-                rotatedKeyStore.keys().withValidity(DEFAULT_FILTER).secretKeys().pickNrandom(1),
+                rotatedKeyStore.keys().withValidity(DEFAULT_VALIDITY).secretKeys().pickNrandom(1),
                 null
         );
 

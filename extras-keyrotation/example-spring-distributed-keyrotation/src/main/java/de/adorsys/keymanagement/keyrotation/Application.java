@@ -1,7 +1,9 @@
 package de.adorsys.keymanagement.keyrotation;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,8 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
                 "de.adorsys.keymanagement.keyrotation.service",
                 "de.adorsys.keymanagement.keyrotation.controller"
         },
-        scanBasePackageClasses = DataSourceAutoConfiguration.class, // Forcing JDBC
-        exclude = MongoAutoConfiguration.class // REST demo app will use H2 configured by application.yml
+        exclude = {MongoAutoConfiguration.class} // REST demo app will use H2 configured by application.yml
 )
 public class Application {
 

@@ -13,6 +13,6 @@ public class KeyRotator {
 
     @Scheduled(cron = "${rotation.schedule}")
     void rotate() {
-        rotatedKeyStore.rotation().rotate();
+        rotatedKeyStore.forRotation().rotate();
     }
 }
