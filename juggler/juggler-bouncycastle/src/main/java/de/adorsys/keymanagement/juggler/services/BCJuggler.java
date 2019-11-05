@@ -7,7 +7,7 @@ import de.adorsys.keymanagement.adapter.modules.keystore.KeyStoreModule;
 import de.adorsys.keymanagement.adapter.modules.persist.PersistModule;
 import de.adorsys.keymanagement.adapter.modules.serde.SerdeModule;
 import de.adorsys.keymanagement.adapter.modules.source.DecodeModule;
-import de.adorsys.keymanagement.api.Juggler;
+import de.adorsys.keymanagement.api.KeyStoreManager;
 import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.metadata.KeyMetadataPersistence;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
         DecodeModule.class,
         SerdeModule.class,
 })
-public interface BCJuggler extends Juggler {
+public interface BCJuggler extends KeyStoreManager {
 
     @Component.Builder
     interface Builder {

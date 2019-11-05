@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: db_user
+    password: db_user@123
+    driver-class-name: org.h2.Driver
+    # You should keep this `type` field for pooled connection:
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    show-sql: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations:
+      - classpath:/db/migration/flyway/mysql
+
+rotation:
+  jdbc:
+    enabled: true
+    keystore-id: MY_KEYSTORE
+    lock-table: rotation_lock
+    keystore-table: keystore
+  count-valid-by-type:
+    SIGNING: 3
+    ENCRYPTING: 3
+    SECRET: 3
+  validity: 10M
+  legacy: 20M
+  lock-at-most: 30S
+  # Generate AES-128 secret keys in keystore, other key types will get default template
+  key-templates:
+    secret:
+      algo: AES
+      size: 128
+    encrypting:
+      algo: RSA
+      size: 1024
+      sig-algo: SHA256withRSA
+    signing:
+      algo: DSA
+      size: 1024
+      sig-algo: SHA256withDSA
+  keystore:
+    store-password: read-store
+    password: read-key
+    # UBER is faster than BCFKS default and provides sufficient protection for KeyStores that are stored in RDBMS
+    type: UBER
+
+  schedule: "*/10 * * * * *"

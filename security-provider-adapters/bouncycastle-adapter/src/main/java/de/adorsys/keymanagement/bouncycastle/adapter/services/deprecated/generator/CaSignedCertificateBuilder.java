@@ -1,8 +1,6 @@
 package de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator;
 
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.Extension;
@@ -17,6 +15,8 @@ import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -55,9 +55,9 @@ public class CaSignedCertificateBuilder {
 
         signatureAlgo = autodetectAlgorithm(issuerPrivatekey);
 
-        Date now = new Date();
-        Date notAfter = notAfterInDays != null ? DateUtils.addDays(now, notAfterInDays) : null;
-        Date notBefore = notBeforeInDays != null ? DateUtils.addDays(now, notBeforeInDays) : null;
+        Instant now = Instant.now();
+        Date notAfter = notAfterInDays != null ? Date.from(now.plus(notAfterInDays, ChronoUnit.DAYS)) : null;
+        Date notBefore = notBeforeInDays != null ? Date.from(now.plus(notBeforeInDays, ChronoUnit.DAYS)) : null;
 
         List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
                 .add("provider", provider)
@@ -114,14 +114,21 @@ public class CaSignedCertificateBuilder {
     private String autodetectAlgorithm(PrivateKey issuerPrivatekey) {
         if (null == signatureAlgo || signatureAlgo.isEmpty()) {
             String algorithm = issuerPrivatekey.getAlgorithm();
-            if (StringUtils.equalsAnyIgnoreCase("DSA", algorithm)) {
+
+            if (null == algorithm) {
+                return null;
+            }
+
+            if ("DSA".equals(algorithm.toUpperCase())) {
                 return "SHA256withDSA";
-            } else if (StringUtils.equals("RSA", algorithm)) {
+            } else if ("RSA".equals(algorithm.toUpperCase())) {
                 return "SHA256WithRSA";
             }
+
+            return null;
         }
 
-        return null;
+        return signatureAlgo;
     }
 
     public CaSignedCertificateBuilder withProvider(Provider provider) {

@@ -20,23 +20,26 @@ import javax.annotation.Nullable;
 import javax.crypto.SecretKey;
 import javax.inject.Inject;
 import java.security.KeyStore;
+import java.security.Provider;
 import java.security.cert.Certificate;
 import java.util.function.Supplier;
 
 public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
+    private final Provider provider;
     private final KeyMetadataOper metadataOper;
     private final KeyStoreConfig config;
 
     @Inject
-    public DefaultKeyStoreOperImpl(KeyMetadataOper metadataOper, @Nullable KeyStoreConfig config) {
+    public DefaultKeyStoreOperImpl(Provider provider, KeyMetadataOper metadataOper, @Nullable KeyStoreConfig config) {
+        this.provider = provider;
         this.metadataOper = metadataOper;
         this.config = null == config ? KeyStoreConfig.builder().build() : config;
     }
 
     @Override
     public DefaultKeyStoreOperImpl withConfig(KeyStoreConfig config) {
-        return new DefaultKeyStoreOperImpl(metadataOper, config);
+        return new DefaultKeyStoreOperImpl(provider, metadataOper, config);
     }
 
     @Override
@@ -161,8 +164,8 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
     }
 
     @SneakyThrows
-    private static KeyStore createBCFKSKeystore(KeyStoreConfig config) {
-        KeyStore ks = KeyStore.getInstance(config.getType());
+    private KeyStore createBCFKSKeystore(KeyStoreConfig config) {
+        KeyStore ks = KeyStore.getInstance(config.getType(), provider);
 
         BCFKSLoadStoreParameter.EncryptionAlgorithm encAlgo =
                 BCFKSLoadStoreParameter.EncryptionAlgorithm.valueOf(config.getEncryptionAlgo());
@@ -180,8 +183,8 @@ public class DefaultKeyStoreOperImpl implements KeyStoreOper {
     }
 
     @SneakyThrows
-    private static KeyStore createKeyStoreByType(String keyStoreType) {
-        KeyStore ks = KeyStore.getInstance(keyStoreType);
+    private KeyStore createKeyStoreByType(String keyStoreType) {
+        KeyStore ks = KeyStore.getInstance(keyStoreType, provider);
         ks.load(null, null);
         return ks;
     }

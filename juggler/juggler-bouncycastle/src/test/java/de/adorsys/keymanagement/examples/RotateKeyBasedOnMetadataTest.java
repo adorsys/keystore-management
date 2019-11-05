@@ -14,11 +14,9 @@ import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
 import java.security.KeyStore;
-import java.security.Security;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;

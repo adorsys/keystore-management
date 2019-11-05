@@ -3,11 +3,9 @@ package de.adorsys.keymanagement.examples;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 
 import java.security.Key;
-import java.security.Security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -13,6 +13,8 @@
         <module>core</module>
         <module>security-provider-adapters</module>
         <module>juggler</module>
+        <!-- This is rather foreign module for this repository -->
+        <module>extras-keyrotation</module>
     </modules>
 
     <name>keymanagement</name>
@@ -66,6 +68,8 @@
         <lombok.version>1.18.10</lombok.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <dagger.version>2.24</dagger.version>
+        <schedlock.version>2.5.0</schedlock.version>
+        <mongo.version>3.11.1</mongo.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.2</slf4j.version>
@@ -75,6 +79,11 @@
         <mockito.version>2.25.1</mockito.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <gson.version>2.8.6</gson.version>
+        <spring.framework.boot.version>2.2.0.RELEASE</spring.framework.boot.version>
+        <nimbus.version>8.2</nimbus.version>
+        <jsonassert.version>1.5.0</jsonassert.version>
+        <mysql-test.version>1.12.1</mysql-test.version>
+        <postgresql-test.version>1.12.1</postgresql-test.version>
         <maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
@@ -128,29 +137,38 @@
                 <version>${gson.version}</version>
             </dependency>
 
+            <!-- Extras section -->
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-core</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-provider-jdbc</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-provider-mongo</artifactId>
+                <version>${schedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus.version}</version>
+            </dependency>
+
             <!-- Test section -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <version>${jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-commons</artifactId>
-                <version>${junit.platform.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -169,6 +187,24 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${jsonassert.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>mysql</artifactId>
+                <version>${mysql-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql-test.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

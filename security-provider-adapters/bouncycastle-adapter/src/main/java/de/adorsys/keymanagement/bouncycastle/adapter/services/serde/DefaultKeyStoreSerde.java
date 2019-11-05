@@ -9,20 +9,23 @@ import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.security.KeyStore;
+import java.security.Provider;
 import java.util.function.Supplier;
 
 public class DefaultKeyStoreSerde implements SerDe {
 
+    private final Provider provider;
     private final KeyStoreConfig config;
 
     @Inject
-    public DefaultKeyStoreSerde(@Nullable KeyStoreConfig config) {
+    public DefaultKeyStoreSerde(Provider provider, @Nullable KeyStoreConfig config) {
+        this.provider = provider;
         this.config = null == config ? KeyStoreConfig.builder().build() : config;
     }
 
     @Override
     public DefaultKeyStoreSerde withConfig(KeyStoreConfig config) {
-        return new DefaultKeyStoreSerde(config);
+        return new DefaultKeyStoreSerde(provider, config);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class DefaultKeyStoreSerde implements SerDe {
     @Override
     @SneakyThrows
     public KeyStore deserialize(byte[] keyStore, Supplier<char[]> keyStorePassword) {
-        KeyStore ks = KeyStore.getInstance(config.getType());
+        KeyStore ks = KeyStore.getInstance(config.getType(), provider);
         ks.load(new ByteArrayInputStream(keyStore), keyStorePassword.get());
         return ks;
     }
