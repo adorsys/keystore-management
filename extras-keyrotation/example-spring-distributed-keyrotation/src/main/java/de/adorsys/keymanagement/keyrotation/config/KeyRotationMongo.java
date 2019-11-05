@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import javax.sql.DataSource;
 
 /**
+ * Mongo backed rotation and persistence.
  * Will be enabled if configuration properties have:
  * rotation:
  *   mongo:

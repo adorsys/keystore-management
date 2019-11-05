@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 import javax.sql.DataSource;
 
 /**
+ * JDBC backed rotation and persistence.
  * Will be enabled if configuration properties have:
  * rotation:
  *   jdbc:
