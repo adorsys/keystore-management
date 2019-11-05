@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 @Getter
 @RequiredArgsConstructor
@@ -94,7 +95,7 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
         MongoCollection<Document> docs = client.getDatabase(databaseName).getCollection(keyStoreCollectionName);
         docs.updateOne(
                 eq("id", keyStoreId),
-                new BasicDBObject("keystore", new Binary(keyStore)),
+                set("keystore", new Binary(keyStore)),
                 new UpdateOptions().upsert(true)
         );
     }

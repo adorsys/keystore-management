@@ -12,7 +12,7 @@ import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
 
 import javax.sql.DataSource;
-import javax.sql.rowset.serial.SerialBlob;
+import java.io.ByteArrayInputStream;
 import java.sql.*;
 import java.time.Duration;
 import java.time.Instant;
@@ -77,8 +77,7 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
                     return null;
                 }
 
-                Blob blob = rs.getBlob(1);
-                return blob.getBytes(0, (int) blob.length());
+                return rs.getBytes(1);
             }
         }
     }
@@ -91,28 +90,36 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
                 PreparedStatement stmt = conn
                         .prepareStatement("UPDATE " + keyStoreTableName + " SET keystore = ? WHERE id = ?")
         ) {
-            Blob keyStoreBlob = new SerialBlob(keyStore);
-            stmt.setBlob(1, keyStoreBlob);
+            conn.setAutoCommit(false);
+            setKeyStore(1, keyStore, stmt);
             stmt.setString(2, keyStoreId);
             int cnt = stmt.executeUpdate();
 
             if (0 == cnt) {
-                doInsert(conn, keyStoreBlob);
+                doInsert(conn, keyStore);
             }
+
+            conn.commit();
         }
     }
 
-    private void doInsert(Connection conn, Blob keyStore) throws SQLException {
-        try (PreparedStatement insert = conn
-                .prepareStatement("INSERT INTO " + keyStoreTableName + " (id, keystore) VALUES (?, ?)")) {
-            insert.setString(1, keyStoreId);
-            insert.setBlob(2, new SerialBlob(keyStore));
-            insert.executeUpdate();
-        }
+    private void setKeyStore(int pos, byte[] keyStore, PreparedStatement stmt) throws SQLException {
+        ByteArrayInputStream is = new ByteArrayInputStream(keyStore);
+        stmt.setBinaryStream(pos, is, is.available());
     }
 
     @Override
     public void executeWithLock(Runnable runnable) {
         executor.executeWithLock(runnable, new LockConfiguration(keyStoreId, Instant.now().plus(lockAtMost)));
+    }
+
+
+    private void doInsert(Connection conn, byte[] keyStore) throws SQLException {
+        try (PreparedStatement insert = conn
+                .prepareStatement("INSERT INTO " + keyStoreTableName + " (id, keystore) VALUES (?, ?)")) {
+            insert.setString(1, keyStoreId);
+            setKeyStore(2, keyStore, insert);
+            insert.executeUpdate();
+        }
     }
 }
