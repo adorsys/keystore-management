@@ -1,6 +1,5 @@
 package de.adorsys.keymanagement.keyrotation.mongo;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;

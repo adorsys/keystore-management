@@ -13,7 +13,10 @@ import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 

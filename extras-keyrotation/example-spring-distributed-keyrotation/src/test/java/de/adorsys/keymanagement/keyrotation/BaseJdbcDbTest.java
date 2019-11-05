@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoCo
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.jdbc.core.JdbcOperations;
-import org.springframework.test.annotation.DirtiesContext;
 
 /**
  * Ensures that after each test method there is an empty {@code keyrotation} schema;

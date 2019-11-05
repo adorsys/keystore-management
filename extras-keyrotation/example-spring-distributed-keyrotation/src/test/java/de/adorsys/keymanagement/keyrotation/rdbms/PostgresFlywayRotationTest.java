@@ -4,8 +4,6 @@ import de.adorsys.keymanagement.keyrotation.BaseJdbcDbTest;
 import de.adorsys.keymanagement.keyrotation.PopRotationValidator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles(profiles = "postgres")

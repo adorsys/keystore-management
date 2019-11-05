@@ -32,6 +32,14 @@ rotation:
     secret:
       algo: AES
       size: 128
+    encrypting:
+      algo: RSA
+      size: 1024
+      sig-algo: SHA256withRSA
+    signing:
+      algo: DSA
+      size: 1024
+      sig-algo: SHA256withDSA
   keystore:
     store-password: read-store
     password: read-key

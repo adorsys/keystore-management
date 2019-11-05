@@ -1,9 +1,7 @@
 package de.adorsys.keymanagement.keyrotation.impl.services;
 
 import com.googlecode.cqengine.query.Query;
-import com.googlecode.cqengine.query.QueryFactory;
 import de.adorsys.keymanagement.api.Juggler;
-import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
 import de.adorsys.keymanagement.api.types.ResultCollection;
 import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.view.EntryView;
@@ -21,7 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.query.QueryFactory.*;
-import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.*;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.STATUS;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.TYPE;
 
 @RequiredArgsConstructor
 public class KeyViewWithValidityImpl implements KeyViewWithValidity {

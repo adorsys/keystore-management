@@ -11,8 +11,23 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "rotation.mongo")
 public class MongoRotationProperties {
 
+    /**
+     * KeyStore ID that will be rotated.
+     */
     private String keystoreId;
+
+    /**
+     * Mongo database to use.
+     */
     private String database;
+
+    /**
+     * Collection that contains key rotation lock to prevent concurrent key rotation.
+     */
     private String lockCollection;
+
+    /**
+     * Collection with KeyStore blobs that are identified by {@code keystoreId}.
+     */
     private String keystoreCollection;
 }

@@ -1,18 +1,13 @@
 package de.adorsys.keymanagement.keyrotation.config;
 
 import com.mongodb.MongoClient;
-import de.adorsys.keymanagement.keyrotation.config.properties.JdbcRotationProperties;
 import de.adorsys.keymanagement.keyrotation.config.properties.MongoRotationProperties;
 import de.adorsys.keymanagement.keyrotation.config.properties.RotationConfiguration;
-import de.adorsys.keymanagement.keyrotation.jdbc.JdbcRotationManager;
 import de.adorsys.keymanagement.keyrotation.mongo.MongoRotationManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-
-import javax.sql.DataSource;
 
 /**
  * Mongo backed rotation and persistence.

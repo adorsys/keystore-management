@@ -1,7 +1,6 @@
 package de.adorsys.keymanagement.keyrotation.impl.services;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.Juggler;
 import de.adorsys.keymanagement.api.config.keystore.KeyStoreConfig;
