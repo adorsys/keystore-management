@@ -1,8 +1,11 @@
 package de.adorsys.keymanagement.keyrotation.config;
 
+import com.mongodb.MongoClient;
 import de.adorsys.keymanagement.keyrotation.config.properties.JdbcRotationProperties;
+import de.adorsys.keymanagement.keyrotation.config.properties.MongoRotationProperties;
 import de.adorsys.keymanagement.keyrotation.config.properties.RotationConfiguration;
 import de.adorsys.keymanagement.keyrotation.jdbc.JdbcRotationManager;
+import de.adorsys.keymanagement.keyrotation.mongo.MongoRotationManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,27 +17,28 @@ import javax.sql.DataSource;
 /**
  * Will be enabled if configuration properties have:
  * rotation:
- *   jdbc:
- *     enabled: true
+ *   mongo:
+ *     enabled: ...
  */
 @Configuration
-@ConditionalOnProperty(value = "rotation.jdbc.enabled", havingValue = "true")
-@ConditionalOnBean(JdbcRotationProperties.class)
-public class KeyRotationJdbc {
+@ConditionalOnProperty(value = "rotation.mongo.enabled", havingValue = "true")
+@ConditionalOnBean(MongoRotationProperties.class)
+public class KeyRotationMongo {
 
     /**
      * This bean configures which KeyStore to read/rotate, where to persist the KeyStore and how to lock
      * to prevent concurrent rotations.
      */
     @Bean
-    JdbcRotationManager jdbcRotationManager(JdbcRotationProperties properties,
-                                        DataSource dataSource,
+    MongoRotationManager mongoRotationManager(MongoRotationProperties properties,
+                                        MongoClient client,
                                         RotationConfiguration configuration) {
-        return new JdbcRotationManager(
+        return new MongoRotationManager(
                 properties.getKeystoreId(),
-                dataSource,
-                properties.getLockTable(),
-                properties.getKeystoreTable(),
+                client,
+                properties.getDatabase(),
+                properties.getLockCollection(),
+                properties.getKeystoreCollection(),
                 configuration.getLockAtMost()
         );
     }

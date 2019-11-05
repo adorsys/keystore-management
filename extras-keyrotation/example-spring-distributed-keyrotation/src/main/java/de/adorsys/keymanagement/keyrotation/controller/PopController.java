@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import static de.adorsys.keymanagement.keyrotation.api.types.CommonValidities.DEFAULT_FILTER;
+import static de.adorsys.keymanagement.keyrotation.api.types.CommonValidities.DEFAULT_VALIDITY;
 
 @RestController
 @RequestMapping("/pop")
@@ -28,7 +28,7 @@ public class PopController {
     @GetMapping
     @ApiOperation("Get Proof-of-Possession valid public keys to encrypt with")
     public ResponseEntity<String> pop() {
-        KeyViewWithValidity view = rotatedKeyStore.keys().withValidity(DEFAULT_FILTER);
+        KeyViewWithValidity view = rotatedKeyStore.keys().withValidity(DEFAULT_VALIDITY);
 
         return ResponseEntity.ok(
                 new JWKSet(new ArrayList<>(

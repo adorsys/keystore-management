@@ -24,7 +24,7 @@ import java.time.Clock;
 })
 public interface RotatedKeyStore {
 
-    Rotation rotation();
+    Rotation forRotation();
     KeyView keys();
 
     @Component.Builder

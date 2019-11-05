@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:tc:mysql:8.0.17://127.0.0.1/keyrotation
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    enabled: true
+    locations:
+      - classpath:/db/migration/flyway/mysql

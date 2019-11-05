@@ -7,11 +7,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConditionalOnProperty("rotation.jdbc.keystore-id")
-@ConfigurationProperties(prefix = "rotation.jdbc")
-public class JdbcRotationProperties {
+@ConditionalOnProperty("rotation.mongo.keystore-id")
+@ConfigurationProperties(prefix = "rotation.mongo")
+public class MongoRotationProperties {
 
     private String keystoreId;
-    private String lockTable;
-    private String keystoreTable;
+    private String database;
+    private String lockCollection;
+    private String keystoreCollection;
 }

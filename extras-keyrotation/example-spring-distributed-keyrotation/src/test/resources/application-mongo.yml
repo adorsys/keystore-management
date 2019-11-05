@@ -1,0 +1,32 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mongo
+  flyway:
+    enabled: false
+
+rotation:
+  jdbc:
+    enabled: false
+  mongo:
+    enabled: true
+    keystore-id: MY-KEYSTORE
+    database: mongo
+    lock-collection: locks
+    keystore-collection: keystores
+  count-valid-by-type:
+    SIGNING: 3
+    ENCRYPTING: 3
+    SECRET: 3
+  validity: 10M
+  legacy: 20M
+  lock-at-most: 30S
+  keystore:
+    store-password: read-store
+    password: read-key
+    # UBER is faster than BCFKS default and provides sufficient protection for KeyStores that are stored in RDBMS
+    type: UBER
+
+  schedule: "*/10 * * * * *"
