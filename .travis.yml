@@ -4,6 +4,8 @@ jdk:
   - openjdk8
   - openjdk11
 
+services: docker
+
 script:
   - mvn --settings .travis/settings.xml clean verify -B -V
 
