@@ -16,6 +16,8 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 /**
  * Ensures that after each test method there is an empty {@code keyrotation} schema;
+ * This allows us not to rebuild Application Context on each test method (that is performance boost), but rather to
+ * have class-wide DirtiesContext.
  */
 @ImportAutoConfiguration(exclude = {
         EmbeddedMongoAutoConfiguration.class,
