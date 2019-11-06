@@ -10,6 +10,7 @@ import net.javacrumbs.shedlock.core.LockConfiguration;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
+import net.javacrumbs.shedlock.support.StorageBasedLockProvider;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
@@ -106,16 +107,22 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
         }
     }
 
-    private void setKeyStore(int pos, byte[] keyStore, PreparedStatement stmt) throws SQLException {
-        ByteArrayInputStream is = new ByteArrayInputStream(keyStore);
-        stmt.setBinaryStream(pos, is, is.available());
-    }
-
     @Override
     public void executeWithLock(Runnable runnable) {
         executor.executeWithLock(runnable, new LockConfiguration(keyStoreId, Instant.now().plus(lockAtMost)));
     }
 
+    @Override
+    public void clearCache() {
+        if (lockProvider instanceof StorageBasedLockProvider) {
+            ((StorageBasedLockProvider) lockProvider).clearCache();
+        }
+    }
+
+    private void setKeyStore(int pos, byte[] keyStore, PreparedStatement stmt) throws SQLException {
+        ByteArrayInputStream is = new ByteArrayInputStream(keyStore);
+        stmt.setBinaryStream(pos, is, is.available());
+    }
 
     private void doInsert(Connection conn, byte[] keyStore) throws SQLException {
         try (PreparedStatement insert = conn

@@ -13,6 +13,7 @@ import net.javacrumbs.shedlock.core.LockConfiguration;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.mongo.MongoLockProvider;
+import net.javacrumbs.shedlock.support.StorageBasedLockProvider;
 import org.bson.Document;
 import org.bson.types.Binary;
 
@@ -102,5 +103,12 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
     @Override
     public void executeWithLock(Runnable runnable) {
         executor.executeWithLock(runnable, new LockConfiguration(keyStoreId, Instant.now().plus(lockAtMost)));
+    }
+
+    @Override
+    public void clearCache() {
+        if (lockProvider instanceof StorageBasedLockProvider) {
+            ((StorageBasedLockProvider) lockProvider).clearCache();
+        }
     }
 }

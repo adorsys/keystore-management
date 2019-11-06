@@ -1,1 +1,1 @@
-CREATE SCHEMA keyrotation;
+CREATE SCHEMA IF NOT EXISTS keyrotation;
