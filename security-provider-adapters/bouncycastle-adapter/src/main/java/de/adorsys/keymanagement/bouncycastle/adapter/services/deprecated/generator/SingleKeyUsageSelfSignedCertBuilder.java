@@ -1,6 +1,7 @@
 package de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.generator;
 
 import de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.types.SelfSignedKeyPairData;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CertificateHolder;
 
@@ -38,7 +39,10 @@ public class SingleKeyUsageSelfSignedCertBuilder {
      * @return SelfSignedKeyPairData
      */
     public SelfSignedKeyPairData build(KeyPair keyPair) {
-        if (dirty) throw new IllegalStateException("Builder can not be reused");
+        if (dirty) {
+            throw new IllegalStateException("Builder can not be reused");
+        }
+
         dirty = true;
         List<KeyValue> notNullCheckList = ListOfKeyValueBuilder.newBuilder()
                 .add("provider", provider)
@@ -61,8 +65,12 @@ public class SingleKeyUsageSelfSignedCertBuilder {
                 .withNotAfterInDays(notAfterInDays)
                 .withSubjectDN(subjectDN)
                 .withSubjectPublicKey(keyPair.getPublic());
-        if (keyUsages != null)
-            for (int keyUsage : keyUsages) builder = builder.withKeyUsage(keyUsage);
+
+        if (keyUsages != null) {
+            for (int keyUsage : keyUsages) {
+                builder = builder.withKeyUsage(keyUsage);
+            }
+        }
 
         X509CertificateHolder subjectCert = builder.build(keyPair.getPrivate());
 
@@ -99,6 +107,7 @@ public class SingleKeyUsageSelfSignedCertBuilder {
         return this;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2") // Same as Lombok, should be converted to Lombok-based
     public SingleKeyUsageSelfSignedCertBuilder withKeyUsages(int[] keyUsages) {
         this.keyUsages = keyUsages;
         return this;

@@ -4,6 +4,7 @@ import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyType;
 import de.adorsys.keymanagement.keyrotation.config.properties.keys.SimpleKeyTemplate;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "rotation")
+@SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR", justification = "It is configuration POJO")
 public class RotationConfiguration implements KeyRotationConfig {
 
     /**

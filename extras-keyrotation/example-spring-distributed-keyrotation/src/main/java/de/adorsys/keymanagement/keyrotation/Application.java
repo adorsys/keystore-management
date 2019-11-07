@@ -14,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         },
         exclude = {MongoAutoConfiguration.class} // REST demo app will use H2 configured by application.yml
 )
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Spring entry point
 public class Application {
 
     public static void main(String[] args) {

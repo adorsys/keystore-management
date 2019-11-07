@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.keyrotation.jdbc;
 
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,6 +13,7 @@ import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
 import net.javacrumbs.shedlock.support.StorageBasedLockProvider;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
@@ -69,6 +71,9 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
 
     @Override
     @SneakyThrows
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
+    @Nullable
     public byte[] read() {
         try (
                 Connection conn = dataSource.getConnection();
@@ -88,6 +93,8 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
 
     @Override
     @SneakyThrows
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
     public void write(byte[] keyStore) {
         try (
                 Connection conn = dataSource.getConnection();
@@ -124,6 +131,8 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
         stmt.setBinaryStream(pos, is, is.available());
     }
 
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
     private void doInsert(Connection conn, byte[] keyStore) throws SQLException {
         try (PreparedStatement insert = conn
                 .prepareStatement("INSERT INTO " + keyStoreTableName + " (id, keystore) VALUES (?, ?)")) {

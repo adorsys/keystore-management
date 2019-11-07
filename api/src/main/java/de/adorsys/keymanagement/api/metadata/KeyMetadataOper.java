@@ -1,11 +1,15 @@
 package de.adorsys.keymanagement.api.metadata;
 
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import javax.annotation.Nullable;
 import java.security.KeyStore;
 
 public interface KeyMetadataOper {
 
+    @Nullable
+    @SuppressFBWarnings("PZLA_PREFER_ZERO_LENGTH_ARRAYS")
     default char[] metadataPassword(String forAlias) {
         return null;
     }

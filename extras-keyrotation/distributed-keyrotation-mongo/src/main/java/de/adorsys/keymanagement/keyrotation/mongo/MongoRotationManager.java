@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -17,6 +18,7 @@ import net.javacrumbs.shedlock.support.StorageBasedLockProvider;
 import org.bson.Document;
 import org.bson.types.Binary;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -76,6 +78,11 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
 
     @Override
     @SneakyThrows
+    @Nullable
+    @SuppressFBWarnings(
+            value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS",
+            justification = "Null here means missing object and is API documented"
+    )
     public byte[] read() {
         Document keyStoreDoc = client.getDatabase(databaseName).getCollection(keyStoreCollectionName)
                 .find(eq("id", keyStoreId))

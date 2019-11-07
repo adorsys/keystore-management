@@ -34,6 +34,7 @@ public class ProvidedKey implements ProvidedKeyTemplate {
         this.key = key;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     ProvidedKey(String alias, String prefix, Supplier<char[]> password, @NonNull Key key, KeyMetadata metadata) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);

@@ -45,6 +45,7 @@ public class Pbe implements GeneratedKeyTemplate {
         this.encryptionTemplate = encryptionTemplate;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     Pbe(@NonNull char[] data, String alias, String prefix, Supplier<char[]> password, String algo, Integer saltLen,
         Integer iterCount, KeyMetadata metadata) {

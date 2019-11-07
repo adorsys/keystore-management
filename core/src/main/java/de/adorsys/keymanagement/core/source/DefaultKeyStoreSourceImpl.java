@@ -8,6 +8,7 @@ import de.adorsys.keymanagement.api.types.entity.AliasWithMeta;
 import de.adorsys.keymanagement.api.types.entity.WithMetadata;
 import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -15,11 +16,16 @@ import javax.inject.Inject;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyStore;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@SuppressFBWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS", justification = "Null usage for password")
 public class DefaultKeyStoreSourceImpl implements KeySource {
 
     private final KeyMetadataOper metadataOper;
@@ -105,7 +111,10 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
     @Override
     @SneakyThrows
     public String addAndReturnId(ProvidedKeyTemplate keyTemplate) {
-        String alias = oper.addToKeyStoreAndGetName(store, keyTemplate, () -> null);
+        String alias = oper.addToKeyStoreAndGetName(
+                store, keyTemplate,
+                () -> null
+        );
         metadataOper.persistMetadata(alias, keyTemplate.getMetadata(), store);
         return alias;
     }
