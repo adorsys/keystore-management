@@ -341,6 +341,11 @@
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>
+                    <!-- Java11 triggers issue
+                    https://github.com/spotbugs/spotbugs/issues/756
+                    that is false positive, excluding it
+                    -->
+                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
                 <executions>
                     <execution>
