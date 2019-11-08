@@ -22,7 +22,7 @@ Add dependency (Uses BouncyCastle security provider):
 <dependency>
     <groupId>de.adorsys.keymanagement</groupId>
     <artifactId>juggler-bouncycastle</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.6</version>
 </dependency>
 ```
 
