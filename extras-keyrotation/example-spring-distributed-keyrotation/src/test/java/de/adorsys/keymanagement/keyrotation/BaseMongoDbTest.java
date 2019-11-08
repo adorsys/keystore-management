@@ -20,8 +20,11 @@ import java.util.function.Consumer;
  * have class-wide DirtiesContext.
  */
 @Import({MongoDataAutoConfiguration.class, MongoAutoConfiguration.class})
-@ImportAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, FlywayAutoConfiguration.class})
-public abstract class BaseMongoDbTest extends BaseSpringTest {
+@ImportAutoConfiguration(exclude = {
+        DataSourceAutoConfiguration.class,
+        FlywayAutoConfiguration.class
+})
+public abstract class BaseMongoDbTest extends BaseNonWebTest {
 
     @Autowired
     private MongoClient client;

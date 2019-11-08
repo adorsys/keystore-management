@@ -1,6 +1,8 @@
 package de.adorsys.keymanagement.keyrotation;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springdoc.config.SpringDocConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -14,5 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         classes = {PopRotationValidator.class, Application.class},
         webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
-public abstract class BaseSpringTest extends BaseMockitoTest {
+@ImportAutoConfiguration(exclude = {
+        SpringDocConfiguration.class, // Enables WebMvc we don't need it
+})
+public abstract class BaseNonWebTest extends BaseMockitoTest {
 }
