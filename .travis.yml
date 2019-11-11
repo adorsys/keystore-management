@@ -14,8 +14,8 @@ before_deploy:
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
 deploy:
-  -
-    provider: script
+  # Deployment to maven-central
+  - provider: script
     skip_cleanup: true
     script: /bin/bash .travis/deploy.sh
     on:
@@ -23,9 +23,10 @@ deploy:
       condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?(-SNAPSHOT)?$"
       jdk: openjdk8
 
-  -
-    provider: script
+  # Coverage upload:
+  - provider: script
     skip_cleanup: true
     script: /bin/bash .travis/codecov_bash.sh
     on:
       jdk: openjdk8
+      all_branches: true
