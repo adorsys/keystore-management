@@ -22,3 +22,9 @@ deploy:
       tags: true
       condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?(-SNAPSHOT)?$"
       jdk: openjdk8
+
+  - skip_cleanup: true
+    provider: script
+    script: /bin/bash .travis/codecov_bash.sh
+    on:
+      jdk: openjdk8
