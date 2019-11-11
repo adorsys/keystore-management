@@ -14,7 +14,7 @@ before_deploy:
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
 deploy:
-  # Deployment to maven-central
+  # Deployment to maven-central, active only on tags like v1.0.0
   - provider: script
     skip_cleanup: true
     script: /bin/bash .travis/deploy.sh
