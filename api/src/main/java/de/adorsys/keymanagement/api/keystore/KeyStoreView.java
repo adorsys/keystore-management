@@ -35,7 +35,23 @@ public interface KeyStoreView {
      */
     <Q> AliasView<Q> allAliases();
 
+    /**
+     * Get source of keys
+     * @return object which have access to keys and can operate with them
+     */
     KeySource source();
+
+    /**
+     * Generates keySet from all existing in key source keys
+     * @param keyPassword password which is used to access keys
+     * @return keySet with lists of key pairs, secret keys or key entries
+     */
     KeySet copyToKeySet(Function<String, char[]> keyPassword);
+
+    /**
+     * Generates template from all existing in key source keys
+     * @param keyPassword password which is used to access keys
+     * @return key set template with lists of key pairs, secret keys or key entries
+     */
     KeySetTemplate copyToTemplate(Function<String, char[]> keyPassword);
 }
