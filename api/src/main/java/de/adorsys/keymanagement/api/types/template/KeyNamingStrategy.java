@@ -6,7 +6,7 @@ package de.adorsys.keymanagement.api.types.template;
 public interface KeyNamingStrategy {
 
     /**
-     * @return generated key name
+     * @return generated or hardcoded key name
      */
     String generateName();
 }

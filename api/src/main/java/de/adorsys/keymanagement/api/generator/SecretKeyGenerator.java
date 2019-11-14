@@ -11,21 +11,24 @@ public interface SecretKeyGenerator {
 
     /**
      * Generates key from template
-     * @param fromTemplate password based encryption entry template
+     * @param fromTemplate Template that defines encrypting key properties like encryption algorithm, key size,
+     *                     key name that are going to be used on creation
      * @return generated key
      */
     ProvidedKey generate(Pbe fromTemplate);
 
     /**
      * Generates key from template using default salt and iterations count
-     * @param fromTemplate password based encryption entry template
+     * @param fromTemplate Template that defines encrypting key properties like encryption algorithm, key size,
+     *                     key name that are going to be used on creation
      * @return generated key
      */
     ProvidedKey generateRaw(Pbe fromTemplate);
 
     /**
      * Generates key from Secret template
-     * @param fromTemplate Secret template
+     * @param fromTemplate Template that defines encrypting key properties like encryption algorithm, key size,
+     *                     key name that are going to be used on creation
      * @return generated key
      */
     ProvidedKey generate(Secret fromTemplate);

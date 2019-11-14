@@ -62,7 +62,8 @@ public interface KeySource {
 
     /**
      * Adds key to key source
-     * @param keyTemplate keeps key, key metadata and generates new alias for the key
+     * @param keyTemplate keeps key, key metadata and acts as alias source (either generate alias or hardcode it)
+     *                    for the key
      * @return generated key alias
      */
     String addAndReturnId(ProvidedKeyTemplate keyTemplate);

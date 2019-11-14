@@ -10,7 +10,8 @@ public interface EncryptingKeyGenerator {
 
     /**
      * generates key pair using template
-     * @param fromTemplate encrypting template which is used to generate key pair
+     * @param fromTemplate Template that defines encrypting key properties like encryption algorithm, key size,
+     *                     key name that are going to be used on creation
      * @return generated key pair
      */
     KeyPairEntry generate(Encrypting fromTemplate);

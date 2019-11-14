@@ -36,20 +36,23 @@ public interface KeyStoreView {
     <Q> AliasView<Q> allAliases();
 
     /**
-     * Get source of keys
+     * Get source of keys. For example KeySource can wrap following entities - java Keystore, Database table,
+     * list of Key instances, etc.
      * @return object which have access to keys and can operate with them
      */
     KeySource source();
 
     /**
-     * Generates keySet from all existing in key source keys
+     * Clones current KeySource into KeySet in a way, that all keys will be materialized in KeySet.
+     * You can view it as generates keySet from all existing in key source keys
      * @param keyPassword password which is used to access keys
      * @return keySet with lists of key pairs, secret keys or key entries
      */
     KeySet copyToKeySet(Function<String, char[]> keyPassword);
 
     /**
-     * Generates template from all existing in key source keys
+     * Clones current KeySource into KeySetTemplate in a way, that all keys will be materialized in KeySetTemplate.
+     * You can view it as generating template from all existing in key source keys
      * @param keyPassword password which is used to access keys
      * @return key set template with lists of key pairs, secret keys or key entries
      */

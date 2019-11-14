@@ -6,7 +6,7 @@ public interface KeyTemplate {
 
     /**
      * Generates alias for new key
-     * @return generated key name
+     * @return generated or hardcoded key name
      */
     String generateName();
 
