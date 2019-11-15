@@ -20,21 +20,21 @@ public interface View<Q, O> {
     QueryResult<O> retrieve(String query);
 
     /**
-     * Guarantees result uniqueness
+     * Returns exactly one result, if ResultSet has zero or more throws an Exception
      * @param query understandable to implementation query.
      * @return query result
      */
     O uniqueResult(Q query);
 
     /**
-     * Guarantees result uniqueness
+     * Returns exactly one result, if ResultSet has zero or more throws an Exception
      * @param query understandable to implementation query as a string
      * @return query result
      */
     O uniqueResult(String query);
 
     /**
-     * Retrieves all elements of target object
+     * Retrieves all elements (like aliases for {@link AliasView}) of target object
      * @return objects as a collection
      */
     ResultCollection<O> all();
