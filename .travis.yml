@@ -9,10 +9,6 @@ services: docker
 script:
   - mvn --settings .travis/settings.xml clean verify -B -V
 
-before_deploy:
-  - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-
 deploy:
   # Deployment to maven-central, active only on tags like v1.0.0
   - provider: script
