@@ -11,7 +11,7 @@ public interface KeyTemplate {
     String generateName();
 
     /**
-     * password used to access key in keystore
+     * password used to access key in {@link java.security.KeyStore}
      * @return password as a char array supplier
      */
     Supplier<char[]> getPassword();

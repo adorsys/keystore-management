@@ -22,7 +22,7 @@ public interface KeyMetadataOper {
 
     /**
      * Generates metadata key entry alias from key alias
-     * @param forAlias key name used to find key in keystore
+     * @param forAlias key name used to find key in {@link java.security.KeyStore}
      * @return metadata alias
      */
     String metadataAliasForKeyAlias(String forAlias);
@@ -36,15 +36,15 @@ public interface KeyMetadataOper {
     boolean isMetadataEntry(String forAlias, KeyStore keyStore);
 
     /**
-     * Reads metadata entry for key (by its alias) from KeyStore
+     * Reads metadata entry for key (by its alias) from {@link java.security.KeyStore}
      * @param forAlias name used to find key
-     * @param keyStore Keystore where search key
+     * @param keyStore {@link java.security.KeyStore} where search key
      * @return key metadata
      */
     KeyMetadata extract(String forAlias, KeyStore keyStore);
 
     /**
-     * Saves metadata for existing key in keystore
+     * Saves metadata for existing key in {@link java.security.KeyStore}
      * @param forAlias name used to find key
      * @param metadata new key metadata
      * @param keyStore which consists key to which metadata will be added
@@ -52,7 +52,7 @@ public interface KeyMetadataOper {
     void persistMetadata(String forAlias, KeyMetadata metadata, KeyStore keyStore);
 
     /**
-     * Removes key metadata from KeyStore
+     * Removes key metadata from {@link java.security.KeyStore}
      * @param forAlias name used to find key
      * @param keyStore key store to remove metadata from
      */
