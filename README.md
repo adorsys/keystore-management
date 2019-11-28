@@ -316,3 +316,6 @@ assertThat(view.retrieve(KeyValidity.EXPIRED).toCollection()).hasSize(0);
 #  Project details
 Main service provider - `Juggler` is built using Dagger2 framework. This allows user to re-compose this service
 in his own project by providing replacing modules.
+
+# JavaDoc
+You can read JavaDoc [here](https://adorsys.github.io/keystore-management/javadoc/latest/index.html)
