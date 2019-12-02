@@ -23,7 +23,7 @@ class GeneratePbeKeyTest {
         // Obtain Juggler service instance:
         BCJuggler juggler = DaggerBCJuggler.builder().build();
         // Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
-        // encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
+        // encryption IS PROVIDED by keystore - i.e. BCFKS or UBER keystore provide it):
         Supplier<char[]> keyPassword =  "WOW"::toCharArray;
         ProvidedKey key = juggler.generateKeys().secretRaw(
                 Pbe.with()

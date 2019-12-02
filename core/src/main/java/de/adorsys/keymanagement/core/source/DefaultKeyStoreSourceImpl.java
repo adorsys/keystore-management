@@ -139,7 +139,7 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
 
         private final KeyStore store;
         private final Enumeration<String> source;
-        private final KeyMetadataOper metdataOper;
+        private final KeyMetadataOper metadataOper;
 
         @Override
         public boolean hasNext() {
@@ -152,8 +152,8 @@ public class DefaultKeyStoreSourceImpl implements KeySource {
 
             return WithMetadata.<String>builder()
                     .key(next)
-                    .metadata(metdataOper.extract(next, store))
-                    .metadataEntry(metdataOper.isMetadataEntry(next, store))
+                    .metadata(metadataOper.extract(next, store))
+                    .metadataEntry(metadataOper.isMetadataEntry(next, store))
                     .build();
         }
     }
