@@ -69,7 +69,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <dagger.version>2.24</dagger.version>
         <shedlock.version>3.0.0</shedlock.version>
-        <mongo.version>3.11.1</mongo.version>
+        <mongo.version>3.11.3</mongo.version>
         <cqeengine.version>3.4.0</cqeengine.version>
         <guava.version>29.0-jre</guava.version>
         <slf4j.version>1.7.2</slf4j.version>
