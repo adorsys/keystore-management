@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
 import org.springframework.jdbc.core.JdbcOperations;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.core.JdbcOperations;
  * Ensures that after each test method there is an empty {@code keyrotation} schema;
  */
 @ImportAutoConfiguration(exclude = {
-        EmbeddedMongoAutoConfiguration.class,
         MongoDataAutoConfiguration.class,
         MongoAutoConfiguration.class
 })

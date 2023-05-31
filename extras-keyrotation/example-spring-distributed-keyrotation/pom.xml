@@ -140,9 +140,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>test</scope>
+            <version>8.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -158,6 +159,7 @@
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
+            <version>4.6.3</version>
         </dependency>
     </dependencies>
 </project>
