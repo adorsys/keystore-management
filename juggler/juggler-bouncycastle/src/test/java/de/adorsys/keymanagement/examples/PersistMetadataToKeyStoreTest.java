@@ -1,11 +1,17 @@
 package de.adorsys.keymanagement.examples;
 
+import static com.googlecode.cqengine.query.QueryFactory.and;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.has;
+import static com.googlecode.cqengine.query.QueryFactory.lessThan;
+import static de.adorsys.keymanagement.core.view.AliasViewImpl.META;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
-import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
@@ -14,18 +20,12 @@ import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
 import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.jupiter.api.Test;
-
 import java.security.KeyStore;
 import java.time.Instant;
 import java.util.function.Supplier;
-
-import static com.googlecode.cqengine.query.QueryFactory.*;
-import static de.adorsys.keymanagement.core.view.AliasViewImpl.META;
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Test;
 
 class PersistMetadataToKeyStoreTest {
 
