@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.api.types.entity;
 
+import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import lombok.Getter;
 
 import java.security.KeyStore;

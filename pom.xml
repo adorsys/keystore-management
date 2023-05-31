@@ -70,7 +70,7 @@
         <dagger.version>2.24</dagger.version>
         <schedlock.version>2.5.0</schedlock.version>
         <mongo.version>3.11.1</mongo.version>
-        <cqeengine.version>3.4.0</cqeengine.version>
+        <cqeengine.version>3.6.0</cqeengine.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.2</slf4j.version>
         <jupiter.version>5.4.1</jupiter.version>
@@ -92,7 +92,7 @@
         <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <surefireArgLine>--add-opens java.base/java.time=ALL-UNNAMED</surefireArgLine>
+        <surefireArgLine>--add-opens java.base/java.time=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</surefireArgLine>
     </properties>
 
     <dependencyManagement>

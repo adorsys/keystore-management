@@ -31,9 +31,9 @@ import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> implements AliasView<Query<KeyAlias>> {
 
-    public static final SimpleAttribute<KeyAlias, String> A_ID = attribute("alias", KeyAlias::getAlias);
-    public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = nullableAttribute("meta", KeyAlias::getMeta);
-    public static final SimpleAttribute<KeyAlias, Boolean> IS_META = attribute("is_meta", KeyAlias::isMetadataEntry);
+    public static final SimpleAttribute<KeyAlias, String> A_ID = attribute(KeyAlias.class, String.class, "alias", KeyAlias::getAlias);
+    public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = nullableAttribute(KeyAlias.class, KeyMetadata.class, "meta", KeyAlias::getKeyMetadata);
+    public static final SimpleAttribute<KeyAlias, Boolean> IS_META = attribute(KeyAlias.class, Boolean.class, "is_meta", KeyAlias::isMetadataEntry);
 
     private static final SQLParser<KeyAlias> PARSER = SQLParser.forPojoWithAttributes(
             KeyAlias.class,
