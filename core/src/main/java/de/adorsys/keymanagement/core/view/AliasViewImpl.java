@@ -1,9 +1,13 @@
 package de.adorsys.keymanagement.core.view;
 
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.TransactionalIndexedCollection;
+import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.attribute.SimpleNullableAttribute;
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
@@ -19,29 +23,33 @@ import de.adorsys.keymanagement.api.types.entity.WithMetadata;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.view.AliasView;
 import de.adorsys.keymanagement.api.view.QueryResult;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
-import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
-import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
-
 public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> implements AliasView<Query<KeyAlias>> {
 
-    public static final SimpleAttribute<KeyAlias, String> A_ID = QueryFactory.attribute("alias", KeyAlias::getAlias);
+    public static final SimpleAttribute<KeyAlias, String> A_ID = QueryFactory.attribute(
+        KeyAlias.class, String.class, "alias", (SimpleFunction<KeyAlias, String>) KeyAlias::getAlias
+    );
     public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = QueryFactory.nullableAttribute(
-            "meta", KeyAlias::getMeta
+        KeyAlias.class, KeyMetadata.class, "meta", (SimpleFunction<KeyAlias, KeyMetadata>) KeyAlias::getMeta
     );
     public static final SimpleAttribute<KeyAlias, Boolean> IS_META = QueryFactory.attribute(
-            "is_meta", KeyAlias::isMetadataEntry
+        KeyAlias.class, Boolean.class, "is_meta", (SimpleFunction<KeyAlias, Boolean>) KeyAlias::isMetadataEntry
     );
 
     private static final SQLParser<KeyAlias> PARSER = SQLParser.forPojoWithAttributes(
             KeyAlias.class,
-            createAttributes(KeyAlias.class, GETTER_METHODS_ONLY, SNAKE_CASE)
+            Map.<String, Attribute<KeyAlias, ?>>of(
+                "alias", attribute(KeyAlias.class, String.class, "alias", KeyAlias::getAlias),
+                "meta", attribute(
+                    KeyAlias.class, KeyMetadata.class,
+                    "meta", (SimpleFunction<KeyAlias, KeyMetadata>) KeyAlias::getMeta
+                )
+            )
     );
 
     @Getter

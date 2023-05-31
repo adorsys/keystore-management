@@ -1,9 +1,16 @@
 package de.adorsys.keymanagement.core.view;
 
+import static com.googlecode.cqengine.query.QueryFactory.and;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
+
 import com.googlecode.cqengine.IndexedCollection;
 import com.googlecode.cqengine.TransactionalIndexedCollection;
+import com.googlecode.cqengine.attribute.Attribute;
 import com.googlecode.cqengine.attribute.SimpleAttribute;
 import com.googlecode.cqengine.attribute.SimpleNullableAttribute;
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
@@ -18,33 +25,34 @@ import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.keymanagement.api.view.QueryResult;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
-import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
-import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static com.googlecode.cqengine.query.QueryFactory.and;
-import static com.googlecode.cqengine.query.QueryFactory.attribute;
-import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
-import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
-
 public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> implements EntryView<Query<KeyEntry>> {
 
-    public static final SimpleAttribute<KeyEntry, String> A_ID = attribute("alias", KeyEntry::getAlias);
+    public static final SimpleAttribute<KeyEntry, String> A_ID = attribute(
+        KeyEntry.class, String.class, "alias", (SimpleFunction<KeyEntry, String>) KeyEntry::getAlias
+    );
     public static final SimpleNullableAttribute<KeyEntry, KeyMetadata> META = nullableAttribute(
-            "meta", KeyEntry::getMeta
+        KeyEntry.class, KeyMetadata.class, "meta", (SimpleFunction<KeyEntry, KeyMetadata>) KeyEntry::getMeta
     );
     public static final SimpleAttribute<KeyEntry, Boolean> IS_META = attribute(
-            "is_meta", KeyEntry::isMetadataEntry
+        KeyEntry.class, Boolean.class, "is_meta", (SimpleFunction<KeyEntry, Boolean>) KeyEntry::isMetadataEntry
     );
 
     private static final SQLParser<KeyEntry> PARSER = SQLParser.forPojoWithAttributes(
             KeyEntry.class,
-            createAttributes(KeyEntry.class, GETTER_METHODS_ONLY, SNAKE_CASE)
+            Map.<String, Attribute<KeyEntry, ?>>of(
+                "alias", A_ID,
+                "meta", META,
+                "is_meta", IS_META,
+                "is_private", attribute(KeyEntry.class, Boolean.class, "is_private", KeyEntry::isPrivate),
+                "is_secret", attribute(KeyEntry.class, Boolean.class, "is_secret", KeyEntry::isSecret),
+                "is_trusted_cert", attribute(KeyEntry.class, Boolean.class, "is_trusted_cert", KeyEntry::isTrustedCert)
+            )
     );
 
     @Getter

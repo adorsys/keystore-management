@@ -1,9 +1,11 @@
 package de.adorsys.keymanagement.examples;
 
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
 import de.adorsys.keymanagement.api.types.entity.KeyAlias;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
@@ -14,6 +16,7 @@ import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 
 import java.security.KeyStore;
@@ -66,7 +69,7 @@ class PersistMetadataToKeyStoreTest {
                         and(
                                 has(META), // Key has metadata
                                 lessThan(
-                                        attribute(key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter()), // Key expiration date
+                                        attribute(KeyAlias.class, Instant.class, "expires_after", (SimpleFunction<KeyAlias, Instant>) key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter()), // Key expiration date
                                         Instant.now() // current date, so that if expiresAfter < now() key is expired
                                 )
                         )
