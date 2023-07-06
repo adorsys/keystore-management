@@ -22,11 +22,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @RequiredArgsConstructor
 public class JdbcRotationManager implements KeyStorePersistence, RotationLocker {
 
+    private static final int LOCK_DURATION = 5;
     private final String keyStoreId;
     private final LockProvider lockProvider;
     private final DataSource dataSource;
@@ -116,7 +118,8 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
 
     @Override
     public void executeWithLock(Runnable runnable) {
-        executor.executeWithLock(runnable, new LockConfiguration(keyStoreId, Instant.now().plus(lockAtMost)));
+        executor.executeWithLock(runnable, new LockConfiguration(Instant.now(), keyStoreId, lockAtMost,
+                Duration.of(LOCK_DURATION, ChronoUnit.MILLIS)));
     }
 
     @Override

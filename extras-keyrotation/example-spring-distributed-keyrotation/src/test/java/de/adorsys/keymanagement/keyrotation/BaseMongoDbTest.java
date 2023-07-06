@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.keyrotation;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;

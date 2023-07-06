@@ -27,17 +27,18 @@ import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class AliasViewImpl extends BaseUpdatingView<Query<KeyAlias>, KeyAlias> implements AliasView<Query<KeyAlias>> {
 
-    public static final SimpleAttribute<KeyAlias, String> A_ID = QueryFactory.attribute("alias", KeyAlias::getAlias);
-    public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = QueryFactory.nullableAttribute(
-            "meta", KeyAlias::getMeta
-    );
-    public static final SimpleAttribute<KeyAlias, Boolean> IS_META = QueryFactory.attribute(
-            "is_meta", KeyAlias::isMetadataEntry
-    );
+    public static final SimpleAttribute<KeyAlias, String> A_ID = attribute(KeyAlias.class, String.class,
+            "alias", KeyAlias::getAlias);
+    public static final SimpleNullableAttribute<KeyAlias, KeyMetadata> META = nullableAttribute(KeyAlias.class,
+            KeyMetadata.class, "meta", KeyAlias::getKeyMetadata);
+    public static final SimpleAttribute<KeyAlias, Boolean> IS_META = attribute(KeyAlias.class, Boolean.class,
+            "is_meta", KeyAlias::isMetadataEntry);
 
     private static final SQLParser<KeyAlias> PARSER = SQLParser.forPojoWithAttributes(
             KeyAlias.class,

@@ -1,7 +1,7 @@
 package de.adorsys.keymanagement.keyrotation;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springdoc.config.SpringDocConfiguration;
+import org.springdoc.core.SpringDocConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;

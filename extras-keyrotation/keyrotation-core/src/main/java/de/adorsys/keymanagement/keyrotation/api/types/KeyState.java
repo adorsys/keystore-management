@@ -21,10 +21,28 @@ import static com.googlecode.cqengine.query.QueryFactory.lessThan;
 public class KeyState implements KeyMetadata {
 
     public static final SimpleFunction<KeyEntry, KeyState> STATE = it -> it.getMeta(KeyState.class);
-    public static final Attribute<KeyEntry, KeyStatus> STATUS = attribute(it -> STATE.apply(it).getStatus());
-    public static final Attribute<KeyEntry, KeyType> TYPE = attribute(it -> STATE.apply(it).getType());
-    public static final Attribute<KeyEntry, Instant> NOT_AFTER = attribute(it -> STATE.apply(it).getNotAfter());
-    public static final Attribute<KeyEntry, Instant> EXPIRE_AT = attribute(it -> STATE.apply(it).getExpireAt());
+    public static final Attribute<KeyEntry, KeyStatus> STATUS;
+
+    static {
+        SimpleFunction<KeyEntry, KeyStatus> keyEntryKeyStatusSimpleFunction = it -> STATE.apply(it).getStatus();
+        STATUS = attribute(KeyEntry.class, KeyStatus.class, "status", keyEntryKeyStatusSimpleFunction);
+    }
+
+    public static final Attribute<KeyEntry, KeyType> TYPE;
+
+    static {
+        SimpleFunction<KeyEntry, KeyType> keyEntryKeyTypeSimpleFunction = it -> STATE.apply(it).getType();
+        TYPE = attribute(KeyEntry.class, KeyType.class, "keyType", keyEntryKeyTypeSimpleFunction);
+        SimpleFunction<KeyEntry, Instant> keyEntryInstantSimpleFunction = it -> STATE.apply(it).getNotAfter();
+        NOT_AFTER = attribute(KeyEntry.class, Instant.class, "instant", keyEntryInstantSimpleFunction);
+        SimpleFunction<KeyEntry, Instant> keyEntryInstantSimpleFunction2 = it -> STATE.apply(it).getExpireAt();
+        EXPIRE_AT = attribute(KeyEntry.class, Instant.class, "instant", keyEntryInstantSimpleFunction2);
+    }
+
+    public static final Attribute<KeyEntry, Instant> NOT_AFTER;
+
+
+    public static final Attribute<KeyEntry, Instant> EXPIRE_AT;
 
     public static final Function<Instant, Query<KeyEntry>> BECAME_LEGACY = now -> QueryFactory.and(
             equal(STATUS, KeyStatus.VALID),

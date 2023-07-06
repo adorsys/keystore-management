@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.keyrotation.mongo;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
@@ -21,6 +21,7 @@ import org.bson.types.Binary;
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
@@ -29,6 +30,7 @@ import static com.mongodb.client.model.Updates.set;
 @RequiredArgsConstructor
 public class MongoRotationManager implements KeyStorePersistence, RotationLocker {
 
+    private static final int LOCK_DURATION = 5;
     private final String keyStoreId;
     private final LockProvider lockProvider;
     private final MongoClient client;
@@ -48,7 +50,7 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
             String keyStoreCollectionName,
             Duration lockAtMost) {
         this.keyStoreId = keyStoreId;
-        this.lockProvider = new MongoLockProvider(client, databaseName, lockCollectionName);
+        this.lockProvider = new MongoLockProvider(client.getDatabase(databaseName).getCollection(lockCollectionName));
         this.executor = new DefaultLockingTaskExecutor(lockProvider);
         this.client = client;
         this.databaseName = databaseName;
@@ -109,7 +111,8 @@ public class MongoRotationManager implements KeyStorePersistence, RotationLocker
 
     @Override
     public void executeWithLock(Runnable runnable) {
-        executor.executeWithLock(runnable, new LockConfiguration(keyStoreId, Instant.now().plus(lockAtMost)));
+        executor.executeWithLock(runnable, new LockConfiguration(Instant.now(), keyStoreId, lockAtMost,
+                Duration.of(LOCK_DURATION, ChronoUnit.MILLIS)));
     }
 
     @Override

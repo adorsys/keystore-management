@@ -33,6 +33,7 @@
         <dependency>
             <groupId>com.googlecode.cqengine</groupId>
             <artifactId>cqengine</artifactId>
+            <version>${cqeengine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
