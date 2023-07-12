@@ -1,9 +1,8 @@
-package de.adorsys.keymanagement.keyrotation;
+package de.adorsys.keymanagement.keyrotation.mongo;
 
-import com.mongodb.client.MongoClient;
-import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
+import de.adorsys.keymanagement.keyrotation.BaseNonWebTest;
+import de.adorsys.keymanagement.keyrotation.PopRotationValidator;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
@@ -11,8 +10,11 @@ import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 /**
  * Ensures that after each test method there is an empty {@code keyrotation} database;
@@ -24,18 +26,19 @@ import java.util.function.Consumer;
         DataSourceAutoConfiguration.class,
         FlywayAutoConfiguration.class
 })
-public abstract class BaseMongoDbTest extends BaseNonWebTest {
+@ActiveProfiles(profiles = "mongo")
+@Testcontainers
+public class BaseMongoDbTest extends BaseNonWebTest {
+
+    public MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.6");
 
     @Autowired
-    private MongoClient client;
+    private PopRotationValidator validator;
 
-    @Autowired
-    private RotationLocker locker;
-
-    @AfterEach
-    @SneakyThrows
-    void cleanUp() {
-        client.listDatabaseNames().forEach((Consumer<? super String>) it -> client.getDatabase(it).drop());
-        locker.clearCache();
+    @Test
+    void testPopRotates() {
+        mongoDBContainer.setPortBindings(List.of("27017:27017"));
+        mongoDBContainer.start();
+        validator.testPopRotates();
     }
 }

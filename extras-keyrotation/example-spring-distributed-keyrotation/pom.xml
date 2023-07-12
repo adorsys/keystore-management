@@ -91,13 +91,6 @@
             <version>9.20.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
-        </dependency>
-
         <!-- Test only dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -169,6 +162,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mongodb</artifactId>
+            <version>1.15.3</version> <!-- replace with the latest version -->
+            <scope>test</scope>
         </dependency>
 
         <dependency>
