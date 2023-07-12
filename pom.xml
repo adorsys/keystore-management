@@ -55,7 +55,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <deploy.disabled>false</deploy.disabled>
+        <deploy.disabled>disabledfalse</deploy.disabled>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
         <doclint>none</doclint>
         <src.dir>src/main/java</src.dir>

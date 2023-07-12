@@ -17,6 +17,12 @@
             <artifactId>api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.googlecode.cqengine/cqengine -->
+        <dependency>
+            <groupId>com.googlecode.cqengine</groupId>
+            <artifactId>cqengine</artifactId>
+            <version>3.6.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.dagger</groupId>
