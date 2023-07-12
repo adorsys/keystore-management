@@ -26,7 +26,6 @@ public class PopRotationValidator {
     @Autowired
     private KeyRotation.ResettableClock clock;
 
-    @SneakyThrows
     public void testPopRotates() {
         assertThat(rotatedKeyStore.keys().keyStore()).isNull();
 
