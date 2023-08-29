@@ -16,6 +16,7 @@ import java.util.Set;
 public class ResultCollection<T> implements Collection<T> {
 
     @Delegate
+    @SuppressWarnings("VisibilityModifier") // Is a delegate
     protected final Set<T> result;
 
     public ResultCollection(Set<T> result) {

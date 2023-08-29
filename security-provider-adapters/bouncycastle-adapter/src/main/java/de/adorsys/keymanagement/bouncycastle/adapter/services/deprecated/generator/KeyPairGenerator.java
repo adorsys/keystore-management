@@ -13,8 +13,10 @@ import java.security.Provider;
 @Builder
 public class KeyPairGenerator {
 
-    private static final int[] keyUsageSignature = {KeyUsage.nonRepudiation};
-    private static final int[] keyUsageEncryption = {KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement};
+    private static final int[] KEY_USAGE_SIGNATURE = {KeyUsage.nonRepudiation};
+    private static final int[] KEY_USAGE_ENCRYPTION = {
+            KeyUsage.keyEncipherment, KeyUsage.dataEncipherment, KeyUsage.keyAgreement
+    };
 
     private final Provider provider;
     private final String keyAlgo;
@@ -29,11 +31,11 @@ public class KeyPairGenerator {
     private final boolean withCA = false;
 
     public KeyPairData generateSignatureKey() {
-        return generate(keyUsageSignature);
+        return generate(KEY_USAGE_SIGNATURE);
     }
 
     public KeyPairData generateEncryptionKey() {
-        return generate(keyUsageEncryption);
+        return generate(KEY_USAGE_ENCRYPTION);
     }
 
     private KeyPairData generate(int[] keyUsages) {

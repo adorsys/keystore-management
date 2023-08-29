@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.function.Supplier;
 
+/**
+ * Keeps key name generating strategy and password
+ */
 @Getter
 @RequiredArgsConstructor
 public class NameAndPassword implements KeyTemplate {
@@ -24,6 +27,10 @@ public class NameAndPassword implements KeyTemplate {
         this.password = password;
     }
 
+    /**
+     * Uses provided namingStrategy to generate key name
+     * @return generated key name
+     */
     @Override
     public String generateName() {
         return namingStrategy.generateName();

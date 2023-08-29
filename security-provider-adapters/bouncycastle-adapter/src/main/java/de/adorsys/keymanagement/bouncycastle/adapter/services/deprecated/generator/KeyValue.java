@@ -4,15 +4,10 @@ import lombok.Value;
 
 @Value
 public class KeyValue {
-	private final String key;
-	private final Object value;
+    private String key;
+    private Object value;
 
-	public KeyValue(String key, Object value) {
-		this.key = key;
-		this.value = value;
-	}
-	
-	public boolean isNull(){
-		return null == value;
-	}
+    public boolean isNull() {
+        return null == value;
+    }
 }

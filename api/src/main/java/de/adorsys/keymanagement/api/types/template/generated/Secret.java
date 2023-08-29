@@ -40,6 +40,7 @@ public class Secret implements GeneratedKeyTemplate {
         this.encryptionTemplate = encryptionTemplate;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     Secret(String alias, String prefix, Supplier<char[]> password, String algo, Integer keySize,
                   KeyMetadata metadata) {

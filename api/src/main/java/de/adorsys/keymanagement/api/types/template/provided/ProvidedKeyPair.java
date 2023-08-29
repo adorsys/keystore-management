@@ -2,7 +2,11 @@ package de.adorsys.keymanagement.api.types.template.provided;
 
 import de.adorsys.keymanagement.api.types.entity.KeyPairEntry;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
-import de.adorsys.keymanagement.api.types.template.*;
+import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
+import de.adorsys.keymanagement.api.types.template.GeneratedKeyTemplate;
+import de.adorsys.keymanagement.api.types.template.KeyTemplate;
+import de.adorsys.keymanagement.api.types.template.NameAndPassword;
+import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -42,6 +46,7 @@ public class ProvidedKeyPair implements ProvidedKeyTemplate {
         this.pair = pair;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     ProvidedKeyPair(String alias, String prefix, Supplier<char[]> password, @NonNull KeyPair pair,
                     @Singular @NonNull List<Certificate> certificates, KeyMetadata metadata) {
@@ -52,7 +57,6 @@ public class ProvidedKeyPair implements ProvidedKeyTemplate {
     }
 
     public static ProvidedKeyPair from(KeyPairEntry entry, GeneratedKeyTemplate template) {
-
         return ProvidedKeyPair.builder()
                 .keyTemplate(template)
                 .pair(entry.getPair())

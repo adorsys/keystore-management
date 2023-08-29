@@ -11,6 +11,7 @@ import lombok.val;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.security.KeyStore;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -105,7 +106,7 @@ public class ToKeyStoreMetadataPersister implements MetadataPersister {
     private String crc32(String forAlias) {
         CRC32 crc = new CRC32();
         crc.update(forAlias.getBytes(UTF_8));
-        return Long.toHexString(crc.getValue()).toUpperCase();
+        return Long.toHexString(crc.getValue()).toUpperCase(Locale.US);
     }
 
     @Override

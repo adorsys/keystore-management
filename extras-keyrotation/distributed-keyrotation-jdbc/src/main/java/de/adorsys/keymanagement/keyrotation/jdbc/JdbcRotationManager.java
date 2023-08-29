@@ -2,6 +2,7 @@ package de.adorsys.keymanagement.keyrotation.jdbc;
 
 import de.adorsys.keymanagement.keyrotation.api.persistence.KeyStorePersistence;
 import de.adorsys.keymanagement.keyrotation.api.persistence.RotationLocker;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,7 +11,9 @@ import net.javacrumbs.shedlock.core.LockConfiguration;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import net.javacrumbs.shedlock.provider.jdbc.JdbcLockProvider;
+import net.javacrumbs.shedlock.support.StorageBasedLockProvider;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.io.ByteArrayInputStream;
 import java.sql.Connection;
@@ -69,6 +72,9 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
 
     @Override
     @SneakyThrows
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
+    @Nullable
     public byte[] read() {
         try (
                 Connection conn = dataSource.getConnection();
@@ -88,6 +94,8 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
 
     @Override
     @SneakyThrows
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
     public void write(byte[] keyStore) {
         try (
                 Connection conn = dataSource.getConnection();
@@ -107,18 +115,26 @@ public class JdbcRotationManager implements KeyStorePersistence, RotationLocker 
         }
     }
 
-    private void setKeyStore(int pos, byte[] keyStore, PreparedStatement stmt) throws SQLException {
-        ByteArrayInputStream is = new ByteArrayInputStream(keyStore);
-        stmt.setBinaryStream(pos, is, is.available());
-    }
-
     @Override
     public void executeWithLock(Runnable runnable) {
 
         executor.executeWithLock(runnable, new LockConfiguration(Instant.now(), keyStoreId, lockAtMost, Duration.of(5, ChronoUnit.MILLIS)));
     }
 
+    @Override
+    public void clearCache() {
+        if (lockProvider instanceof StorageBasedLockProvider) {
+            ((StorageBasedLockProvider) lockProvider).clearCache();
+        }
+    }
 
+    private void setKeyStore(int pos, byte[] keyStore, PreparedStatement stmt) throws SQLException {
+        ByteArrayInputStream is = new ByteArrayInputStream(keyStore);
+        stmt.setBinaryStream(pos, is, is.available());
+    }
+
+    @SuppressFBWarnings(value = "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            justification = "Table name is unbindable and is trusted code-provided")
     private void doInsert(Connection conn, byte[] keyStore) throws SQLException {
         try (PreparedStatement insert = conn
                 .prepareStatement("INSERT INTO " + keyStoreTableName + " (id, keystore) VALUES (?, ?)")) {

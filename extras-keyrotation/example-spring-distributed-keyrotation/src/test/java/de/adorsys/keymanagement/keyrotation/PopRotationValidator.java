@@ -36,6 +36,8 @@ public class PopRotationValidator {
         clock.setInstant(Instant.now().plus(conf.getValidity()).plusSeconds(1));
         rotatedKeyStore.forRotation().rotate();
         hasValidAndLegacy();
+
+        clock.setInstant(null);
     }
 
     private void hasValidAndLegacy() {

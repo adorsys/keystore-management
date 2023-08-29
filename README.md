@@ -22,7 +22,7 @@ Add dependency (Uses BouncyCastle security provider):
 <dependency>
     <groupId>de.adorsys.keymanagement</groupId>
     <artifactId>juggler-bouncycastle</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.6</version>
 </dependency>
 ```
 
@@ -130,7 +130,7 @@ you can store any data in form of SecretKey within java KeyStore.
 // Obtain Juggler service instance:
 BCJuggler juggler = DaggerBCJuggler.builder().build();
 // Generate PBE (password-based encryption) raw key (only transformed to be stored in keystore,
-// encryption IS PROVIDED by keystore - i.e. BCKFS or UBER keystore provide it):
+// encryption IS PROVIDED by keystore - i.e. BCFKS or UBER keystore provide it):
 Supplier<char[]> keyPassword =  "WOW"::toCharArray;
 ProvidedKey key = juggler.generateKeys().secretRaw(
         Pbe.with()
@@ -316,3 +316,6 @@ assertThat(view.retrieve(KeyValidity.EXPIRED).toCollection()).hasSize(0);
 #  Project details
 Main service provider - `Juggler` is built using Dagger2 framework. This allows user to re-compose this service
 in his own project by providing replacing modules.
+
+# JavaDoc
+You can read JavaDoc [here](https://adorsys.github.io/keystore-management/javadoc/latest/index.html)

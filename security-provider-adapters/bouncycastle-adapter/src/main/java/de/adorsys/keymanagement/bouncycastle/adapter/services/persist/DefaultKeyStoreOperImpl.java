@@ -9,6 +9,7 @@ import de.adorsys.keymanagement.api.types.template.ProvidedKeyTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyEntry;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKeyPair;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.SneakyThrows;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.crypto.util.PBKDF2Config;
@@ -24,6 +25,7 @@ import java.security.Provider;
 import java.security.cert.Certificate;
 import java.util.function.Supplier;
 
+@SuppressFBWarnings(value = "PZLA_PREFER_ZERO_LENGTH_ARRAYS", justification = "Null usage for password")
 public class DefaultKeyStoreOperImpl implements KeyStoreOper {
 
     private final Provider provider;

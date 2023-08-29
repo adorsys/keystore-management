@@ -19,6 +19,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Build a certificate based on information passed to this object.
@@ -49,12 +50,14 @@ public class CaSignedCertificateBuilder {
     boolean dirty = false;
 
     @SneakyThrows
+    @SuppressWarnings("checkstyle:MethodLength") // TODO: refactor
     public X509CertificateHolder build(PrivateKey issuerPrivatekey) {
-        if (dirty) throw new IllegalStateException("Builder can not be reused");
+        if (dirty) {
+            throw new IllegalStateException("Builder can not be reused");
+        }
+
         dirty = true;
-
         signatureAlgo = autodetectAlgorithm(issuerPrivatekey);
-
         Instant now = Instant.now();
         Date notAfter = notAfterInDays != null ? Date.from(now.plus(notAfterInDays, ChronoUnit.DAYS)) : null;
         Date notBefore = notBeforeInDays != null ? Date.from(now.plus(notBeforeInDays, ChronoUnit.DAYS)) : null;
@@ -119,9 +122,9 @@ public class CaSignedCertificateBuilder {
                 return null;
             }
 
-            if ("DSA".equals(algorithm.toUpperCase())) {
+            if ("DSA".equals(algorithm.toUpperCase(Locale.US))) {
                 return "SHA256withDSA";
-            } else if ("RSA".equals(algorithm.toUpperCase())) {
+            } else if ("RSA".equals(algorithm.toUpperCase(Locale.US))) {
                 return "SHA256WithRSA";
             }
 

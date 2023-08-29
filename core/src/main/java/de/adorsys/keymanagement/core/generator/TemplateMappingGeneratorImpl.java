@@ -26,7 +26,8 @@ public class TemplateMappingGeneratorImpl implements KeyGenerator {
     private final SigningKeyGenerator signingKeyGenerator;
 
     @Inject
-    public TemplateMappingGeneratorImpl(EncryptingKeyGenerator encryptingKeyGenerator, SecretKeyGenerator secretKeyGenerator,
+    public TemplateMappingGeneratorImpl(EncryptingKeyGenerator encryptingKeyGenerator,
+                                        SecretKeyGenerator secretKeyGenerator,
                                         SigningKeyGenerator signingKeyGenerator) {
         this.encryptingKeyGenerator = encryptingKeyGenerator;
         this.secretKeyGenerator = secretKeyGenerator;
