@@ -11,6 +11,7 @@ import de.adorsys.keymanagement.keyrotation.api.types.KeyRotationConfig;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyStatus;
 import de.adorsys.keymanagement.keyrotation.api.types.KeyType;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,7 +19,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.googlecode.cqengine.query.QueryFactory.*;
+import static com.googlecode.cqengine.query.QueryFactory.and;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.in;
 import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.STATUS;
 import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.TYPE;
 
@@ -64,9 +67,9 @@ public class KeyViewWithValidityImpl implements KeyViewWithValidity {
                                                            EntryView<Query<KeyEntry>> entries) {
         Set<KeyEntry> result = new HashSet<>();
 
-        for (KeyType type : validityMap.keySet()) {
+        for (val entry : validityMap.entrySet()) {
             result.addAll(
-                    entries.retrieve(and(equal(TYPE, type), in(STATUS, validityMap.get(type)))).toCollection()
+                    entries.retrieve(and(equal(TYPE, entry.getKey()), in(STATUS, entry.getValue()))).toCollection()
             );
         }
 

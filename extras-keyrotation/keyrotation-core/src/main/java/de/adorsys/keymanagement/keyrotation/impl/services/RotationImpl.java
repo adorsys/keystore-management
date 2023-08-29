@@ -27,8 +27,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.googlecode.cqengine.query.QueryFactory.*;
-import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.*;
+import static com.googlecode.cqengine.query.QueryFactory.and;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.in;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.BECAME_EXPIRED;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.BECAME_LEGACY;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.STATUS;
+import static de.adorsys.keymanagement.keyrotation.api.types.KeyState.TYPE;
 
 @Slf4j
 public class RotationImpl implements Rotation {
@@ -41,6 +46,7 @@ public class RotationImpl implements Rotation {
     private final RotationLocker locker;
 
     @Inject
+    @SuppressWarnings("checkstyle:ParameterNumber") //
     public RotationImpl(KeyGenerator generator, KeyRotationConfig config,
                         Juggler juggler, @Nullable Clock timeSource, KeyStoreAccess access,
                         RotationLocker locker) {

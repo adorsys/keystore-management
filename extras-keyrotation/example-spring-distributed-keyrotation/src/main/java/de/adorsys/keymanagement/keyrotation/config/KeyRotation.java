@@ -27,6 +27,7 @@ public class KeyRotation {
      * This is primary bean you need to have rotatable KeyStore.
      */
     @Bean
+    @SuppressWarnings("checkstyle:LineLength") // For demo purposes
     RotatedKeyStore rotatedKeyStore(ResettableClock clock, RotationLocker locker, KeyStorePersistence persistence,
                                     RotationConfiguration config) {
         return DaggerRotatedKeyStore.builder()

@@ -4,6 +4,9 @@ import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 
 import java.security.KeyStore;
 
+/**
+ * Stub implementation when key doesn't use metadata
+ */
 public class NoOpMetadataPersistence implements KeyMetadataPersistence {
 
     @Override

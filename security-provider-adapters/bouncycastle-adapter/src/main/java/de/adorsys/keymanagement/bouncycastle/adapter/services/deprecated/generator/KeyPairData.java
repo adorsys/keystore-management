@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@SuppressWarnings("checkstyle:FinalClass")
 public class KeyPairData implements KeyPairEntry {
 
     private final SelfSignedKeyPairData keyPair;

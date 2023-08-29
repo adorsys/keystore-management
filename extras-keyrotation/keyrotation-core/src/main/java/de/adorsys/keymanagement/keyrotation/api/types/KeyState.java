@@ -12,7 +12,9 @@ import lombok.Getter;
 import java.time.Instant;
 import java.util.function.Function;
 
-import static com.googlecode.cqengine.query.QueryFactory.*;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.lessThan;
 
 @Getter
 @Builder(toBuilder = true)

@@ -1,11 +1,11 @@
 package de.adorsys.keymanagement.keyrotation;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableSwagger2
+@OpenAPIDefinition
 @SpringBootApplication(
         scanBasePackages = {
                 "de.adorsys.keymanagement.keyrotation.config",
@@ -14,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         },
         exclude = {MongoAutoConfiguration.class} // REST demo app will use H2 configured by application.yml
 )
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Spring entry point
 public class Application {
 
     public static void main(String[] args) {

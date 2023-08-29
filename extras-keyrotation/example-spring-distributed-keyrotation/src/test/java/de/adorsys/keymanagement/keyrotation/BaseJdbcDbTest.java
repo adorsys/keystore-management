@@ -1,7 +1,5 @@
 package de.adorsys.keymanagement.keyrotation;
 
-import org.junit.jupiter.api.AfterEach;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -11,27 +9,14 @@ import org.springframework.jdbc.core.JdbcOperations;
 
 /**
  * Ensures that after each test method there is an empty {@code keyrotation} schema;
+ * This allows us not to rebuild Application Context on each test method (that is performance boost), but rather to
+ * have class-wide DirtiesContext.
  */
 @ImportAutoConfiguration(exclude = {
         MongoDataAutoConfiguration.class,
         MongoAutoConfiguration.class
 })
-public abstract class BaseJdbcDbTest extends BaseSpringTest {
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private JdbcOperations jdbcOper;
-
-    @AfterEach
-    void destroyAndCreateEmptySchema() {
-        if (env.acceptsProfiles(Profiles.of("postgres"))) {
-            jdbcOper.update("DROP SCHEMA IF EXISTS keyrotation CASCADE");
-        } else {
-            jdbcOper.update("DROP SCHEMA IF EXISTS keyrotation");
-        }
-
-        jdbcOper.update("CREATE SCHEMA keyrotation");
-    }
+@TestExecutionListeners(value = DatabaseCleaningListener.class,
+        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+public abstract class BaseJdbcDbTest extends BaseNonWebTest {
 }

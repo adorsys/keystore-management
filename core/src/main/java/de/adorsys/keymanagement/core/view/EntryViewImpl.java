@@ -8,7 +8,6 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
-import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
 import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.CqeQueryResult;
@@ -27,7 +26,10 @@ import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
 import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static com.googlecode.cqengine.query.QueryFactory.*;
+import static com.googlecode.cqengine.query.QueryFactory.and;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
+import static com.googlecode.cqengine.query.QueryFactory.equal;
+import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> implements EntryView<Query<KeyEntry>> {
@@ -35,6 +37,7 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
     public static final SimpleAttribute<KeyEntry, String> A_ID = attribute(KeyEntry.class, String.class, "alias", KeyEntry::getAlias);
     public static final SimpleNullableAttribute<KeyEntry, KeyMetadata> META = nullableAttribute(KeyEntry.class, KeyMetadata.class, "meta", KeyEntry::getKeyMetadata);
     public static final SimpleAttribute<KeyEntry, Boolean> IS_META = attribute(KeyEntry.class, Boolean.class, "is_meta", KeyEntry::isMetadataEntry);
+
     private static final SQLParser<KeyEntry> PARSER = SQLParser.forPojoWithAttributes(
             KeyEntry.class,
             createAttributes(KeyEntry.class, GETTER_METHODS_ONLY, SNAKE_CASE)
@@ -69,12 +72,12 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
 
     @Override
     public QueryResult<KeyEntry> retrieve(Query<KeyEntry> query) {
-        return new CqeQueryResult<>(keys.retrieve(QueryFactory.and(viewFilter, query)));
+        return new CqeQueryResult<>(keys.retrieve(and(viewFilter, query)));
     }
 
     @Override
     public QueryResult<KeyEntry> retrieve(String query) {
-        return new CqeQueryResult<>(keys.retrieve(QueryFactory.and(viewFilter, PARSER.parse(query).getQuery())));
+        return new CqeQueryResult<>(keys.retrieve(and(viewFilter, PARSER.parse(query).getQuery())));
     }
 
     @Override

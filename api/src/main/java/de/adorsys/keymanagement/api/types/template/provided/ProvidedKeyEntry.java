@@ -34,6 +34,7 @@ public class ProvidedKeyEntry implements ProvidedKeyTemplate {
         this.entry = entry;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     ProvidedKeyEntry(String alias, String prefix, Supplier<char[]> password, @NonNull KeyStore.Entry entry,
                      KeyMetadata metadata) {

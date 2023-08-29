@@ -41,6 +41,7 @@ public class Encrypting implements GeneratedKeyTemplate {
         this.encryptionTemplate = encryptionTemplate;
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     Encrypting(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
                Integer keySize, KeyMetadata metadata, String commonName) {
