@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.examples;
 
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
@@ -91,13 +92,18 @@ class RotateKeyBasedOnMetadataTest {
     @RequiredArgsConstructor
     private static class KeyValidity implements KeyMetadata {
 
-        public static final Query<KeyAlias> EXPIRED = and(
-                has(META), // Key has metadata
-                lessThan(
-                        attribute(key -> ((KeyValidity) key.getMeta()).getExpiresAfter()), // Key expiration date
-                        Instant.now() // current date, so that if expiresAfter < now() key is expired
-                )
-        );
+        public static final Query<KeyAlias> EXPIRED;
+
+        static {
+            SimpleFunction<KeyAlias, Instant> keyAliasInstantSimpleFunction = key -> ((KeyValidity) key.getMeta()).getExpiresAfter();
+            EXPIRED = and(
+                    has(META), // Key has metadata
+                    lessThan(
+                            attribute(KeyAlias.class, Instant.class, "instant", keyAliasInstantSimpleFunction), // Key expiration date
+                            Instant.now() // current date, so that if expiresAfter < now() key is expired
+                    )
+            );
+        }
 
         private final Instant expiresAfter;
     }

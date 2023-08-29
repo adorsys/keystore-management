@@ -1,5 +1,6 @@
 package de.adorsys.keymanagement.examples;
 
+import com.googlecode.cqengine.attribute.support.SimpleFunction;
 import com.googlecode.cqengine.query.Query;
 import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
@@ -25,6 +26,7 @@ import static de.adorsys.keymanagement.core.view.AliasViewImpl.META;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PersistMetadataToKeyStoreTest {
+
 
     @Test
     void newKeystore() {
@@ -61,12 +63,13 @@ class PersistMetadataToKeyStoreTest {
         // Open alias view to query key alias by metadata
         AliasView<Query<KeyAlias>> view = source.aliases();
         // Assert that key has been expired
+        SimpleFunction<KeyAlias, Instant> function = key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter();
         assertThat(
                 view.retrieve(
                         and(
                                 has(META), // Key has metadata
                                 lessThan(
-                                        attribute(key -> ((KeyExpirationMetadata) key.getMeta()).getExpiresAfter()), // Key expiration date
+                                        attribute(KeyAlias.class, Instant.class, "instant", function), // Key expiration date
                                         Instant.now() // current date, so that if expiresAfter < now() key is expired
                                 )
                         )

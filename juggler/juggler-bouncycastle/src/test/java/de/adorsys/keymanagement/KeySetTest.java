@@ -1,14 +1,19 @@
 package de.adorsys.keymanagement;
 
+import com.googlecode.cqengine.query.Query;
+import de.adorsys.keymanagement.api.keystore.KeyStoreView;
 import de.adorsys.keymanagement.api.types.KeySetTemplate;
+import de.adorsys.keymanagement.api.types.entity.KeyEntry;
 import de.adorsys.keymanagement.api.types.entity.metadata.KeyMetadata;
 import de.adorsys.keymanagement.api.types.source.KeySet;
 import de.adorsys.keymanagement.api.types.template.generated.Encrypting;
 import de.adorsys.keymanagement.api.types.template.generated.Secret;
 import de.adorsys.keymanagement.api.types.template.generated.Signing;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
+import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.keymanagement.core.metadata.MetadataPersistenceConfig;
 import de.adorsys.keymanagement.core.metadata.WithPersister;
+import de.adorsys.keymanagement.core.source.DefaultKeyStoreView;
 import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
 import lombok.Getter;
@@ -21,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.security.KeyStore;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.function.Supplier;
@@ -47,9 +53,9 @@ class KeySetTest {
                 .build();
 
         KeySet keySet = juggler.generateKeys().fromTemplate(template);
-        val store = juggler.toKeystore().generate(keySet, password);
-        val source = juggler.readKeys().fromKeyStore(store, id -> password.get());
-        val entryView = source.entries();
+        KeyStore store = juggler.toKeystore().generate(keySet, password);
+        KeyStoreView source = juggler.readKeys().fromKeyStore(store, id -> password.get());
+        EntryView<Object> entryView = source.entries();
 
         assertThat(entryView.all()).hasSize(14);
         assertThat(entryView.retrieve("SELECT * FROM keys WHERE alias LIKE 'Z%'").toCollection()).hasSize(3);

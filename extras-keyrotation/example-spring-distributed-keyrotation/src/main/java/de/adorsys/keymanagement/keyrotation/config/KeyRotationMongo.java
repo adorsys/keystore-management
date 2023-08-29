@@ -1,6 +1,6 @@
 package de.adorsys.keymanagement.keyrotation.config;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import de.adorsys.keymanagement.keyrotation.config.properties.MongoRotationProperties;
 import de.adorsys.keymanagement.keyrotation.config.properties.RotationConfiguration;
 import de.adorsys.keymanagement.keyrotation.mongo.MongoRotationManager;
