@@ -492,8 +492,8 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven-gpg-plugin.version}</version>
                         <configuration>
-                            <gpgExecutable>/opt/homebrew/bin/gpg</gpgExecutable>
-                            <keyname>opensource@adorsys.de</keyname>
+                            <passphrase>${env.GPG_PASSPHRASE}</passphrase>
+                            <secretKeyring>${env.GPG_PRIVATE_KEY}</secretKeyring>
                         </configuration>
                         <executions>
                             <execution>
