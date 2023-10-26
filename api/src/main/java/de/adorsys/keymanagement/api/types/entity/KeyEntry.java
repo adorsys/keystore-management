@@ -8,21 +8,15 @@ import java.security.KeyStore;
 public class KeyEntry extends KeyAlias {
 
     private final KeyStore.Entry entry;
+    private final boolean isSecret;
+    private final boolean isPrivate;
+    private final boolean isTrustedCert;
 
     public KeyEntry(String alias, WithMetadata<KeyStore.Entry> entry) {
         super(alias, entry.getMetadata(), entry.isMetadataEntry());
         this.entry = entry.getKey();
-    }
-
-    public boolean isSecret() {
-        return entry instanceof KeyStore.SecretKeyEntry;
-    }
-
-    public boolean isPrivate() {
-        return entry instanceof KeyStore.PrivateKeyEntry;
-    }
-
-    public boolean isTrustedCert() {
-        return entry instanceof KeyStore.TrustedCertificateEntry;
+        isSecret = entry.getKey() instanceof KeyStore.SecretKeyEntry;
+        isPrivate = entry.getKey() instanceof KeyStore.PrivateKeyEntry;
+        isTrustedCert = entry.getKey() instanceof KeyStore.TrustedCertificateEntry;
     }
 }
