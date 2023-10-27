@@ -8,6 +8,7 @@ import com.googlecode.cqengine.index.Index;
 import com.googlecode.cqengine.index.hash.HashIndex;
 import com.googlecode.cqengine.index.radix.RadixTreeIndex;
 import com.googlecode.cqengine.query.Query;
+import com.googlecode.cqengine.query.QueryFactory;
 import com.googlecode.cqengine.query.parser.sql.SQLParser;
 import com.googlecode.cqengine.resultset.ResultSet;
 import de.adorsys.keymanagement.api.CqeQueryResult;
@@ -20,31 +21,37 @@ import de.adorsys.keymanagement.api.view.EntryView;
 import de.adorsys.keymanagement.api.view.QueryResult;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import static com.googlecode.cqengine.query.QueryFactory.attribute;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import static com.googlecode.cqengine.codegen.AttributeBytecodeGenerator.createAttributes;
-import static com.googlecode.cqengine.codegen.MemberFilters.GETTER_METHODS_ONLY;
-import static com.googlecode.cqengine.query.QueryFactory.and;
-import static com.googlecode.cqengine.query.QueryFactory.attribute;
-import static com.googlecode.cqengine.query.QueryFactory.equal;
-import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
-import static de.adorsys.keymanagement.core.view.ViewUtil.SNAKE_CASE;
 
 public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> implements EntryView<Query<KeyEntry>> {
 
-    public static final SimpleAttribute<KeyEntry, String> A_ID = attribute(KeyEntry.class, String.class,
+    public static final SimpleAttribute<KeyEntry, String> A_ID = QueryFactory.attribute(KeyEntry.class, String.class,
             "alias", KeyEntry::getAlias);
-    public static final SimpleNullableAttribute<KeyEntry, KeyMetadata> META = nullableAttribute(KeyEntry.class,
+    public static final SimpleNullableAttribute<KeyEntry, KeyMetadata> META =
+            QueryFactory.nullableAttribute(KeyEntry.class,
             KeyMetadata.class, "meta", KeyEntry::getKeyMetadata);
     public static final SimpleAttribute<KeyEntry, Boolean> IS_META = attribute(KeyEntry.class, Boolean.class,
             "is_meta", KeyEntry::isMetadataEntry);
 
-    private static final SQLParser<KeyEntry> PARSER = SQLParser.forPojoWithAttributes(
-            KeyEntry.class,
-            createAttributes(KeyEntry.class, GETTER_METHODS_ONLY, SNAKE_CASE)
-    );
+    public static SQLParser<KeyEntry> getCQAttributes(){
+        HashMap<String, SimpleAttribute<KeyEntry, ?>> stringSimpleAttributeHashMap = new HashMap<>();
+
+        stringSimpleAttributeHashMap.put("is_private",KeyEntry.IS_PRIVATE);
+        stringSimpleAttributeHashMap.put("is_secret",KeyEntry.IS_SECRET);
+        stringSimpleAttributeHashMap.put("is_trusted_cert",KeyEntry.IS_TRUSTED_CERT);
+        stringSimpleAttributeHashMap.put("alias",KeyEntry.ALIAS);
+
+        return SQLParser.forPojoWithAttributes(
+                KeyEntry.class,stringSimpleAttributeHashMap
+        );
+    }
+
+    private static final SQLParser<KeyEntry> PARSER = getCQAttributes();
 
     @Getter
     private final KeySource source;
@@ -75,24 +82,24 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
 
     @Override
     public QueryResult<KeyEntry> retrieve(Query<KeyEntry> query) {
-        return new CqeQueryResult<>(keys.retrieve(and(viewFilter, query)));
+        return new CqeQueryResult<>(keys.retrieve(QueryFactory.and(viewFilter, query)));
     }
 
     @Override
     public QueryResult<KeyEntry> retrieve(String query) {
-        return new CqeQueryResult<>(keys.retrieve(and(viewFilter, PARSER.parse(query).getQuery())));
+        return new CqeQueryResult<>(keys.retrieve(QueryFactory.and(viewFilter, PARSER.parse(query).getQuery())));
     }
 
     @Override
     public KeyEntry uniqueResult(Query<KeyEntry> query) {
-        try (ResultSet<KeyEntry> unique = keys.retrieve(and(viewFilter, query))) {
+        try (ResultSet<KeyEntry> unique = keys.retrieve(QueryFactory.and(viewFilter, query))) {
             return unique.uniqueResult();
         }
     }
 
     @Override
     public KeyEntry uniqueResult(String query) {
-        try (ResultSet<KeyEntry> unique = keys.retrieve(and(viewFilter, PARSER.query(query)))) {
+        try (ResultSet<KeyEntry> unique = keys.retrieve(QueryFactory.and(viewFilter, PARSER.query(query)))) {
             return unique.uniqueResult();
         }
     }
@@ -130,7 +137,7 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
     @Override
     protected KeyEntry fromCollection(String ofKey) {
         // Skip view filter
-        try (ResultSet<KeyEntry> byId = keys.retrieve(equal(A_ID, ofKey))) {
+        try (ResultSet<KeyEntry> byId = keys.retrieve(QueryFactory.equal(A_ID, ofKey))) {
             return byId.uniqueResult();
         }
     }
