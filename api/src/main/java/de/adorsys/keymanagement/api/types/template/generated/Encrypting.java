@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.Delegate;
 
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Collection;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -44,9 +45,9 @@ public class Encrypting implements GeneratedKeyTemplate {
     @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     @Builder(builderMethodName = "with")
     Encrypting(String alias, String prefix, Supplier<char[]> password, String algo, String sigAlgo,
-               Integer keySize, KeyMetadata metadata, String commonName) {
+               Integer keySize, KeyMetadata metadata, String commonName, AlgorithmParameterSpec paramSpec) {
         this.keyTemplate = new NameAndPassword(new DefaultNamingStrategy(alias, prefix), password);
         this.metadata = metadata;
-        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo, commonName);
+        this.encryptionTemplate = KeyPairEncryptionTemplate.of(algo, keySize, sigAlgo, commonName, paramSpec);
     }
 }
