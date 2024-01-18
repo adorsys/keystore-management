@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/adorsys/keystore-management/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/keystore-management)
+[![Maintainability](https://codeclimate.com/github/adorsys/keystore-management.png)](https://codeclimate.com/github/adorsys/keystore-management)
+
 #  Project overview
 This library allows to generate keys and keystores using fluent-like API instead of dealing with JCA intricacies.
 Additionally to key persistence it provides capability of persisting key metadata directly within Java-KeyStore.
