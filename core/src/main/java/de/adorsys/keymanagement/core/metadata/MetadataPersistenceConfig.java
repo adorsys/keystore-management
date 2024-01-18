@@ -38,7 +38,8 @@ public class MetadataPersistenceConfig {
         }
 
         @Override
-        public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             return Instant.parse(json.getAsString());
         }
     }

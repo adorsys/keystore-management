@@ -28,7 +28,8 @@ public class KeyPairEncryptionTemplate {
         KeyPairEncryptionTemplate toBuilder();
     }
 
-    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName, AlgorithmParameterSpec paramSpec) {
+    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName,
+                                        AlgorithmParameterSpec paramSpec) {
         KeyPairEncryptionTemplate result = KeyPairEncryptionTemplate.builder().build();
 
         if (null != algo) {
