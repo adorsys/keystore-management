@@ -18,7 +18,12 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Step 3 - Maven deploy release
+      - name: Step 3 - Cache Docker images.
+        uses: ScribeMD/docker-cache@0.3.7
+        with:
+          key: docker-${{ runner.os }}
+
+      - name: Step 4 - Maven deploy release
         run: ./scripts/mvn_deploy.sh
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}

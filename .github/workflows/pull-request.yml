@@ -19,10 +19,15 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Step 3 - Build & Test
+      - name: Step 3 - Cache Docker images.
+        uses: ScribeMD/docker-cache@0.3.7
+        with:
+          key: docker-${{ runner.os }}
+
+      - name: Step 4 - Build & Test
         run: mvn clean verify -ntp
 
-      - name: Step 4 - Upload coverage reports to Codecov
+      - name: Step 5 - Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
