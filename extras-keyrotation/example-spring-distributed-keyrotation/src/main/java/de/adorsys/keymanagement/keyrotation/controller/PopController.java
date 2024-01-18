@@ -36,7 +36,7 @@ public class PopController {
                 new JWKSet(new ArrayList<>(
                 exporter.export(
                         view.encryptionKeys().stream().map(KeyAlias::getAlias).collect(Collectors.toSet())))
-                ).toPublicJWKSet().toJSONObject().toJSONString()
+                ).toPublicJWKSet().toString(false)
         );
     }
 }

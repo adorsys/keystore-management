@@ -36,13 +36,13 @@ import static com.googlecode.cqengine.query.QueryFactory.nullableAttribute;
 public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> implements EntryView<Query<KeyEntry>> {
 
     public static final SimpleAttribute<KeyEntry, String> A_ID = attribute(
-            KeyEntry.class, String.class,"alias", KeyEntry::getAlias
+            KeyEntry.class, String.class, "alias", KeyEntry::getAlias
     );
     public static final SimpleNullableAttribute<KeyEntry, KeyMetadata> META = nullableAttribute(
-            KeyEntry.class, KeyMetadata.class,"meta", (SimpleFunction<KeyEntry, KeyMetadata>) KeyEntry::getMeta
+            KeyEntry.class, KeyMetadata.class, "meta", (SimpleFunction<KeyEntry, KeyMetadata>) KeyEntry::getMeta
     );
     public static final SimpleAttribute<KeyEntry, Boolean> IS_META = attribute(
-            KeyEntry.class, Boolean.class,"is_meta", KeyEntry::isMetadataEntry
+            KeyEntry.class, Boolean.class, "is_meta", KeyEntry::isMetadataEntry
     );
 
     private static final SQLParser<KeyEntry> PARSER = SQLParser.forPojoWithAttributes(

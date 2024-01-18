@@ -12,7 +12,10 @@
     <artifactId>example-spring-distributed-keyrotation</artifactId>
 
     <properties>
-        <springfox-swagger.version>2.9.2</springfox-swagger.version>
+        <spring.framework.boot.version>3.2.1</spring.framework.boot.version>
+        <mysql-connector-j.version>8.3.0</mysql-connector-j.version>
+        <flyway-mysql.version>9.22.3</flyway-mysql.version>
+        <de.flapdoodle.embed.mongo.spring30x.version>4.11.0</de.flapdoodle.embed.mongo.spring30x.version>
     </properties>
 
     <dependencyManagement>
@@ -83,12 +86,10 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-mysql -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
-            <version>9.20.0</version>
+            <version>${flyway-mysql.version}</version>
         </dependency>
 
         <!-- Test only dependencies -->
@@ -131,50 +132,38 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
+            <version>${mysql-connector-j.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mysql</artifactId>
-            <version>1.18.3</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.18.3</version>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test-autoconfigure</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mongodb</artifactId>
-            <version>1.15.3</version> <!-- replace with the latest version -->
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
-            <version>4.7.0</version>
+            <version>${de.flapdoodle.embed.mongo.spring30x.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
