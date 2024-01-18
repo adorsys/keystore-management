@@ -24,10 +24,6 @@ public class KeyAlias {
         return new AliasWithMeta<>(getAlias(), getMeta(metadataClass));
     }
 
-    public KeyMetadata getKeyMetadata() {
-        return meta;
-    }
-
     public <T> T getMeta(Class<T> asClass) {
         return (T) meta;
     }
