@@ -2,10 +2,12 @@ package de.adorsys.keymanagement.bouncycastle.adapter.services.deprecated.genera
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.Provider;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.List;
 
 /**
@@ -18,6 +20,7 @@ public class KeyPairBuilder {
     private Provider provider;
     private Integer keyLength;
     private String keyAlg;
+    private AlgorithmParameterSpec paramSpec;
 
     boolean dirty = false;
 
@@ -51,7 +54,16 @@ public class KeyPairBuilder {
             throw new IllegalStateException(e);
         }
 
-        kGen.initialize(keyLength);
+        if (paramSpec != null) {
+            try {
+                kGen.initialize(paramSpec);
+            } catch (InvalidAlgorithmParameterException e) {
+                throw new RuntimeException(e);
+            }
+        } else { // RSA
+            kGen.initialize(keyLength);
+        }
+
         return kGen.generateKeyPair();
     }
 
@@ -67,6 +79,11 @@ public class KeyPairBuilder {
 
     public KeyPairBuilder withKeyAlg(String keyAlg) {
         this.keyAlg = keyAlg;
+        return this;
+    }
+
+    public KeyPairBuilder withParamSpec(AlgorithmParameterSpec paramSpec) {
+        this.paramSpec = paramSpec;
         return this;
     }
 }

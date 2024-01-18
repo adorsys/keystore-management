@@ -9,6 +9,7 @@ import org.bouncycastle.asn1.x509.KeyUsage;
 
 import java.security.KeyPair;
 import java.security.Provider;
+import java.security.spec.AlgorithmParameterSpec;
 
 @Builder
 public class KeyPairGenerator {
@@ -21,6 +22,7 @@ public class KeyPairGenerator {
     private final Provider provider;
     private final String keyAlgo;
     private final int keySize;
+    private final AlgorithmParameterSpec paramSpec;
     private final String serverSigAlgo;
     private final String serverKeyPairName;
 
@@ -43,6 +45,7 @@ public class KeyPairGenerator {
                 .withProvider(provider)
                 .withKeyAlg(keyAlgo)
                 .withKeyLength(keySize)
+                .withParamSpec(paramSpec)
                 .build();
 
         X500Name dn = new X500NameBuilder(BCStyle.INSTANCE).addRDN(BCStyle.CN, serverKeyPairName).build();

@@ -27,6 +27,7 @@ public class DefaultEncryptingKeyGeneratorImpl implements EncryptingKeyGenerator
                 .keySize(fromTemplate.getSize())
                 .serverSigAlgo(fromTemplate.getSigAlgo())
                 .serverKeyPairName(fromTemplate.getCommonName())
+                .paramSpec(fromTemplate.getParamSpec())
                 .build()
                 .generateEncryptionKey();
 

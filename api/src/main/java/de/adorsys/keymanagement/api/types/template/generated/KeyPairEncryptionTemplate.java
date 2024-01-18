@@ -3,6 +3,8 @@ package de.adorsys.keymanagement.api.types.template.generated;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.security.spec.AlgorithmParameterSpec;
+
 @Getter
 @Builder(toBuilder = true)
 public class KeyPairEncryptionTemplate {
@@ -19,11 +21,14 @@ public class KeyPairEncryptionTemplate {
     @Builder.Default
     private final String commonName = "KEY-PAIR";
 
+    @Builder.Default
+    private final AlgorithmParameterSpec paramSpec = null;
+
     public interface ExcludeToBuilder {
         KeyPairEncryptionTemplate toBuilder();
     }
 
-    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName) {
+    static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName, AlgorithmParameterSpec paramSpec) {
         KeyPairEncryptionTemplate result = KeyPairEncryptionTemplate.builder().build();
 
         if (null != algo) {
@@ -40,6 +45,10 @@ public class KeyPairEncryptionTemplate {
 
         if (null != commonName) {
             result = result.toBuilder().commonName(commonName).build();
+        }
+
+        if (null != paramSpec) {
+            result = result.toBuilder().paramSpec(paramSpec).build();
         }
 
         return result;

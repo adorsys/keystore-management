@@ -126,6 +126,8 @@ public class CaSignedCertificateBuilder {
                 return "SHA256withDSA";
             } else if ("RSA".equals(algorithm.toUpperCase(Locale.US))) {
                 return "SHA256WithRSA";
+            } else if ("ECDH".equals(algorithm.toUpperCase(Locale.US))) {
+                return "SHA256WITHECDSA";
             }
 
             return null;
