@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-job:
+  pull-request-job:
     runs-on: ubuntu-latest
     steps:
       - name: Step 1 - Checkout repository code
