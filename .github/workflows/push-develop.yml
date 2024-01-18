@@ -19,13 +19,12 @@ jobs:
           cache: 'maven'
 
       - name: Step 3 - Build & Test
-        run: mvn clean verify -ntp -v
+        run: mvn clean verify -ntp
 
       - name: Step 4 - Upload coverage reports to Codecov
-        run: bash <(curl -s https://codecov.io/bash) -F unittests -B ${GITHUB_REF_NAME};
-#        uses: codecov/codecov-action@v3
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Step 5 - Deploy Snapshot
         run: ./scripts/mvn_deploy.sh

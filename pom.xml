@@ -77,7 +77,7 @@
         <assertj.version>3.24.2</assertj.version>
         <mockito.version>5.4.0</mockito.version>
         <surefire.version>3.0.0-M3</surefire.version>
-        <jacoco.version>0.8.10</jacoco.version>
+        <jacoco.version>0.8.11</jacoco.version>
         <gson.version>2.8.6</gson.version>
         <spring.framework.boot.version>3.1.0</spring.framework.boot.version>
         <springdoc.version>1.7.0</springdoc.version>
