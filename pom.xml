@@ -60,13 +60,11 @@
         <doclint>none</doclint>
         <src.dir>src/main/java</src.dir>
         <test.src.dir>src/test/java</test.src.dir>
-        <!-- TODO: should be maven.multiModuleProjectDirectory but not using it because Intellij does not support it -->
-        <jacoco.reportPath>${basedir}/../../target/jacoco.exec</jacoco.reportPath>
-
+        <jacoco.reportPath>${maven.multiModuleProjectDirectory}/target/jacoco.exec</jacoco.reportPath>
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>3.6.1</maven.dependency.plugin.version>
         <lombok.version>1.18.30</lombok.version>
-        <bouncycastle.version>1.74</bouncycastle.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
         <dagger.version>2.50</dagger.version>
         <shedlock.version>5.10.2</shedlock.version>
         <mongo.version>4.11.1</mongo.version>
@@ -108,12 +106,12 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15to18</artifactId>
+                <artifactId>bcpkix-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15to18</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
@@ -372,10 +370,9 @@
                 <version>${checkstyle-plugin.version}</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>false</failsOnError>
-                    <failOnViolation>false</failOnViolation>
+<!--                    <failOnViolation>false</failOnViolation>-->
                     <linkXRef>false</linkXRef>
                 </configuration>
                 <executions>
@@ -457,7 +454,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <version>${nexus-staging-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype</serverId>
@@ -483,11 +480,6 @@
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven-gpg-plugin.version}</version>
                         <configuration>
-                            <keyname>opensource@adorsys.de</keyname>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
                         </configuration>
                         <executions>
                             <execution>
@@ -496,12 +488,6 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
-                                <configuration>
-                                    <gpgArguments>
-                                        <arg>--pinentry-mode</arg>
-                                        <arg>loopback</arg>
-                                    </gpgArguments>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
