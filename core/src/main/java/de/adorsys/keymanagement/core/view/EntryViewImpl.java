@@ -25,7 +25,6 @@ import lombok.SneakyThrows;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.googlecode.cqengine.query.QueryFactory.and;
 import static com.googlecode.cqengine.query.QueryFactory.attribute;
@@ -53,7 +52,8 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
                     "is_meta", IS_META,
                     "is_private", attribute(KeyEntry.class, Boolean.class, "is_private", KeyEntry::isPrivate),
                     "is_secret", attribute(KeyEntry.class, Boolean.class, "is_secret", KeyEntry::isSecret),
-                    "is_trusted_cert", attribute(KeyEntry.class, Boolean.class, "is_trusted_cert", KeyEntry::isTrustedCert)
+                    "is_trusted_cert", attribute(KeyEntry.class, Boolean.class, "is_trusted_cert",
+                            KeyEntry::isTrustedCert)
             )
     );
 
@@ -75,7 +75,7 @@ public class EntryViewImpl extends BaseUpdatingView<Query<KeyEntry>, KeyEntry> i
         keys.addAll(
                 source.aliasesFor(ProvidedKeyEntry.class)
                         .map(it -> new KeyEntry(it.getKey(), source.asEntry(it.getKey())))
-                        .collect(Collectors.toList())
+                        .toList()
         );
 
         this.keys.addIndex(RadixTreeIndex.onAttribute(A_ID));

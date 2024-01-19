@@ -28,6 +28,7 @@ public class KeyPairEncryptionTemplate {
         KeyPairEncryptionTemplate toBuilder();
     }
 
+    @SuppressWarnings("checkstyle:ParameterNumber") // Is a builder method
     static KeyPairEncryptionTemplate of(String algo, Integer size, String sigAlgo, String commonName,
                                         AlgorithmParameterSpec paramSpec) {
         KeyPairEncryptionTemplate result = KeyPairEncryptionTemplate.builder().build();
