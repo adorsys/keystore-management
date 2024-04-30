@@ -64,7 +64,7 @@
         <maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>3.6.1</maven.dependency.plugin.version>
         <lombok.version>1.18.30</lombok.version>
-        <bouncycastle.version>1.77</bouncycastle.version>
+        <bouncycastle.version>1.78.1</bouncycastle.version>
         <dagger.version>2.50</dagger.version>
         <shedlock.version>5.10.2</shedlock.version>
         <mongo.version>4.11.1</mongo.version>
