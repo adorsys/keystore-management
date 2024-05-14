@@ -167,6 +167,11 @@ public class CaSignedCertificateBuilder {
         return this;
     }
 
+    public CaSignedCertificateBuilder withSignatureAlgo(String signatureAlgo) {
+        this.signatureAlgo = signatureAlgo;
+        return this;
+    }
+
     public CaSignedCertificateBuilder withKeyUsage(int keyUsage) {
         if (keyUsageSet) {
             this.keyUsage = this.keyUsage | keyUsage;
