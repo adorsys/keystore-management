@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Locale;
 
 @Getter
 @Builder(toBuilder = true)
@@ -35,6 +36,10 @@ public class KeyPairEncryptionTemplate {
 
         if (null != algo) {
             result = result.toBuilder().algo(algo).build();
+
+            if (null == sigAlgo) {
+                sigAlgo = autodetectAlgorithm(algo);
+            }
         }
 
         if (null != size) {
@@ -54,5 +59,14 @@ public class KeyPairEncryptionTemplate {
         }
 
         return result;
+    }
+
+    private static String autodetectAlgorithm(String algo) {
+        return switch (algo.toUpperCase(Locale.US)) {
+            case "DSA" -> "SHA256withDSA";
+            case "RSA" -> "SHA256WithRSA";
+            case "ECDH" -> "SHA256WITHECDSA";
+            default -> null;
+        };
     }
 }
