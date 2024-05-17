@@ -26,7 +26,13 @@ jobs:
       - name: Step 4 - Build & Test
         run: mvn clean verify -ntp
 
-      - name: Step 5 - Deploy Snapshot
+      - name: Step 5 - Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true
+
+      - name: Step 6 - Deploy Snapshot
         run: ./scripts/mvn_deploy.sh
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
@@ -35,9 +41,3 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-
-      - name: Step 6 - Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
