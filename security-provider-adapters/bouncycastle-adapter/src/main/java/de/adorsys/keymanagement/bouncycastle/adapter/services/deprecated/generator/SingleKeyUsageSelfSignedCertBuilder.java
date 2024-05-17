@@ -64,6 +64,7 @@ public class SingleKeyUsageSelfSignedCertBuilder {
                 .withNotBeforeInDays(notBeforeInDays)
                 .withNotAfterInDays(notAfterInDays)
                 .withSubjectDN(subjectDN)
+                .withSignatureAlgo(signatureAlgo)
                 .withSubjectPublicKey(keyPair.getPublic());
 
         if (keyUsages != null) {
