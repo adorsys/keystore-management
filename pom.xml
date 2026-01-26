@@ -72,7 +72,7 @@
         <guava.version>33.0.0-jre</guava.version>
         <slf4j.version>2.0.11</slf4j.version>
         <jupiter.version>5.10.1</jupiter.version>
-        <assertj.version>3.25.1</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <mockito.version>5.9.0</mockito.version>
         <surefire.version>3.2.5</surefire.version>
         <jacoco.version>0.8.11</jacoco.version>
